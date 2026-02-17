@@ -1,9 +1,8 @@
-
 import { YoutubeInfo } from '../types';
 
 export const youtubeData: YoutubeInfo = {
   channelId: 'UC-xxxxxxxxx',
-  latestVideoId: 'dQw4w9WgXcQ', // Placeholder video
-  channelUrl: 'https://www.youtube.com/@PuertaDelCielo',
+  latestVideoId: 'XHux7egEoOk', // Nuevo video
+  channelUrl: 'https://www.youtube.com/@puertadelcielo1112',
   title: 'Nuestras Transmisiones en Vivo'
 };
