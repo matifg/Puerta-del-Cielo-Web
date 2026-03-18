@@ -24,10 +24,7 @@ const App: React.FC = () => {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-amber-100 via-white to-amber-200">
         <div className="relative flex-1 flex items-center justify-center w-full">
-          {/* Glow cálido detrás del card */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-amber-200 blur-3xl opacity-30 z-0"></div>
           <div className="relative z-10 bg-white p-16 rounded-2xl shadow-lg text-center max-w-2xl mx-auto border border-amber-200">
-            {/* Logo de la iglesia */}
             <img
               src="/images/puerta.logo.png"
               alt="Logo Puerta del Cielo"
@@ -40,8 +37,8 @@ const App: React.FC = () => {
               Pronto volveremos a estar conectados.<br />
               Mientras tanto, seguinos en nuestras redes:
             </p>
-            {/* Botones de redes sociales */}
             <div className="flex justify-center gap-6 mb-6">
+              {/* Instagram */}
               <a
                 href="https://www.instagram.com/puertadelcielo.ba/"
                 target="_blank"
@@ -53,6 +50,7 @@ const App: React.FC = () => {
                   <path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6zm5.235-1.3a1.107 1.107 0 100 2.214 1.107 1.107 0 000-2.214z"/>
                 </svg>
               </a>
+              {/* YouTube */}
               <a
                 href="https://www.youtube.com/@puertadelcielo1112"
                 target="_blank"
@@ -62,6 +60,18 @@ const App: React.FC = () => {
               >
                 <svg className="w-7 h-7 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M23.498 6.186a2.994 2.994 0 0 0-2.107-2.117C19.185 3.5 12 3.5 12 3.5s-7.185 0-9.391.569A2.994 2.994 0 0 0 .502 6.186C0 8.4 0 12 0 12s0 3.6.502 5.814a2.994 2.994 0 0 0 2.107 2.117C4.815 20.5 12 20.5 12 20.5s7.185 0 9.391-.569a2.994 2.994 0 0 0 2.107-2.117C24 15.6 24 12 24 12s0-3.6-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+              {/* Facebook */}
+              <a
+                href="https://www.facebook.com/puertadelcielobaradero"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="w-14 h-14 flex items-center justify-center rounded-full bg-white border border-[rgba(199,119,26,0.25)] shadow transition-colors duration-200 hover:bg-amber-50"
+              >
+                <svg className="w-7 h-7 text-amber-600 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.525 2.001H6.475A4.474 4.474 0 002 6.475v11.05A4.474 4.474 0 006.475 22h11.05A4.474 4.474 0 0022 17.525V6.475A4.474 4.474 0 0017.525 2.001zm-2.03 7.5h-1.07c-.84 0-.98.4-.98.96v1.14h2.05l-.27 2.09h-1.78v5.36h-2.13v-5.36h-1.78v-2.09h1.78v-1.54c0-1.76 1.07-2.72 2.63-2.72.75 0 1.39.06 1.58.09v1.8z"/>
                 </svg>
               </a>
             </div>
@@ -125,6 +135,18 @@ const App: React.FC = () => {
       </main>
 
       <Footer />
+
+      {/* Modal Overlay y Caja */}
+      <div id="horarios-modal-overlay" className="modal-overlay" style={{ display: 'none' }}>
+        <div className="modal-box" id="horarios-modal-box">
+          <button className="modal-close" id="horarios-modal-close" aria-label="Cerrar">&times;</button>
+          <h2 className="modal-title">Horarios de reuniones</h2>
+          <ul className="modal-content">
+            <li>Domingos 19:00 hs</li>
+            <li>Miércoles 20:00 hs</li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };
