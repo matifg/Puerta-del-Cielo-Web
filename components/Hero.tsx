@@ -53,7 +53,12 @@ export const Hero: React.FC = () => {
           {/* Botón secundario: Ver horarios */}
           <button
             className="flex items-center justify-center px-6 py-3 rounded-full border border-amber-600 text-amber-600 font-semibold bg-white shadow-lg hover:bg-amber-50 hover:-translate-y-1 transition-all duration-200 text-lg"
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              const section = document.getElementById("servicios");
+              if (section) {
+                section.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
             type="button"
           >
             {/* Icono reloj */}

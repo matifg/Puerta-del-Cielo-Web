@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Hero } from './components/Hero.tsx';
 import { Rema } from './components/Rema.tsx';
 import { Anuncios } from './components/Anuncios.tsx';
@@ -7,10 +8,26 @@ import { Devocional } from './components/Devocional.tsx';
 import { Multimedia } from './components/Multimedia.tsx';
 import { Footer } from './components/Footer.tsx';
 import { Team } from './components/Team.tsx';
+import { Navbar } from "./components/Navbar";
+
+// Importa tus páginas (por ahora pueden ser placeholders)
+import Home from "./pages/Home";
+import QuienesSomos from "./pages/QuienesSomos";
+import AreaEducativa from "./pages/AreaEducativa.tsx";
+import Conexion from "./pages/Conexion.tsx";
+import Bethel from "./pages/Bethel.tsx";
+import ContactoPage from "./pages/ContactoPage";
+import VisionSection from "./sections/VisionSection";
+import EquipoMinisterialSection from "./components/EquipoMinisterialSection";
+import AreasServicioSection from "./components/AreasServicioSection";
+import SePartePage from "./pages/SePartePage";
+import ConexionPage from "./pages/ConexionPage";
+import DiscipuladoSection from "./components/DiscipuladoSection";
+import DanzaArtesSection from "./components/DanzaArtesSection";
 
 const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [maintenanceMode] = useState(true);
+  const [maintenanceMode] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -104,50 +121,46 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Dynamic Navigation */}
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-4' : 'bg-transparent py-6'}`}>
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <div className={`text-2xl font-bold serif transition-colors ${scrolled ? 'text-slate-800' : 'text-white'}`}>
-            Puerta del Cielo
-          </div>
-          <div className={`hidden md:flex gap-8 text-sm font-bold uppercase tracking-widest transition-colors ${scrolled ? 'text-slate-600' : 'text-slate-200'}`}>
-            <a href="#anuncios" className="hover:text-amber-500 transition-colors">Anuncios</a>
-            <a href="#eventos" className="hover:text-amber-500 transition-colors">Eventos</a>
-            <a href="#devocional" className="hover:text-amber-500 transition-colors">Devocional</a>
-            <a href="#multimedia" className="hover:text-amber-500 transition-colors">Multimedia</a>
-            <a href="#equipo" className="hover:text-amber-500 transition-colors">Nosotros</a>
-          </div>
-          <button className="md:hidden">
-            <svg className={`w-8 h-8 ${scrolled ? 'text-slate-800' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-          </button>
-        </div>
-      </nav>
-
-      <main>
-        <Hero />
-        <Rema />
-        <Anuncios />
-        <Eventos />
-        <Devocional />
-        <Team />
-        <Multimedia />
-      </main>
-
-      <Footer />
-
-      {/* Modal Overlay y Caja */}
-      <div id="horarios-modal-overlay" className="modal-overlay" style={{ display: 'none' }}>
-        <div className="modal-box" id="horarios-modal-box">
-          <button className="modal-close" id="horarios-modal-close" aria-label="Cerrar">&times;</button>
-          <h2 className="modal-title">Horarios de reuniones</h2>
-          <ul className="modal-content">
-            <li>Domingos 19:00 hs</li>
-            <li>Miércoles 20:00 hs</li>
-          </ul>
-        </div>
+    <BrowserRouter>
+      <Navbar />
+      <div className="pt-24">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/quienes-somos" element={<QuienesSomos />}>
+            <Route index element={<VisionSection />} />
+            <Route path="vision" element={<VisionSection />} />
+            <Route path="equipo-ministerial" element={<EquipoMinisterialSection />} />
+            <Route path="areas-servicio" element={<AreasServicioSection />} />
+          </Route>
+          <Route path="/area-educativa" element={<AreaEducativa />} />
+          <Route path="/conexion" element={<Conexion />} />
+          <Route path="/bethel" element={<Bethel />} />
+          <Route path="/contacto" element={<ContactoPage />} />
+          <Route path="/conexion/se-parte" element={<SePartePage />} />
+          <Route path="/conexion/iglesia-en-casa" element={<ConexionPage />} />
+          <Route path="/area-educativa/discipulado" element={<DiscipuladoSection />} />
+          <Route path="/area-educativa/danza-artes" element={<DanzaArtesSection />} />
+        </Routes>
       </div>
-    </div>
+
+            {/* BOTÓN WHATSAPP PRO */}
+      <a
+        href="https://wa.me/549123456789"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 z-[9999] w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-2xl"
+        aria-label="Escribinos por WhatsApp"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 32 32"
+          className="w-7 h-7"
+          fill="currentColor"
+        >
+          <path d="M16 .4C7.2.4 0 7.6 0 16c0 2.8.7 5.5 2.1 7.9L0 32l8.3-2.1C10.6 31.3 13.3 32 16 32c8.8 0 16-7.2 16-16S24.8.4 16 .4zm0 29.2c-2.4 0-4.8-.6-6.9-1.8l-.5-.3-4.9 1.3 1.3-4.7-.3-.5C3.5 20.8 3 18.5 3 16 3 9.4 9.4 3 16 3s13 6.4 13 13-6.4 13-13 13zm7.2-9.6c-.4-.2-2.2-1.1-2.5-1.2-.3-.1-.6-.2-.9.2-.3.4-1 1.2-1.2 1.4-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.3-2.1-1.2-1-2.1-2.3-2.4-2.7-.2-.4 0-.6.2-.8.2-.2.4-.4.6-.6.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7 0-.2-.9-2.1-1.2-2.9-.3-.7-.6-.6-.9-.6h-.7c-.2 0-.6.1-.9.5-.3.4-1.2 1.2-1.2 3s1.3 3.5 1.5 3.7c.2.2 2.6 4 6.3 5.6.9.4 1.6.6 2.2.8.9.3 1.7.3 2.3.2.7-.1 2.2-.9 2.5-1.8.3-.9.3-1.7.2-1.8-.1-.1-.4-.2-.8-.4z"/>
+        </svg>
+      </a>
+    </BrowserRouter>
   );
 };
 
