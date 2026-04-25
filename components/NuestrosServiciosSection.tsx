@@ -98,7 +98,7 @@ const NuestrosServiciosSection: React.FC = () => {
 
   return (
     <section id="servicios" className="max-w-4xl mx-auto py-16 px-6">
-      <h2 className="text-3xl font-bold text-amber-700 mb-10 font-serif text-center">
+      <h2 className="text-3xl font-bold text-primary mb-10 font-serif text-center">
         Nuestros Servicios
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -107,16 +107,16 @@ const NuestrosServiciosSection: React.FC = () => {
           return (
             <div
               key={servicio.nombre}
-              className="bg-white rounded-xl shadow p-7 flex flex-col items-center text-center transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl hover:bg-amber-50 border hover:border-amber-300 cursor-pointer"
+              className="bg-white rounded-xl shadow p-7 flex flex-col items-center text-center transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl hover:bg-secondary/10 border hover:border-secondary cursor-pointer"
               onClick={() => handleOpenModal(servicio)}
               tabIndex={0}
               role="button"
               aria-label={`Ver detalles de ${servicio.nombre}`}
             >
-              <Icon className="w-10 h-10 text-amber-600 mb-4" />
+              <Icon className="w-10 h-10 text-primary mb-4" />
               <div className="text-xl font-semibold text-slate-800 mb-1">{servicio.nombre}</div>
               {servicio.horarios && (
-                <div className="text-base text-amber-700">{servicio.horarios[0]}</div>
+                <div className="text-base text-secondary">{servicio.horarios[0]}</div>
               )}
             </div>
           );
@@ -125,19 +125,19 @@ const NuestrosServiciosSection: React.FC = () => {
       <Modal open={modalOpen} onClose={handleCloseModal}>
         {modalServicio && (
           <div className="text-center px-1">
-            <h3 className="text-3xl font-bold text-amber-700 mb-6 font-serif">{modalServicio.nombre}</h3>
+            <h3 className="text-3xl font-bold text-primary mb-6 font-serif">{modalServicio.nombre}</h3>
             <div className="flex flex-col gap-4 mb-6">
               {modalServicio.descripcion.map((p: string, idx: number) => (
                 <p key={idx} className="text-base md:text-lg text-slate-700">{p}</p>
               ))}
               {modalServicio.edad && (
-                <div className="text-base font-semibold text-amber-700 bg-amber-50 rounded-lg py-2 px-4 inline-block mx-auto">
+                <div className="text-base font-semibold text-secondary bg-secondary/10 rounded-lg py-2 px-4 inline-block mx-auto">
                   Edad: {modalServicio.edad}
                 </div>
               )}
             </div>
             <div className="mb-6">
-              <div className="font-bold text-lg text-amber-700 mb-2">Horarios</div>
+              <div className="font-bold text-lg text-primary mb-2">Horarios</div>
               <ul className="flex flex-col gap-1 items-center">
                 {modalServicio.horarios.map((h: string, idx: number) => (
                   <li key={idx} className="text-base text-slate-800">{h}</li>
@@ -147,7 +147,7 @@ const NuestrosServiciosSection: React.FC = () => {
             {modalServicio.conexion && (
               <Link
                 to="/conexion"
-                className="inline-block mt-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-6 rounded-full shadow transition"
+                className="inline-block mt-2 bg-primary hover:bg-secondary text-white font-semibold py-2 px-6 rounded-full shadow transition"
               >
                 Ir a Conexión
               </Link>

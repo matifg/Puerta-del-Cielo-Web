@@ -91,34 +91,54 @@ const areas: Area[] = [
   },
 ];
 
+const cardColors = [
+  "from-primary/80 to-secondary/80",
+  "from-secondary/80 to-primary/80",
+  "from-[#2563ad]/90 to-[#40c2de]/80",
+  "from-[#40c2de]/80 to-[#2563ad]/90",
+  "from-primary/90 to-secondary/70",
+  "from-secondary/90 to-primary/70",
+];
+
 const AreasServicioSection: React.FC = () => (
   <SectionWrapper>
-    <h2 className="text-3xl font-bold text-amber-700 mb-10 font-serif text-center">
+    <h2 className="text-3xl md:text-4xl font-bold text-primary mb-10 font-serif text-center drop-shadow-lg">
       Áreas de Servicio
     </h2>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {areas.map((area, idx) => {
         const Icon = area.icon;
+        const colorIdx = idx % cardColors.length;
         return (
           <div
             key={area.title}
-            className="bg-white rounded-xl shadow-md p-6 flex flex-col items-start hover:shadow-lg transition-all duration-200 animate-fade-in"
-            style={{ animationDelay: `${idx * 60}ms` }}
+            className={`
+              bg-gradient-to-br ${cardColors[colorIdx]}
+              rounded-2xl shadow-xl p-7 flex flex-col items-start
+              border border-white/10
+              hover:scale-105 hover:shadow-2xl transition-all duration-400
+              animate-area-fade-in
+            `}
+            style={{ animationDelay: `${idx * 80}ms` }}
           >
-            <Icon className="w-8 h-8 text-amber-600 mb-2" />
-            <h3 className="text-xl font-semibold text-slate-800 mb-2">{area.title}</h3>
-            <p className="text-gray-600">{area.description}</p>
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/10 mb-3 shadow-inner">
+              <Icon className="w-7 h-7 text-white drop-shadow" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2 font-serif drop-shadow">
+              {area.title}
+            </h3>
+            <p className="text-gray-100 font-sans font-light">{area.description}</p>
           </div>
         );
       })}
     </div>
     <style>{`
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(24px);}
-        to { opacity: 1; transform: translateY(0);}
+      @keyframes areaFadeIn {
+        from { opacity: 0; transform: translateY(32px) scale(0.97);}
+        to { opacity: 1; transform: translateY(0) scale(1);}
       }
-      .animate-fade-in {
-        animation: fadeIn 0.7s both;
+      .animate-area-fade-in {
+        animation: areaFadeIn 0.8s cubic-bezier(.4,0,.2,1) both;
       }
     `}</style>
   </SectionWrapper>

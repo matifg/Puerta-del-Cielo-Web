@@ -1,46 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Puerta del Cielo - Iglesia Cristiana</title>
-    <!-- Aquí van los links de favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/web-app-manifest-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/web-app-manifest-512x512.png" />
-    <!-- Fin de los links de favicon -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Puerta del Cielo - Iglesia Cristiana</title>
+
+  <link rel="icon" href="/favicon.ico" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- 🔥 CONFIG REAL (ACÁ VA TODO) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['"Helvetica Neue"', 'Arial', 'sans-serif'],
+          },
+          colors: {
+            primary: "#2563ad",
+            secondary: "#40c2de",
+            dark: "#000000",
+            light: "#ffffff",
+            grayCustom: "#828282"
+          }
         }
-        h1, h2, h3, .serif {
-            font-family: 'Playfair Display', serif;
-        }
-        /* Fix para evitar flash de contenido no estilizado */
-        [id="root"]:empty {
-            display: none;
-        }
-    </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@19.0.0",
-    "react-dom": "https://esm.sh/react-dom@19.0.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/"
+      }
+    }
+  </script>
+
+  <!-- ❌ SACAMOS INTER -->
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+    }
+
+    #root:empty {
+      display: none;
+    }
+  </style>
+
+  <!-- IMPORTMAP -->
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@19.0.0",
+      "react-dom": "https://esm.sh/react-dom@19.0.0",
+      "react-dom/client": "https://esm.sh/react-dom@19.0.0/client"
+    }
   }
-}
-</script>
+  </script>
+
 </head>
-<body class="bg-slate-50 text-slate-900 overflow-x-hidden">
-    <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
+
+<body class="bg-light text-dark overflow-x-hidden">
+
+  <div id="root"></div>
+
+  <script type="module" src="./index.tsx"></script>
+
 </body>
 </html>

@@ -8,7 +8,7 @@ const subLinks = [
 
 const QuienesSomos = () => (
   <div className="max-w-6xl mx-auto py-16 px-6">
-    <h1 className="text-4xl font-bold text-amber-700 mb-8 font-serif">Quiénes Somos</h1>
+    <h1 className="text-4xl font-bold text-amber-700 mb-8 font-serif"></h1>
     <nav className="flex gap-6 mb-8 border-b pb-2">
       {subLinks.map(link => (
         <NavLink
