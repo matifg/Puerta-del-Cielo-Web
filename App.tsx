@@ -24,6 +24,7 @@ import ConexionPage from "./pages/ConexionPage";
 import DiscipuladoSection from "./components/DiscipuladoSection";
 import DanzaArtesSection from "./components/DanzaArtesSection";
 import IntercesionSection from "./components/IntercesionSection";
+import LiderazgoSection from "./components/LiderazgoSection";
 
 const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -140,6 +141,8 @@ const App: React.FC = () => {
         <Route path="/area-educativa/discipulado" element={<DiscipuladoSection />} />
         <Route path="/area-educativa/danza-artes" element={<DanzaArtesSection />} />
         <Route path="/area-educativa/intercesion" element={<IntercesionSection />} />
+        <Route path="/liderazgo" element={<LiderazgoSection />} />
+        <Route path="/area-educativa/liderazgo" element={<LiderazgoSection />} />
       </Routes>
       </div>
 
