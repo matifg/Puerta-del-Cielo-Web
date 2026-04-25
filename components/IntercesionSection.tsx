@@ -5,7 +5,7 @@ const IntercesionSection = () => {
     <section
       className="relative w-full pt-12 pb-20 md:pt-20 md:pb-28 bg-cover bg-center bg-no-repeat overflow-hidden"
       style={{
-        backgroundImage: "url('/images/discipulado.webp')",
+        backgroundImage: "url('/images/eige.jpg')",
       }}
     >
       {/* Overlay */}
