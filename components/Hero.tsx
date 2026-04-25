@@ -12,18 +12,24 @@ export const Hero: React.FC = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
 
-      {/* 🎬 VIDEO (MEJORADO) */}
+      {/* 🎬 VIDEO SOLO DESKTOP */}
       <video
         autoPlay
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-cover brightness-110 contrast-110"
+        className="hidden md:block absolute inset-0 w-full h-full object-cover brightness-110 contrast-110"
       >
         <source src="/video/PuertaDelCieloHero.mp4" type="video/mp4" />
       </video>
 
-      {/* 🔥 OVERLAY PRO (NO TAN OSCURO + GRADIENTE) */}
+      {/* 🖼️ IMAGEN SOLO MOBILE */}
+      <div
+        className="absolute inset-0 md:hidden bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/hero-mobile.jpg')" }}
+      />
+
+      {/* 🔥 OVERLAY PRO */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60"></div>
 
       {/* CONTENIDO */}
