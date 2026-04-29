@@ -2,20 +2,19 @@ import React from "react";
 
 const IglesiaEnCasaSection: React.FC = () => (
   <section
-    className="relative w-full py-20 md:py-28 bg-cover bg-center bg-no-repeat"
+    className="relative w-full pt-8 pb-20 md:pt-12 md:pb-28 bg-cover bg-center bg-no-repeat overflow-hidden"
     style={{
-      backgroundImage: "url('/images/iglesia-en-casa.webp')",
+      backgroundImage: "url('/images/iglesia-en-casa.webp')", // Usa tu imagen de fondo
     }}
   >
     {/* Overlay */}
-    <div className="absolute inset-0 bg-black/50" />
+    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
 
-    <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
-
+    <div className="relative z-10 w-full max-w-4xl mx-auto px-6">
       {/* HERO */}
-      <div className="text-center space-y-5 mb-10 animate-fade-down">
-        <h2 className="text-4xl md:text-5xl font-bold text-white font-serif">
-          Iglesia en casa
+      <div className="text-center space-y-6 mb-8">
+        <h2 className="text-4xl md:text-5xl font-serif text-white tracking-tight">
+          Conexión
         </h2>
         <p className="text-lg text-gray-200 max-w-2xl mx-auto">
           Espacios de encuentro semanal para crecer en la fe, compartir la vida y caminar juntos.

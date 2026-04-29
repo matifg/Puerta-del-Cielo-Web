@@ -2,7 +2,7 @@ import React from "react";
 
 const BethelSection = () => (
   <section
-    className="relative w-full pt-16 pb-20 md:pt-24 md:pb-28 bg-cover bg-center bg-no-repeat overflow-hidden"
+    className="relative w-full pt-8 pb-20 md:pt-12 md:pb-28 bg-cover bg-center bg-no-repeat overflow-hidden"
     style={{
       backgroundImage: "url('/images/bethel.webp')",
     }}
@@ -13,7 +13,7 @@ const BethelSection = () => (
     <div className="relative z-10 w-full max-w-4xl mx-auto px-6">
 
       {/* HERO */}
-      <div className="text-center space-y-6 mb-14 animate-fade-blur">
+      <div className="text-center space-y-6 mb-8 animate-fade-blur">
         <h2 className="text-4xl md:text-5xl font-serif text-white tracking-tight">
           Bethel
         </h2>

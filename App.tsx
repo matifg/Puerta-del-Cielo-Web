@@ -28,7 +28,7 @@ import LiderazgoSection from "./components/LiderazgoSection";
 
 const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [maintenanceMode] = useState(true);
+  const [maintenanceMode] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {

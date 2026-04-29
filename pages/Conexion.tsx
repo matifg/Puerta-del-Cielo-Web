@@ -1,7 +1,7 @@
-// Conexion.tsx
+import IglesiaEnCasaSection from "../components/IglesiaEnCasaSection";
+
 const Conexion = () => (
-  <div className="max-w-6xl mx-auto py-16 px-6">
-    Conexión
-  </div>
+  <IglesiaEnCasaSection />
 );
+
 export default Conexion;
