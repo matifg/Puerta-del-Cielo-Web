@@ -70,10 +70,13 @@ import React, { useEffect, useRef, useState } from "react";
                   {pastors.name}
                 </h3>
 
-                <div className="flex items-center gap-3 justify-center md:justify-start">
-                  <div className="h-[3px] w-24 bg-primary rounded-full"></div>
-                  <div className="h-[2px] w-12 bg-secondary rounded-full"></div>
+                {/* LÍNEAS DECORATIVAS MEJORADAS */}
+                <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start mt-2">
+                  <div className="h-[2px] w-16 bg-primary rounded-full"></div>
+                  <div className="h-[2px] w-10 bg-primary/70 rounded-full"></div>
+                  <div className="h-[2px] w-6 bg-secondary/60 rounded-full"></div>
                 </div>
+                <div className="w-32 md:w-40 h-[2px] bg-gradient-to-r from-primary via-secondary to-transparent rounded-full mt-2 mx-auto md:mx-0"></div>
 
                 <p className="text-secondary uppercase tracking-widest text-sm">
                   {pastors.role}
@@ -122,7 +125,13 @@ import React, { useEffect, useRef, useState } from "react";
             <h2 className="text-4xl md:text-5xl font-serif text-white">
               Equipo Ministerial
             </h2>
-            <p className="text-gray-400 mt-4">
+            {/* LÍNEAS DECORATIVAS AJUSTADAS */}
+            <div className="flex justify-center items-center gap-3 mt-4">
+              <div className="h-[2px] w-20 bg-white/60 rounded-full"></div>
+              <div className="h-[2px] w-12 bg-primary/80 rounded-full"></div>
+              <div className="h-[2px] w-8 bg-secondary/80 rounded-full"></div>
+            </div>
+            <p className="text-primary/80 mt-4">
               Personas comprometidas con servir, acompañar y transformar vidas.
             </p>
           </div>

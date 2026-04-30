@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Puerta del Cielo - Iglesia Cristiana</title>
 
   <link rel="icon" href="/favicon.ico" />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- ✅ GOOGLE FONTS PRO -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- 🔥 CONFIG REAL (ACÁ VA TODO) -->
+  <!-- CONFIG -->
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
             serif: ['"Playfair Display"', 'serif'],
-            sans: ['"Helvetica Neue"', 'Arial', 'sans-serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
           },
           colors: {
             primary: "#2563ad",
@@ -34,21 +35,6 @@
     }
   </script>
 
-  <!-- ❌ SACAMOS INTER -->
-  <style>
-    body {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-    }
-
-    h1, h2, h3 {
-      font-family: 'Playfair Display', serif;
-    }
-
-    #root:empty {
-      display: none;
-    }
-  </style>
-
   <!-- IMPORTMAP -->
   <script type="importmap">
   {
@@ -60,7 +46,7 @@
   }
   </script>
 
-  <!-- Google Analytics 4 -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-X4Y28SP5QK"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -71,7 +57,8 @@
 
 </head>
 
-<body class="bg-light text-dark overflow-x-hidden">
+<!-- 🔥 CLAVE: font-sans -->
+<body class="font-sans bg-light text-dark overflow-x-hidden">
 
   <div id="root"></div>
 

@@ -25,6 +25,7 @@ import DiscipuladoSection from "./components/DiscipuladoSection";
 import DanzaArtesSection from "./components/DanzaArtesSection";
 import IntercesionSection from "./components/IntercesionSection";
 import LiderazgoSection from "./components/LiderazgoSection";
+import ServicioComunidadSection from "./components/ServicioComunidadSection";
 
 const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -153,7 +154,7 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Navbar />
-      <div className="pt-24 bg-black min-h-screen">        <Routes>
+      <div className="pt-16 bg-black min-h-screen">        <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/quienes-somos" element={<QuienesSomos />}>
           <Route index element={<VisionSection />} />
@@ -172,6 +173,8 @@ const App: React.FC = () => {
         <Route path="/area-educativa/intercesion" element={<IntercesionSection />} />
         <Route path="/liderazgo" element={<LiderazgoSection />} />
         <Route path="/area-educativa/liderazgo" element={<LiderazgoSection />} />
+        <Route path="/servicio-comunidad" element={<ServicioComunidadSection />} />
+        <Route path="/area-servicio/comunidad" element={<ServicioComunidadSection />} />
       </Routes>
       </div>
 

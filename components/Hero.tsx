@@ -35,13 +35,13 @@ export const Hero: React.FC = () => {
       {/* CONTENIDO */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-6 px-4 max-w-2xl text-center">
 
-        <h1 className="font-serif text-primary text-5xl md:text-7xl font-bold drop-shadow-xl">
-          Puerta del Cielo
-        </h1>
+        <h1 className="font-serif text-primary text-5xl md:text-7xl font-bold tracking-tight">
+  Puerta del Cielo
+</h1>
 
-        <h2 className="text-xl md:text-2xl text-white/90 italic font-light tracking-wide">
-          Tu Lugar, Tu Casa
-        </h2>
+<h2 className="font-sans text-xl md:text-2xl text-white/90 font-light tracking-wide">
+  Tu Lugar, Tu Casa
+</h2>
 
         <div className="w-16 h-[2px] bg-secondary/80 rounded-full"></div>
 
@@ -81,7 +81,7 @@ export const Hero: React.FC = () => {
       {/* MODAL */}
       {showModal && (
         <div
-          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fade"
+          className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50 animate-fade"
           onClick={handleOverlayClick}
         >
           <div className="bg-white rounded-2xl shadow-lg p-8 min-w-[320px] max-w-[90vw] relative animate-scale">

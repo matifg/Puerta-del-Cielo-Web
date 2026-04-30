@@ -217,14 +217,18 @@ const AreasServicioSection: React.FC = () => {
 
       {selected && (
         <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50 animate-fade"
           onClick={() => setSelected(null)}
         >
-          {/* Overlay animado */}
+          {/* Overlay translúcido y blur, NO negro */}
           <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm animate-modal-overlay"
+            className="absolute inset-0 bg-transparent backdrop-blur-lg transition-opacity"
             onClick={() => setSelected(null)}
           />
+
+          {/* Glow decorativo */}
+          <div className="pointer-events-none absolute -top-16 -left-16 w-72 h-72 bg-primary/30 rounded-full blur-3xl opacity-40 animate-modal-glow" />
+          <div className="pointer-events-none absolute -bottom-20 -right-20 w-80 h-80 bg-secondary/20 rounded-full blur-3xl opacity-20 animate-modal-glow2" />
 
           {/* Card principal */}
           <div className="
@@ -240,11 +244,11 @@ const AreasServicioSection: React.FC = () => {
           "
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-2xl font-serif text-white mb-4">
+            <h3 className="text-2xl md:text-3xl font-serif text-white mb-4">
               {selected.title}
             </h3>
 
-            <p className="text-gray-300 leading-relaxed whitespace-pre-line">
+            <p className="text-gray-300 leading-relaxed whitespace-pre-line text-center">
               {selected.full}
             </p>
 
@@ -258,13 +262,6 @@ const AreasServicioSection: React.FC = () => {
 
           {/* Animaciones PRO */}
           <style>{`
-            @keyframes modalOverlay {
-              0% { opacity: 0; }
-              100% { opacity: 1; }
-            }
-            .animate-modal-overlay {
-              animation: modalOverlay 0.5s cubic-bezier(.4,0,.2,1) both;
-            }
             @keyframes modalCard {
               0% {
                 opacity: 0.92;
@@ -279,6 +276,20 @@ const AreasServicioSection: React.FC = () => {
             }
             .animate-modal-card {
               animation: modalCard 0.7s cubic-bezier(.4,0,.2,1) both;
+            }
+            @keyframes modalGlow {
+              0%,100% { opacity: 0.6; }
+              50% { opacity: 1; }
+            }
+            @keyframes modalGlow2 {
+              0%,100% { opacity: 0.4; }
+              50% { opacity: 0.7; }
+            }
+            .animate-modal-glow {
+              animation: modalGlow 3.5s infinite;
+            }
+            .animate-modal-glow2 {
+              animation: modalGlow2 4.2s infinite;
             }
           `}</style>
         </div>
