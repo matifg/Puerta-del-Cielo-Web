@@ -4,15 +4,13 @@ export const Hero: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      setShowModal(false);
-    }
+    if (e.target === e.currentTarget) setShowModal(false);
   };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
 
-      {/* 🎬 VIDEO SOLO DESKTOP */}
+      {/* VIDEO DESKTOP */}
       <video
         autoPlay
         muted
@@ -23,65 +21,60 @@ export const Hero: React.FC = () => {
         <source src="/video/PuertaDelCieloHero.mp4" type="video/mp4" />
       </video>
 
-      {/* 🖼️ IMAGEN SOLO MOBILE */}
+      {/* IMAGEN MOBILE */}
       <div
         className="absolute inset-0 md:hidden bg-cover bg-center"
         style={{ backgroundImage: "url('/images/hero-mobile.jpg')" }}
       />
 
-      {/* 🔥 OVERLAY PRO */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60"></div>
+      {/* OVERLAY */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80"></div>
 
       {/* CONTENIDO */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-6 px-4 max-w-2xl text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-6 px-4 max-w-2xl text-center animate-fadein">
+        <h1 className="font-serif text-primary text-4xl md:text-6xl font-extrabold tracking-tight drop-shadow-lg uppercase">
+          PUERTA DEL CIELO
+        </h1>
+        <h2 className="font-sans text-xl md:text-2xl text-white font-light tracking-wide drop-shadow uppercase">
+          Tu Lugar, Tu casa
+        </h2>
 
-        <h1 className="font-serif text-primary text-5xl md:text-7xl font-bold tracking-tight">
-  Puerta del Cielo
-</h1>
-
-<h2 className="font-sans text-xl md:text-2xl text-white/90 font-light tracking-wide">
-  Tu Lugar, Tu Casa
-</h2>
-
-        <div className="w-16 h-[2px] bg-secondary/80 rounded-full"></div>
+        {/* Línea decorativa */}
+        <div className="w-20 h-[3px] bg-gradient-to-r from-secondary via-primary to-white rounded-full mx-auto mb-2"></div>
 
         {/* BOTONES */}
-        <div className="flex flex-col sm:flex-row gap-4 mt-6 justify-center">
-
+        <div className="flex flex-col sm:flex-row gap-4 mt-4 justify-center">
           <a
             href="https://www.google.com/maps?q=Manuel+Belgrano+2053+Baradero"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center px-6 py-3 rounded-full bg-primary text-white font-semibold shadow-lg hover:bg-secondary hover:-translate-y-1 transition-all duration-200"
+            className="flex items-center justify-center px-7 py-3 rounded-full bg-primary text-white font-semibold shadow-xl hover:bg-secondary hover:scale-105 transition-all duration-200 text-base gap-2 uppercase"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.24 7.76a3.5 3.5 0 00-4.97 0l-.07.08a3.5 3.5 0 000 4.97l4.24 4.24a3.5 3.5 0 004.95-4.95l-.07-.08-4.24-4.24zM12 2a10 10 0 00-10 10c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18a8 8 0 01-8-8 8 8 0 0116 0 8 8 0 01-8 8z" />
+            {/* Icono Lucide: MapPin */}
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s-6-5.686-6-10a6 6 0 1112 0c0 4.314-6 10-6 10z" />
+              <circle cx="12" cy="11" r="2.5" fill="currentColor" className="text-white" />
             </svg>
-            Cómo llegar
+            CÓMO LLEGAR
           </a>
-
           <button
-            className="flex items-center justify-center px-6 py-3 rounded-full border border-primary text-primary font-semibold bg-white shadow-lg hover:bg-secondary/10 hover:-translate-y-1 transition-all duration-200"
-            onClick={() => {
-              const section = document.getElementById("servicios");
-              if (section) {
-                section.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
+            className="flex items-center justify-center px-7 py-3 rounded-full border-2 border-primary text-primary font-semibold bg-white shadow-xl hover:bg-secondary/10 hover:scale-105 transition-all duration-200 text-base gap-2 uppercase"
+            onClick={() => setShowModal(true)}
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 2M12 2a10 10 0 100 20 10 10 0 000-20z" />
+            {/* Icono Lucide: Clock */}
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
             </svg>
-            Ver horarios
+            VER HORARIOS
           </button>
-
         </div>
       </div>
 
       {/* MODAL */}
       {showModal && (
         <div
-          className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50 animate-fade"
+          className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50 animate-fade"
           onClick={handleOverlayClick}
         >
           <div className="bg-white rounded-2xl shadow-lg p-8 min-w-[320px] max-w-[90vw] relative animate-scale">
@@ -91,11 +84,9 @@ export const Hero: React.FC = () => {
             >
               &times;
             </button>
-
-            <h2 className="text-2xl font-serif font-bold mb-4 text-primary text-center">
-              Horarios de reuniones
+            <h2 className="text-2xl font-serif font-bold mb-4 text-primary text-center uppercase">
+              HORARIOS DE REUNIONES
             </h2>
-
             <ul className="text-lg text-gray-700 text-center">
               <li>Domingos 19:00 hs</li>
               <li>Miércoles 20:00 hs</li>
@@ -106,6 +97,13 @@ export const Hero: React.FC = () => {
 
       {/* ANIMACIONES */}
       <style>{`
+        @keyframes fadein {
+          from { opacity: 0; transform: translateY(30px);}
+          to { opacity: 1; transform: translateY(0);}
+        }
+        .animate-fadein {
+          animation: fadein 0.8s cubic-bezier(.4,0,.2,1) both;
+        }
         @keyframes fade {
           from { opacity: 0; }
           to { opacity: 1; }
@@ -113,7 +111,6 @@ export const Hero: React.FC = () => {
         .animate-fade {
           animation: fade 0.2s;
         }
-
         @keyframes scale {
           from { transform: scale(0.95); opacity: 0; }
           to { transform: scale(1); opacity: 1; }
@@ -122,7 +119,6 @@ export const Hero: React.FC = () => {
           animation: scale 0.2s;
         }
       `}</style>
-
     </section>
   );
 };

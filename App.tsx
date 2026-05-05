@@ -166,7 +166,6 @@ const App: React.FC = () => {
         <Route path="/conexion" element={<Conexion />} />
         <Route path="/bethel" element={<Bethel />} />
         <Route path="/contacto" element={<ContactoPage />} />
-        <Route path="/conexion/se-parte" element={<SePartePage />} />
         <Route path="/conexion/iglesia-en-casa" element={<ConexionPage />} />
         <Route path="/area-educativa/discipulado" element={<DiscipuladoSection />} />
         <Route path="/area-educativa/danza-artes" element={<DanzaArtesSection />} />
