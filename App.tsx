@@ -29,7 +29,7 @@ import ServicioComunidadSection from "./components/ServicioComunidadSection";
 
 const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [maintenanceMode] = useState(false);
+  const [maintenanceMode] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
