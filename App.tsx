@@ -6,7 +6,6 @@ import { Anuncios } from './components/Anuncios.tsx';
 import { Eventos } from './components/Eventos.tsx';
 import { Devocional } from './components/Devocional.tsx';
 import { Multimedia } from './components/Multimedia.tsx';
-import { Footer } from './components/Footer.tsx';
 import { Team } from './components/Team.tsx';
 import { Navbar } from "./components/Navbar";
 
@@ -29,7 +28,7 @@ import ServicioComunidadSection from "./components/ServicioComunidadSection";
 
 const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [maintenanceMode] = useState(true);
+  const [maintenanceMode] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
