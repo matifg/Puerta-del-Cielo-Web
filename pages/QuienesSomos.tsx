@@ -1,7 +1,8 @@
 import { Outlet } from "react-router-dom";
 
+/** Sin max-width ni px extra: cada página usa `PdcPageShell` + `pdcPageInnerClass` como el resto del sitio. */
 const QuienesSomos = () => (
-  <div className="max-w-6xl mx-auto py-16 px-6">
+  <div className="w-full min-w-0">
     <Outlet />
   </div>
 );

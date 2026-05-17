@@ -1,0 +1,7 @@
+# Alias canónicos (SEO — evita duplicados)
+/liderazgo              /area-educativa/liderazgo       301
+/servicio-comunidad     /area-servicio/comunidad        301
+/quienes-somos          /quienes-somos/vision           301
+
+# SPA: rutas sin HTML prerenderizado (tras archivos estáticos en dist)
+/*    /index.html   200

@@ -1,70 +1,38 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
+import { SITE_PHOTOS } from "../data/sitePhotos";
+import { PdcEditorialPhoto } from "./PdcEditorialPhoto";
 
+/**
+ * En Inicio: la cruz como símbolo (sin repetir visión/misión; eso está en /quienes-somos/vision).
+ * El hero no incluye este texto — no hay duplicación con el video.
+ */
 const NuestraEsenciaSection: React.FC = () => (
-  <section className="relative py-24 px-6 overflow-hidden">
+  <section className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-24 md:py-28">
+    <div className="absolute inset-0 bg-gradient-to-br from-black via-[#020617] to-black opacity-90" aria-hidden />
 
-    {/* BACKGROUND PRO */}
-    <div className="absolute inset-0 bg-gradient-to-br from-black via-[#020617] to-black opacity-90" />
+    <div className="relative z-10 mx-auto max-w-3xl text-center">
+      <h2
+        data-pdc-scroll-focus
+        className="font-serif text-3xl text-white md:text-5xl"
+      >
+        Nuestra Esencia
+      </h2>
+      <div className="mx-auto mt-4 h-[3px] w-20 rounded-full bg-secondary" />
+      <p className="mx-auto mt-6 max-w-xl font-sans text-sm font-medium leading-relaxed text-zinc-400 md:text-base">
+        Cristo en el centro. Todo lo que somos como iglesia nace de su amor.
+      </p>
 
-    <div className="relative z-10 max-w-5xl mx-auto">
+      <PdcEditorialPhoto photo={SITE_PHOTOS.cruzFe} className="mx-auto mt-12" priority />
 
-      {/* TITLE */}
-      <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-5xl font-serif text-white">
-          Nuestra Esencia
-        </h2>
-        <div className="w-20 h-[3px] bg-secondary mx-auto mt-4 rounded-full" />
-      </div>
-
-      {/* CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-
-        {/* VISIÓN */}
-        <div className="
-          group
-          bg-white/5 backdrop-blur-xl
-          border border-white/10
-          rounded-2xl p-10
-          text-center
-
-          transition-all duration-500
-          hover:-translate-y-2
-          hover:shadow-[0_10px_40px_rgba(64,194,222,0.25)]
-        ">
-          <h3 className="text-2xl font-serif text-secondary mb-4 group-hover:scale-105 transition">
-            Visión
-          </h3>
-
-          <p className="text-gray-300 leading-relaxed">
-            Ser una iglesia que impacte vidas a través del amor de Dios,
-            formando una comunidad sólida de fe, esperanza y propósito.
-          </p>
-        </div>
-
-        {/* MISIÓN */}
-        <div className="
-          group
-          bg-white/5 backdrop-blur-xl
-          border border-white/10
-          rounded-2xl p-10
-          text-center
-
-          transition-all duration-500
-          hover:-translate-y-2
-          hover:shadow-[0_10px_40px_rgba(64,194,222,0.25)]
-        ">
-          <h3 className="text-2xl font-serif text-secondary mb-4 group-hover:scale-105 transition">
-            Misión
-          </h3>
-
-          <p className="text-gray-300 leading-relaxed">
-            Guiar a las personas a conocer a Dios, crecer espiritualmente y vivir
-            una vida con propósito, sirviendo a otros y extendiendo el Reino de Dios.
-          </p>
-        </div>
-
-      </div>
-
+      <p className="mt-10">
+        <Link
+          to="/quienes-somos/vision"
+          className="pdc-btn-on-dark-accent inline-flex max-w-none px-8"
+        >
+          <span className="relative z-[1]">Visión y propósito</span>
+        </Link>
+      </p>
     </div>
   </section>
 );

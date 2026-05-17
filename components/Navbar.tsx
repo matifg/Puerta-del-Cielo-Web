@@ -1,105 +1,215 @@
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
-const navLinks = [
-  { to: "/", label: "INICIO" },
+type NavSubLink = { to: string; label: string };
+
+type NavItem =
+  | { to: string; label: string }
+  | { label: string; pathPrefix: string; subLinks: NavSubLink[] };
+
+const navLinks: NavItem[] = [
+  { to: "/", label: "Inicio" },
   {
-    label: "QUIÉNES SOMOS",
+    label: "Quiénes somos",
+    pathPrefix: "/quienes-somos",
     subLinks: [
-      { to: "/quienes-somos/vision", label: "VISIÓN" },
-      { to: "/quienes-somos/equipo-ministerial", label: "EQUIPO MINISTERIAL" },
-      { to: "/quienes-somos/areas-servicio", label: "ÁREAS DE SERVICIO" },
+      { to: "/quienes-somos/vision", label: "Visión" },
+      { to: "/quienes-somos/equipo-ministerial", label: "Equipo ministerial" },
+      { to: "/quienes-somos/areas-servicio", label: "Áreas de servicio" },
     ],
   },
   {
-    label: "ÁREA EDUCATIVA",
+    label: "Área educativa",
+    pathPrefix: "/area-educativa",
     subLinks: [
-      { to: "/area-educativa/discipulado", label: "DISCIPULADO" },
-      { to: "/area-educativa/danza-artes", label: "DANZA Y ARTES" },
-      { to: "/area-educativa/intercesion", label: "INTERCESIÓN" },
-      { to: "/area-educativa/liderazgo", label: "LIDERAZGO" },
+      { to: "/area-educativa/discipulado", label: "Discipulado" },
+      { to: "/area-educativa/danza-artes", label: "Danza y artes" },
+      { to: "/area-educativa/intercesion", label: "Intercesión" },
+      { to: "/area-educativa/liderazgo", label: "Liderazgo" },
     ],
   },
   {
-    label: "ÁREA DE SERVICIO",
-    subLinks: [
-      { to: "/area-servicio/comunidad", label: "SERVICIO A LA COMUNIDAD" },
-      { to: "/area-servicio/alimentos", label: "AYUDA ALIMENTARIA" },
-    ],
+    label: "Área de servicio",
+    pathPrefix: "/area-servicio",
+    subLinks: [{ to: "/area-servicio/comunidad", label: "Servicio a la comunidad" }],
   },
   {
-    label: "CONEXIÓN",
-    subLinks: [
-      { to: "/conexion/iglesia-en-casa", label: "IGLESIA EN CASA" },
-    ],
+    label: "Conexión",
+    pathPrefix: "/conexion",
+    subLinks: [{ to: "/conexion/iglesia-en-casa", label: "Iglesia en casa" }],
   },
-  { to: "/bethel", label: "BETHEL" },
-  { to: "/contacto", label: "CONTACTO" },
+  { to: "/bethel", label: "Bethel" },
 ];
 
+const navLinkBase =
+  "relative font-sans text-sm font-semibold tracking-[0.035em] transition-colors duration-200 md:text-[0.9375rem] md:tracking-[0.03em]";
+
+const navLinkActive = "text-[#40c2de]";
+const navLinkIdle = "text-[#faf8f4]/90 hover:text-[#40c2de]";
+
+const subLinkBase =
+  "block rounded-lg px-4 py-2.5 font-sans text-sm font-medium tracking-[0.02em] transition-colors duration-200";
+
+function isGroupActive(pathPrefix: string, pathname: string) {
+  return pathname === pathPrefix || pathname.startsWith(`${pathPrefix}/`);
+}
+
 export const Navbar = () => {
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const [dropdown, setDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const closeMobile = () => {
+    setOpen(false);
+    setMobileExpanded(null);
+  };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50">
-      {/* Fondo negro semi-transparente con blur y borde inferior sutil */}
-      <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-md border-b border-white/10 pointer-events-none"
-        style={{ minHeight: "64px", maxHeight: "88px" }}
-      />
+    <nav
+      className="fixed top-0 left-0 isolate z-50 w-full border-b border-black/80 bg-[#030508] text-[#faf8f4] shadow-[0_10px_36px_rgba(0,0,0,0.75)] ring-1 ring-black/40"
+      aria-label="Principal"
+    >
+      <div className="relative mx-auto flex min-h-16 h-[4.25rem] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 md:h-[4.5rem] lg:px-8">
+        <Link
+          to="/"
+          className="relative z-10 flex items-center gap-2.5"
+          onClick={closeMobile}
+        >
+          <img
+            src="/images/puerta.logo.png"
+            alt="Puerta del Cielo"
+            className="h-8 w-8 object-contain md:h-9 md:w-9"
+          />
+          <span className="font-serif text-base font-semibold leading-none tracking-[0.08em] text-[#faf8f4] md:text-lg">
+            Puerta del Cielo
+          </span>
+        </Link>
 
-      {/* CONTENIDO */}
-      <div className="relative">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-8 h-16">
-          {/* LOGO */}
-          <Link to="/" className="flex items-center gap-2 z-10">
-            <img
-              src="/images/puerta.logo.png"
-              alt="Logo"
-              className="w-6 h-6 object-contain"
-            />
-            <span className="text-sm md:text-base font-serif font-bold text-white tracking-wider uppercase leading-none">
-              PUERTA DEL CIELO
-            </span>
-          </Link>
-
-          {/* DESKTOP */}
-          <div className="hidden md:flex items-center gap-8 z-10">
-            {navLinks.map((link) =>
-              link.subLinks ? (
-                <div
-                  key={link.label}
-                  className="relative group"
-                  onMouseEnter={() => setDropdown(link.label)}
-                  onMouseLeave={() => setDropdown(null)}
+        <div className="relative z-10 hidden items-center gap-1 md:flex xl:gap-2">
+          {navLinks.map((link) =>
+            "subLinks" in link ? (
+              <div
+                key={link.label}
+                className="relative"
+                onMouseEnter={() => setDropdown(link.label)}
+                onMouseLeave={() => setDropdown(null)}
+              >
+                <button
+                  type="button"
+                  className={`${navLinkBase} px-3 py-2 text-[#faf8f4] ${
+                    isGroupActive(link.pathPrefix, pathname) ? navLinkActive : navLinkIdle
+                  }`}
+                  aria-expanded={dropdown === link.label}
+                  aria-haspopup="true"
                 >
-                  <button className="relative text-sm font-semibold tracking-wide text-white hover:text-primary uppercase transition-all duration-300">
-                    {link.label}
-                    <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-primary/80 transition-all duration-300 group-hover:w-full" />
-                  </button>
-                  {/* DROPDOWN */}
-                  <div
-                    className={`
-                      absolute left-1/2 -translate-x-1/2 top-full pt-4
-                      transition-all duration-300
-                      ${dropdown === link.label
-                        ? "opacity-100 translate-y-0 pointer-events-auto visible"
-                        : "opacity-0 -translate-y-2 pointer-events-none invisible"
-                      }
-                    `}
+                  {link.label}
+                  <span
+                    className={`absolute bottom-1 left-3 right-3 h-px origin-left scale-x-0 bg-secondary/80 transition-transform duration-300 ${
+                      isGroupActive(link.pathPrefix, pathname) ? "scale-x-100" : "group-hover:scale-x-100"
+                    }`}
+                    aria-hidden
+                  />
+                </button>
+                <div
+                  className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 transition-all duration-200 ${
+                    dropdown === link.label
+                      ? "pointer-events-auto visible translate-y-0 opacity-100"
+                      : "pointer-events-none invisible -translate-y-1 opacity-0"
+                  }`}
+                >
+                  <div className="min-w-[13.5rem] rounded-2xl border border-white/15 bg-[#0a0f18] py-1.5 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.75)]">
+                    {link.subLinks.map((sub) => (
+                      <NavLink
+                        key={sub.to}
+                        to={sub.to}
+                        className={({ isActive }) =>
+                          `${subLinkBase} ${
+                            isActive
+                              ? "border-l-2 border-secondary bg-white/[0.06] text-secondary"
+                              : "border-l-2 border-transparent text-[#faf8f4]/90 hover:bg-white/[0.05] hover:text-[#40c2de]"
+                          }`
+                        }
+                      >
+                        {sub.label}
+                      </NavLink>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={({ isActive }) =>
+                  `${navLinkBase} px-3 py-2 ${isActive ? navLinkActive : navLinkIdle}`
+                }
+              >
+                {link.label}
+              </NavLink>
+            )
+          )}
+          <NavLink
+            to="/contacto"
+            className="pdc-btn-on-dark-ghost ml-1 max-w-none px-5 py-2.5 text-xs sm:text-sm"
+          >
+            <span className="relative z-[1]">Contacto</span>
+          </NavLink>
+        </div>
+
+        <button
+          type="button"
+          className="relative z-20 flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] text-[#faf8f4] md:hidden"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-label={open ? "Cerrar menú" : "Abrir menú"}
+        >
+          <span className={`h-0.5 w-5 bg-white transition ${open ? "translate-y-[5px] rotate-45" : ""}`} />
+          <span className={`h-0.5 w-5 bg-white transition ${open ? "opacity-0" : ""}`} />
+          <span className={`h-0.5 w-5 bg-white transition ${open ? "-translate-y-[5px] -rotate-45" : ""}`} />
+        </button>
+      </div>
+
+      {open ? (
+        <div className="fixed inset-0 z-40 flex flex-col bg-[#030508] px-6 pb-10 pt-20 md:hidden">
+          <nav className="flex flex-col gap-1 overflow-y-auto">
+            {navLinks.map((link) =>
+              "subLinks" in link ? (
+                <div key={link.label} className="border-b border-white/10 py-2">
+                  <button
+                    type="button"
+                    className={`flex w-full items-center justify-between py-2 text-left font-sans text-base font-semibold ${
+                      isGroupActive(link.pathPrefix, pathname) ? "text-[#40c2de]" : "text-[#faf8f4]"
+                    }`}
+                    onClick={() =>
+                      setMobileExpanded((v) => (v === link.label ? null : link.label))
+                    }
+                    aria-expanded={mobileExpanded === link.label}
                   >
-                    <div className="bg-neutral-900 shadow-lg rounded-2xl border border-neutral-800 py-2 min-w-[220px]">
+                    {link.label}
+                    <span className="text-secondary" aria-hidden>
+                      {mobileExpanded === link.label ? "−" : "+"}
+                    </span>
+                  </button>
+                  {mobileExpanded === link.label ? (
+                    <div className="mt-1 space-y-0.5 pb-2 pl-2">
                       {link.subLinks.map((sub) => (
                         <NavLink
                           key={sub.to}
                           to={sub.to}
+                          onClick={closeMobile}
                           className={({ isActive }) =>
-                            `block px-5 py-2 text-xs uppercase transition-all duration-300 rounded
-                            ${
+                            `${subLinkBase} py-2 ${
                               isActive
-                                ? "text-primary bg-neutral-800"
-                                : "text-white hover:text-primary hover:bg-neutral-800/80"
+                                ? "text-[#40c2de]"
+                                : "text-[#faf8f4]/85 hover:text-[#40c2de]"
                             }`
                           }
                         >
@@ -107,86 +217,16 @@ export const Navbar = () => {
                         </NavLink>
                       ))}
                     </div>
-                  </div>
-                </div>
-              ) : (
-                <div key={link.to} className="group relative">
-                  <NavLink
-                    to={link.to}
-                    className={({ isActive }) =>
-                      `uppercase font-sans tracking-wide px-3 py-2 transition-all duration-300 rounded text-sm font-semibold
-                      ${
-                        isActive
-                          ? "text-white"
-                          : "text-white hover:text-primary hover:bg-neutral-800/80"
-                      }`
-                    }
-                  >
-                    {link.label}
-                  </NavLink>
-                  <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-primary/80 transition-all duration-300 group-hover:w-full" />
-                </div>
-              )
-            )}
-          </div>
-
-          {/* MOBILE BTN */}
-          <button
-            className="md:hidden flex flex-col gap-1.5 z-20"
-            onClick={() => setOpen(!open)}
-          >
-            <span className="w-6 h-[2px] bg-white" />
-            <span className="w-6 h-[2px] bg-white" />
-            <span className="w-6 h-[2px] bg-white" />
-          </button>
-        </div>
-      </div>
-
-      {/* MOBILE MENU */}
-      {open && (
-        <div className="md:hidden fixed inset-0 bg-black/95 flex flex-col pt-24 px-8 z-40">
-          <button
-            className="absolute top-6 right-8 text-white text-3xl"
-            onClick={() => setOpen(false)}
-          >
-            &times;
-          </button>
-          <div className="flex flex-col gap-6">
-            {navLinks.map((link) =>
-              link.subLinks ? (
-                <div key={link.label}>
-                  <div className="text-white text-lg mb-2 uppercase font-semibold">
-                    {link.label}
-                  </div>
-                  {link.subLinks.map((sub) => (
-                    <NavLink
-                      key={sub.to}
-                      to={sub.to}
-                      onClick={() => setOpen(false)}
-                      className={({ isActive }) =>
-                        `block py-1 text-sm uppercase rounded transition-all duration-300
-                        ${
-                          isActive
-                            ? "text-primary bg-neutral-900"
-                            : "text-white hover:text-primary hover:bg-neutral-800"
-                        }`
-                      }
-                    >
-                      {sub.label}
-                    </NavLink>
-                  ))}
+                  ) : null}
                 </div>
               ) : (
                 <NavLink
                   key={link.to}
                   to={link.to}
-                  onClick={() => setOpen(false)}
+                  onClick={closeMobile}
                   className={({ isActive }) =>
-                    `block text-lg uppercase rounded transition-all duration-300
-                    ${
-                      isActive
-                        ? "text-primary bg-neutral-900"
-                        : "text-white hover:text-primary hover:bg-neutral-800"
+                    `border-b border-white/10 py-3 font-sans text-base font-semibold ${
+                      isActive ? "text-[#40c2de]" : "text-[#faf8f4] hover:text-[#40c2de]"
                     }`
                   }
                 >
@@ -194,9 +234,16 @@ export const Navbar = () => {
                 </NavLink>
               )
             )}
-          </div>
+            <NavLink
+              to="/contacto"
+              onClick={closeMobile}
+              className="pdc-btn-on-dark-accent mx-auto mt-6 max-w-xs"
+            >
+              <span className="relative z-[1]">Contacto</span>
+            </NavLink>
+          </nav>
         </div>
-      )}
+      ) : null}
     </nav>
   );
 };

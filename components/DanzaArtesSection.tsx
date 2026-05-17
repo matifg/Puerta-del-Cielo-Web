@@ -1,170 +1,252 @@
-import { Clock, Calendar } from "lucide-react";
+import {
+  Calendar,
+  ChevronDown,
+  Clock,
+  Download,
+  FileText,
+  MessageCircle,
+  Palette,
+  Sparkles,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { motion } from "framer-motion";
+import { whatsappUrl } from "../data/contacto";
+import { DANZA_CAROUSEL_SLIDES } from "../data/danzaPhotos";
+import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
+import { Reveal } from "./bethel/Reveal";
+import { PdcPhotoCarousel } from "./PdcPhotoCarousel";
+import { PdcPageShell } from "./PdcPageShell";
+import { PdcSectionHeader, pdcPageInnerWithHeroComfort, pdcPageIntroHeaderClass } from "./PdcSectionHeader";
+
+const glassCard =
+  "rounded-2xl border border-white/[0.1] bg-white/[0.04] shadow-[0_20px_60px_-20px_rgba(0,0,0,0.65)] backdrop-blur-xl";
+
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const INFO_CARDS: readonly {
+  eyebrow: string;
+  title: string;
+  body: string;
+  icon: LucideIcon;
+  accent?: boolean;
+}[] = [
+  {
+    eyebrow: "Duración",
+    title: "1 año",
+    body: "Formación completa con ritmo que permite integrar práctica y vida diaria.",
+    icon: Clock,
+  },
+  {
+    eyebrow: "Modalidad",
+    title: "2 sábados / mes",
+    body: "Últimos dos sábados de cada mes, en encuentros presenciales.",
+    icon: Calendar,
+    accent: true,
+  },
+];
+
+const LIST_ITEMS = [
+  "Fundamentos bíblicos sólidos",
+  "Formación espiritual",
+  "Entrenamiento en danza",
+  "Desarrollo de creatividad",
+  "Comunidad real",
+  "Espacios de práctica",
+  "Acompañamiento cercano",
+  "Tiempos de ministración",
+] as const;
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.48, ease, delay: i * 0.08 },
+  }),
+};
+
+const btnPrimary =
+  "pdc-btn-on-dark-accent !min-h-[3.5rem] !max-w-none !px-8 !text-base !shadow-[0_0_32px_rgba(64,194,222,0.4)] ring-2 ring-secondary/30";
+const btnSecondary =
+  "pdc-btn-on-dark !min-h-[3.5rem] !max-w-none !px-8 !text-base !border-white/50 !bg-white/20";
+const btnGhost =
+  "pdc-btn-on-dark-ghost !min-h-[3.5rem] !max-w-none !px-8 !text-base !border-white/40 !text-white";
+
+const DANZA_PDF_HREF = "/docs/escuela-dya.pdf";
+const DANZA_WA_HREF = whatsappUrl("Hola! Quiero info sobre Danza y Artes");
+
+function scrollToDanzaGaleria() {
+  scrollToPdcSectionId("danza-galeria", { behavior: "smooth" });
+}
+
+function FloatingDanzaDock() {
+  return (
+    <motion.div
+      className="pointer-events-none fixed left-3 z-[10010] max-w-[calc(100vw-6rem)] sm:left-5 sm:max-w-none"
+      style={{
+        bottom: "max(1.35rem, calc(1.35rem + env(safe-area-inset-bottom, 0px)))",
+      }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.4, ease }}
+      aria-label="Acciones: plan académico y consulta"
+    >
+      <div className="pdc-dock pointer-events-auto">
+        <a
+          href={DANZA_PDF_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pdc-dock-btn"
+          aria-label="Abrir plan académico en PDF"
+        >
+          <FileText className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
+          <span className="hidden min-[360px]:inline">Abrir</span>
+        </a>
+        <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
+        <a href={DANZA_PDF_HREF} download className="pdc-dock-btn" aria-label="Descargar plan académico PDF">
+          <Download className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
+          <span className="hidden min-[360px]:inline">Bajar</span>
+        </a>
+        <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
+        <a
+          href={DANZA_WA_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pdc-dock-btn text-secondary hover:bg-secondary/15"
+          aria-label="Consultar por WhatsApp sobre Danza y Artes"
+        >
+          <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
+          <span className="hidden min-[360px]:inline">Consultar</span>
+        </a>
+      </div>
+    </motion.div>
+  );
+}
 
 const DanzaArtesSection = () => (
-  <section
-    className="relative w-full pt-12 pb-20 md:pt-20 md:pb-28 bg-cover bg-center bg-no-repeat overflow-hidden"
-    style={{
-      backgroundImage: "url('/images/danzas.jpg')",
-    }}
-  >
-    {/* Overlay */}
-    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
+  <PdcPageShell id="danza-inicio" aria-labelledby="danza-artes-heading">
+    <div className={pdcPageInnerWithHeroComfort}>
+      <Reveal>
+        <header className={pdcPageIntroHeaderClass}>
+          <PdcSectionHeader
+            headingId="danza-artes-heading"
+            eyebrow="Área educativa"
+            eyebrowIcon={Palette}
+            title="Danza y Artes"
+            titleAccent="creatividad que adora"
+            subtitle="Un espacio donde la creatividad, el movimiento y la adoración se convierten en instrumentos para transformar vidas."
+            showSegmentBar
+          >
+            <button type="button" onClick={scrollToDanzaGaleria} className="pdc-btn-on-dark-accent max-w-none">
+              <span className="relative z-[1] flex items-center gap-2">
+                Ver galería
+                <ChevronDown className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+              </span>
+            </button>
+          </PdcSectionHeader>
+        </header>
+      </Reveal>
 
-    <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
-      {/* HERO */}
-      <div className="text-center space-y-5 mb-10 animate-fade-in-hero">
-        <h2 className="font-serif text-4xl md:text-5xl text-white tracking-[0.04em] font-semibold leading-tight drop-shadow-[0_3px_12px_rgba(0,0,0,0.8)]">
-          Danza y Artes
-        </h2>
-        <p className="font-sans text-lg text-gray-100 max-w-2xl mx-auto leading-relaxed font-light tracking-[0.01em] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-          Un espacio donde la creatividad, el movimiento y la adoración se convierten
-          en instrumentos para transformar vidas.
-        </p>
-      </div>
+      <Reveal delayMs={60}>
+        <div id="danza-galeria" className="mx-auto max-w-5xl scroll-mt-28">
+          <PdcPhotoCarousel
+            slides={DANZA_CAROUSEL_SLIDES}
+            className="mb-6 md:mb-8"
+            ariaLabel="Galería Danza y Artes"
+            autoPlayMs={5500}
+          />
+        </div>
+      </Reveal>
 
-      {/* CARD */}
-      <div className="bg-black/60 border border-white/10 rounded-2xl p-6 md:p-10 shadow-2xl shadow-black/40 backdrop-blur-sm animate-fade-in-card">
-        {/* DESCRIPCIÓN */}
-        <p className="font-sans text-gray-100 text-center max-w-2xl mx-auto mb-8 leading-relaxed font-light animate-fade-in-desc">
-          La Escuela de Danza y Artes Dinámicas forma personas con identidad,
-          sensibilidad espiritual y excelencia, entendiendo el arte como un medio
-          para manifestar la presencia de Dios.
-        </p>
+      <Reveal delayMs={80}>
+        <div id="danza-contenido" className={`${glassCard} scroll-mt-28 p-6 md:p-10`}>
+          <p className="mx-auto mb-10 max-w-2xl text-center font-sans text-sm font-medium leading-relaxed text-white/92 md:text-base">
+            La Escuela de Danza y Artes Dinámicas forma personas con identidad, sensibilidad espiritual y excelencia,
+            entendiendo el arte como un medio para manifestar la presencia de Dios.
+          </p>
 
-        {/* INFO */}
-        <div className="grid md:grid-cols-2 gap-5 max-w-2xl mx-auto mb-8">
-          <div className="group bg-white/10 rounded-xl p-5 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(0,0,0,0.6)] animate-fade-in-info" style={{ animationDelay: "300ms" }}>
-            <Clock className="w-6 h-6 text-primary mx-auto mb-2 transition-transform duration-300 group-hover:scale-110" />
-            <p className="font-sans text-xs text-gray-300 uppercase tracking-[0.15em]">
-              Duración
-            </p>
-            <p className="font-sans text-white font-medium text-lg tracking-wide drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
-              1 año
-            </p>
+          <div className="mx-auto mb-10 grid max-w-3xl gap-4 sm:grid-cols-2">
+            {INFO_CARDS.map((card, i) => {
+              const Icon = card.icon;
+              return (
+                <motion.div
+                  key={card.eyebrow}
+                  className={`relative overflow-hidden rounded-2xl border p-6 transition duration-500 md:p-7 ${
+                    card.accent
+                      ? "border-secondary/35 bg-gradient-to-br from-secondary/15 via-[#0c1424]/80 to-[#080c16] shadow-[0_16px_48px_-24px_rgba(64,194,222,0.35)]"
+                      : "border-white/12 bg-white/[0.05] hover:border-white/22 hover:bg-white/[0.08]"
+                  }`}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={{ once: true, margin: "-6%" }}
+                  variants={cardVariants}
+                  custom={i}
+                >
+                  <span
+                    className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border ${
+                      card.accent
+                        ? "border-secondary/40 bg-secondary/15 text-secondary"
+                        : "border-white/15 bg-white/[0.06] text-secondary"
+                    }`}
+                  >
+                    <Icon className="h-6 w-6" aria-hidden />
+                  </span>
+                  <p className="font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                    {card.eyebrow}
+                  </p>
+                  <p className="mt-1 font-serif text-2xl text-[#faf8f4]">{card.title}</p>
+                  <p className="mt-2 font-sans text-sm leading-relaxed text-zinc-400">{card.body}</p>
+                </motion.div>
+              );
+            })}
           </div>
-          <div className="group bg-white/10 rounded-xl p-5 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(0,0,0,0.6)] animate-fade-in-info" style={{ animationDelay: "500ms" }}>
-            <Calendar className="w-6 h-6 text-primary mx-auto mb-2 transition-transform duration-300 group-hover:scale-110" />
-            <p className="font-sans text-xs text-gray-300 uppercase tracking-[0.15em]">
-              Modalidad
-            </p>
-            <p className="font-sans text-white font-medium text-lg tracking-wide drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
-              Últimos dos sábados del mes
-            </p>
+
+          <div className="mb-10">
+            <h3 className="mb-6 flex items-center justify-center gap-2 font-serif text-xl font-medium text-[#faf8f4] md:text-2xl">
+              <Sparkles className="h-5 w-5 text-secondary" aria-hidden />
+              ¿Qué vas a vivir?
+            </h3>
+            <ul className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-2">
+              {LIST_ITEMS.map((item, i) => (
+                <motion.li
+                  key={item}
+                  className="flex items-start gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 font-sans text-sm text-white/90 transition hover:border-secondary/20 hover:bg-white/[0.06]"
+                  initial={{ opacity: 0, x: -8 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.04, duration: 0.4, ease }}
+                >
+                  <span className="mt-0.5 text-secondary" aria-hidden>
+                    •
+                  </span>
+                  <span>{item}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
+            <a
+              href={whatsappUrl("Hola! Quiero info sobre Danza y Artes")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${btnPrimary} text-center`}
+            >
+              <span className="relative z-[1]">Info por WhatsApp</span>
+            </a>
+            <a href="/docs/escuela-dya.pdf" target="_blank" rel="noopener noreferrer" className={`${btnSecondary} text-center`}>
+              <span className="relative z-[1]">Ver plan</span>
+            </a>
+            <a href="/docs/escuela-dya.pdf" download className={`${btnGhost} text-center`}>
+              <span className="relative z-[1]">Descargar plan</span>
+            </a>
           </div>
         </div>
-
-        {/* LISTA */}
-        <div className="mb-8">
-          <h3 className="text-secondary text-center mb-5 font-medium tracking-[0.08em] uppercase animate-fade-in-list-title">
-            ¿Qué vas a vivir?
-          </h3>
-          <ul className="grid md:grid-cols-2 gap-3 text-gray-200 max-w-2xl mx-auto">
-            {[
-              "Fundamentos bíblicos sólidos",
-              "Formación espiritual",
-              "Entrenamiento en danza",
-              "Desarrollo de creatividad",
-              "Comunidad real",
-              "Espacios de práctica",
-              "Acompañamiento cercano",
-              "Tiempos de ministración",
-            ].map((item, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-2 animate-fade-in-list"
-                style={{ animationDelay: `${i * 80 + 700}ms` }}
-              >
-                <span className="text-secondary mt-1">•</span>
-                <span className="font-sans font-light">{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* CTA */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-cta" style={{ animationDelay: "1400ms" }}>
-          <a
-            href="/docs/escuela-dya.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-primary text-white px-6 py-3 rounded-full transition-all duration-300 text-center shadow-lg hover:scale-105 hover:shadow-[0_0_20px_rgba(37,99,235,0.6)] font-sans tracking-wide"
-          >
-            Ver plan
-          </a>
-          <a
-            href="/docs/escuela-dya.pdf"
-            download
-            className="border border-white/40 text-white/90 px-6 py-3 rounded-full transition-all duration-300 text-center hover:bg-white/10 hover:scale-105 font-sans tracking-wide"
-          >
-            Descargar
-          </a>
-          <a
-            href="https://wa.me/549123456789?text=Hola!%20Quiero%20info%20sobre%20Danza%20y%20Artes"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border border-secondary text-secondary px-6 py-3 rounded-full transition-all duration-300 text-center hover:bg-secondary/10 hover:scale-105 hover:shadow-[0_0_20px_rgba(64,194,222,0.5)] font-sans tracking-wide"
-          >
-            Info por WhatsApp
-          </a>
-        </div>
-      </div>
-
-      <div className="h-20 md:h-28" />
+      </Reveal>
     </div>
 
-    {/* Animaciones */}
-    <style>{`
-      @keyframes fadeInHero {
-        from { opacity: 0; transform: translateY(-40px);}
-        to { opacity: 1; transform: translateY(0);}
-      }
-      @keyframes fadeInCard {
-        from { opacity: 0; transform: scale(0.97);}
-        to { opacity: 1; transform: scale(1);}
-      }
-      @keyframes fadeInDesc {
-        from { opacity: 0; transform: translateY(24px);}
-        to { opacity: 1; transform: translateY(0);}
-      }
-      @keyframes fadeInInfo {
-        from { opacity: 0; transform: translateY(32px);}
-        to { opacity: 1; transform: translateY(0);}
-      }
-      @keyframes fadeInListTitle {
-        from { opacity: 0; transform: translateX(-24px);}
-        to { opacity: 1; transform: translateX(0);}
-      }
-      @keyframes fadeInList {
-        from { opacity: 0; transform: translateX(32px);}
-        to { opacity: 1; transform: translateX(0);}
-      }
-      @keyframes fadeInCTA {
-        from { opacity: 0; transform: scale(0.95);}
-        to { opacity: 1; transform: scale(1);}
-      }
-      .animate-fade-in-hero {
-        animation: fadeInHero 0.7s cubic-bezier(.4,0,.2,1) both;
-      }
-      .animate-fade-in-card {
-        animation: fadeInCard 0.7s 0.2s cubic-bezier(.4,0,.2,1) both;
-      }
-      .animate-fade-in-desc {
-        animation: fadeInDesc 0.7s 0.35s cubic-bezier(.4,0,.2,1) both;
-      }
-      .animate-fade-in-info {
-        animation: fadeInInfo 0.7s cubic-bezier(.4,0,.2,1) both;
-      }
-      .animate-fade-in-list-title {
-        animation: fadeInListTitle 0.7s 0.6s cubic-bezier(.4,0,.2,1) both;
-      }
-      .animate-fade-in-list {
-        animation: fadeInList 0.7s cubic-bezier(.4,0,.2,1) both;
-      }
-      .animate-fade-in-cta {
-        animation: fadeInCTA 0.7s 1.2s cubic-bezier(.4,0,.2,1) both;
-      }
-    `}</style>
-  </section>
+    <FloatingDanzaDock />
+  </PdcPageShell>
 );
 
 export default DanzaArtesSection;

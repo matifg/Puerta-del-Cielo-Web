@@ -8,10 +8,11 @@ import {
 } from "../components/FloatingScrollButton";
 
 const HOME_SCROLL_SECTIONS: FloatingScrollNavSection[] = [
+  { id: "home-hero", title: "Inicio" },
   {
     id: "home-section-esencia",
     title: "Nuestra esencia",
-    subtitle: "Conocé nuestra visión",
+    subtitle: "Comunidad y propósito",
   },
   {
     id: "home-section-servicios",
@@ -25,10 +26,10 @@ const HOME_SCROLL_END_ID = "home-scroll-end";
 const Home = () => (
   <>
     <Hero />
-    <div id="home-section-esencia" className="scroll-mt-20">
+    <div id="home-section-esencia" className="scroll-mt-24 sm:scroll-mt-28">
       <NuestraEsenciaSection />
     </div>
-    <div id="home-section-servicios" className="scroll-mt-20">
+    <div id="home-section-servicios" className="scroll-mt-24 sm:scroll-mt-28">
       <NuestrosServiciosSection />
     </div>
     <div

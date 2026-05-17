@@ -1,7 +1,14 @@
 import React from "react";
+import { email, telefonoDisplay, telHref, whatsappUrl } from "../data/contacto";
+import { horariosReunionGeneral } from "../data/horariosWeb";
 
 const socialBtn =
   "flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white/65 transition hover:border-secondary/35 hover:bg-white/[0.08] hover:text-secondary";
+
+const sectionTitle =
+  "mb-1 font-serif text-lg font-medium tracking-tight text-[#faf8f4] md:text-xl";
+
+const sectionRule = "mb-5 h-px w-11 rounded-full bg-gradient-to-r from-secondary/75 to-transparent";
 
 export const Footer: React.FC = () => {
   return (
@@ -10,18 +17,21 @@ export const Footer: React.FC = () => {
         className="pointer-events-none absolute inset-0 bg-gradient-to-br from-black via-[#020617] to-black opacity-95"
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40"
+        aria-hidden
+      />
 
       <div className="relative z-10 mx-auto max-w-6xl px-6">
         <div className="mb-16 grid gap-12 md:grid-cols-4 md:gap-10">
-          {/* Marca */}
           <div className="md:col-span-1">
-            <h3 className="mb-4 font-serif text-2xl font-semibold tracking-wide text-white md:text-3xl">
+            <h3 className="mb-3 font-serif text-2xl font-medium tracking-tight text-[#faf8f4] md:text-3xl">
               Puerta del Cielo
             </h3>
             <div className="mb-6 h-px w-14 rounded-full bg-gradient-to-r from-secondary/80 to-transparent" />
-            <p className="mb-8 text-sm leading-relaxed text-gray-300 md:text-base">
-              Una iglesia comprometida con la verdad del Evangelio y el amor al prójimo. Te esperamos con los brazos abiertos.
+            <p className="mb-8 text-sm font-normal leading-relaxed text-zinc-400 md:text-[0.95rem] md:leading-[1.7]">
+              Una iglesia comprometida con la verdad del Evangelio y el amor al prójimo. Te esperamos con los brazos
+              abiertos.
             </p>
             <div className="flex flex-wrap gap-3">
               <a
@@ -60,10 +70,9 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Ubicación */}
           <div>
-            <h4 className="mb-2 font-serif text-lg font-medium text-white">Ubicación</h4>
-            <div className="mb-6 h-px w-10 rounded-full bg-secondary/70" />
+            <h4 className={sectionTitle}>Ubicación</h4>
+            <div className={sectionRule} />
             <div className="flex gap-3">
               <svg
                 className="mt-0.5 h-5 w-5 shrink-0 text-secondary"
@@ -85,7 +94,7 @@ export const Footer: React.FC = () => {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              <p className="text-sm leading-relaxed text-gray-300">
+              <p className="text-sm leading-relaxed text-zinc-400">
                 Manuel Belgrano 2053,
                 <br />
                 B2942 Baradero,
@@ -95,30 +104,29 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Horarios */}
           <div>
-            <h4 className="mb-2 font-serif text-lg font-medium text-white">Horarios</h4>
-            <div className="mb-6 h-px w-10 rounded-full bg-secondary/70" />
-            <ul className="space-y-3 text-sm text-gray-300">
-              <li className="flex justify-between gap-4 border-b border-white/[0.06] pb-2.5">
-                <span>Domingos</span>
-                <span className="shrink-0 font-medium text-white/90">10:00 hs</span>
-              </li>
-              <li className="flex justify-between gap-4 border-b border-white/[0.06] pb-2.5">
-                <span>Viernes</span>
-                <span className="shrink-0 font-medium text-white/90">19:30 hs</span>
-              </li>
-              <li className="flex justify-between gap-4 pb-0.5">
-                <span>Martes (Células)</span>
-                <span className="shrink-0 font-medium text-white/90">20:00 hs</span>
-              </li>
+            <h4 className={sectionTitle}>Horarios</h4>
+            <div className={sectionRule} />
+
+            <p className="mb-2 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-secondary/90">
+              Reunión general
+            </p>
+            <ul className="space-y-2 text-sm">
+              {horariosReunionGeneral.map((h) => (
+                <li
+                  key={`rg-${h.dia}`}
+                  className="flex justify-between gap-3 rounded-lg border border-white/[0.07] bg-white/[0.04] px-3 py-2 text-zinc-400"
+                >
+                  <span>{h.dia}</span>
+                  <span className="shrink-0 font-medium tabular-nums text-[#ebe8e2]">{h.hora}</span>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Contacto */}
           <div>
-            <h4 className="mb-2 font-serif text-lg font-medium text-white">Contacto</h4>
-            <div className="mb-6 h-px w-10 rounded-full bg-secondary/70" />
+            <h4 className={sectionTitle}>Contacto</h4>
+            <div className={sectionRule} />
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <svg
@@ -135,7 +143,22 @@ export const Footer: React.FC = () => {
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                <span className="text-sm text-gray-300">+54 (3329) 000-000</span>
+                <div>
+                  <a
+                    href={telHref}
+                    className="text-sm text-zinc-400 transition hover:text-secondary"
+                  >
+                    {telefonoDisplay}
+                  </a>
+                  <a
+                    href={whatsappUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 block text-xs text-zinc-500 underline decoration-white/10 underline-offset-2 transition hover:text-secondary"
+                  >
+                    WhatsApp
+                  </a>
+                </div>
               </li>
               <li className="flex items-start gap-3">
                 <svg
@@ -153,10 +176,10 @@ export const Footer: React.FC = () => {
                   />
                 </svg>
                 <a
-                  href="mailto:contacto@puertadelcielo.ar"
-                  className="text-sm text-gray-300 underline decoration-white/20 underline-offset-2 transition hover:text-secondary hover:decoration-secondary/60"
+                  href={`mailto:${email}`}
+                  className="text-sm text-zinc-400 underline decoration-white/12 underline-offset-[3px] transition hover:text-secondary hover:decoration-secondary/45"
                 >
-                  contacto@puertadelcielo.ar
+                  {email}
                 </a>
               </li>
             </ul>
@@ -164,7 +187,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-white/10 pt-10 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
+          <p className="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-zinc-600">
             &copy; {new Date().getFullYear()} Puerta del Cielo - Baradero. Todos los derechos reservados.
           </p>
         </div>

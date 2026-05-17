@@ -1,22 +1,32 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import {
-  Music,
-  HandHeart,
-  Palette,
-  Video,
-  Headphones,
-  Users,
-  Wrench,
-  Heart,
-  BookOpen,
-  Flame,
-  User,
   Baby,
-  Link2
+  BookOpen,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Flame,
+  HandHeart,
+  Headphones,
+  Heart,
+  Layers,
+  Link2,
+  Music,
+  Palette,
+  User,
+  Users,
+  Video,
+  Wrench,
 } from "lucide-react";
-import { LucideIcon } from "lucide-react";
-import SectionWrapper from "./SectionWrapper";
-
+import type { LucideIcon } from "lucide-react";
+import { PdcPageShell } from "./PdcPageShell";
+import {
+  PdcSectionHeader,
+  pdcHeaderScrollMarginTop,
+  pdcPageInnerWithHeroComfort,
+  pdcPageIntroHeaderClass,
+} from "./PdcSectionHeader";
 type Area = {
   title: string;
   description: string;
@@ -31,7 +41,7 @@ const areas: Area[] = [
     full: `Ministros y músicos apasionados que
 con habilidad musical y sensibilidad espiritual, guían a otros en adoración
 y construyen ambientes para que la gloria de Dios se manifieste.`,
-    icon: Music
+    icon: Music,
   },
   {
     title: "Intercesión",
@@ -39,7 +49,7 @@ y construyen ambientes para que la gloria de Dios se manifieste.`,
     full: `Hombres y mujeres que mediante la intercesión y la guerra espiritual,
 aceptan el llamado de colocarse en la brecha delante de Dios,
 a favor de las familias, la iglesia, la ciudad y la nación.`,
-    icon: HandHeart
+    icon: HandHeart,
   },
   {
     title: "Artes Dinámicas",
@@ -47,7 +57,7 @@ a favor de las familias, la iglesia, la ciudad y la nación.`,
     full: `Este ministerio utiliza la expresión artística como un medio para honrar a Dios
 y comunicar verdades espirituales. Corazones son impactados a través de la danza,
 el movimiento y distintas manifestaciones creativas.`,
-    icon: Palette
+    icon: Palette,
   },
   {
     title: "Medios Audiovisuales",
@@ -55,7 +65,7 @@ el movimiento y distintas manifestaciones creativas.`,
     full: `Mediante la tecnología y la comunicación visual, esparcimos el mensaje del evangelio.
 Este ministerio integra redes sociales, producción audiovisual,
 proyección de letras y monitoreo de las pantallas interactivas.`,
-    icon: Video
+    icon: Video,
   },
   {
     title: "Audio y Sonido",
@@ -64,7 +74,7 @@ proyección de letras y monitoreo de las pantallas interactivas.`,
 son elementos necesarios para garantizar que el mensaje del evangelio
 llegue a cada persona de forma clara. Esta área trabaja con dedicación
 para crear un ambiente sonoro adecuado en cada servicio.`,
-    icon: Headphones
+    icon: Headphones,
   },
   {
     title: "Anfitriones",
@@ -72,7 +82,7 @@ para crear un ambiente sonoro adecuado en cada servicio.`,
     full: `Este equipo de servidores trabaja con entusiasmo para que cada persona
 que asiste a los servicios tenga una experiencia agradable desde el ingreso.
 Brinda asistencia durante toda la reunión y al momento de regresar a casa.`,
-    icon: Users
+    icon: Users,
   },
   {
     title: "Mantenimiento Integral",
@@ -80,7 +90,7 @@ Brinda asistencia durante toda la reunión y al momento de regresar a casa.`,
     full: `Hombres y mujeres llenos de amor por la Casa se dedican a tareas de aseo,
 mantenimiento y refacciones. Cuidan las instalaciones y aseguran que todo esté
 en óptimas condiciones para cada servicio.`,
-    icon: Wrench
+    icon: Wrench,
   },
   {
     title: "Área Social",
@@ -88,7 +98,7 @@ en óptimas condiciones para cada servicio.`,
     full: `Esta área es un brazo extendido a la comunidad,
 con el propósito de atender necesidades, brindar asistencia
 y compartir el mensaje de esperanza con los sectores más vulnerables.`,
-    icon: Heart
+    icon: Heart,
   },
   {
     title: "Área Educativa",
@@ -96,14 +106,14 @@ y compartir el mensaje de esperanza con los sectores más vulnerables.`,
     full: `El crecimiento y madurez integral mediante la enseñanza bíblica
 es una de nuestras prioridades. Se brindan espacios de formación,
 entrenamiento y discipulado durante todo el año.`,
-    icon: BookOpen
+    icon: BookOpen,
   },
   {
     title: "Juventud Inquebrantable",
     description: "Fe con propósito.",
     full: `Un grupo de jóvenes enfocado en vivir una fe activa y con propósito.
 Buscan la presencia de Dios y crecen en identidad, comunidad y dones.`,
-    icon: Flame
+    icon: Flame,
   },
   {
     title: "Teens",
@@ -111,14 +121,14 @@ Buscan la presencia de Dios y crecen en identidad, comunidad y dones.`,
     full: `Espacio para adolescentes entre 12 y 15 años.
 A través de enseñanza bíblica y valores, se los guía en su identidad en Dios
 y en el desarrollo de una fe firme.`,
-    icon: User
+    icon: User,
   },
   {
     title: "Kids",
     description: "Niños con propósito.",
     full: `El ministerio Kids enseña principios bíblicos mediante juegos y dinámicas.
 Cada encuentro es una experiencia llena de alegría, creatividad y presencia de Dios.`,
-    icon: Baby
+    icon: Baby,
   },
   {
     title: "Conexión",
@@ -126,176 +136,315 @@ Cada encuentro es una experiencia llena de alegría, creatividad y presencia de 
     full: `Espacios semanales para crecer en la fe, compartir la vida y caminar juntos.
 Se fortalecen vínculos, se edifican familias y cada persona es acompañada
 en su relación con Dios.`,
-    icon: Link2
-  }
+    icon: Link2,
+  },
 ];
 
+const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+function areaSlug(title: string) {
+  return title
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 const AreasServicioSection: React.FC = () => {
-  const [selected, setSelected] = useState<Area | null>(null);
+  const baseId = useId();
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const reduceMotion = useReducedMotion() ?? false;
+
+  const scrollToLista = useCallback(() => {
+    document.getElementById("areas-servicio-lista")?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  }, [reduceMotion]);
+
+  const toggle = useCallback((idx: number) => {
+    setOpenIndex((prev) => (prev === idx ? null : idx));
+  }, []);
+
+  const goPrev = useCallback(() => {
+    setOpenIndex((i) => {
+      if (i === null) return null;
+      return (i + areas.length - 1) % areas.length;
+    });
+  }, []);
+
+  const goNext = useCallback(() => {
+    setOpenIndex((i) => {
+      if (i === null) return null;
+      return (i + 1) % areas.length;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (openIndex === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setOpenIndex(null);
+        return;
+      }
+      const tgt = e.target as HTMLElement | null;
+      if (tgt?.closest?.("input, textarea, select, [contenteditable=true]")) return;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        goPrev();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [openIndex, goNext, goPrev]);
+
+  useEffect(() => {
+    if (openIndex === null) return;
+    const el = itemRefs.current[openIndex];
+    if (!el) return;
+    el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "nearest" });
+  }, [openIndex, reduceMotion]);
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 16 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: reduceMotion ? 0.12 : 0.45, ease: easeOut },
+    },
+  };
+
+  const listContainer = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: reduceMotion ? 0 : 0.04,
+        delayChildren: reduceMotion ? 0 : 0.06,
+      },
+    },
+  };
+
+  const listItem = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 12 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: reduceMotion ? 0.12 : 0.42, ease: easeOut },
+    },
+  };
+
+  const layoutSpring = reduceMotion
+    ? { duration: 0.18, ease: easeOut }
+    : { type: "spring" as const, stiffness: 380, damping: 34, mass: 0.78 };
 
   return (
-    <SectionWrapper>
+    <PdcPageShell aria-labelledby="areas-servicio-heading">
+      <div className={pdcPageInnerWithHeroComfort}>
+        <div className="mx-auto max-w-3xl">
+        <motion.header
+          className={`${pdcPageIntroHeaderClass} text-center`}
+          initial="hidden"
+          animate="show"
+          variants={headerVariants}
+        >
+          <PdcSectionHeader
+            headingId="areas-servicio-heading"
+            eyebrow="Quiénes somos"
+            eyebrowIcon={Layers}
+            title="Áreas de servicio"
+            subtitle="Expandí cada área. Dentro del panel usá anterior y siguiente — o las flechas arriba / abajo. Esc cierra."
+            showSegmentBar
+          />
+          <button
+            type="button"
+            onClick={scrollToLista}
+            className="pdc-btn-on-dark mx-auto mt-6 gap-2 px-6 py-3 text-xs uppercase tracking-[0.18em]"
+          >
+            <span className="relative z-[1]">Ver áreas</span>
+            <ChevronDown className="relative z-[1] h-4 w-4 shrink-0 text-secondary" aria-hidden />
+          </button>
+        </motion.header>
 
-      <div className="-mt-12 md:-mt-16">
-
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-[#020617] to-black opacity-80" />
-
-        <div className="relative z-10">
-
-          <h2 className="text-3xl md:text-5xl font-serif text-center text-white mb-12">
-            Áreas de Servicio
-            <div className="w-20 h-[3px] bg-secondary mx-auto mt-4 rounded-full"></div>
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-
-            {areas.map((area) => {
+        <LayoutGroup id={`${baseId}-areas-accordion`}>
+          <motion.ul
+            id="areas-servicio-lista"
+            className={`${pdcHeaderScrollMarginTop} space-y-3 md:space-y-3.5`}
+            role="list"
+            initial="hidden"
+            animate="show"
+            variants={listContainer}
+          >
+            {areas.map((area, idx) => {
               const Icon = area.icon;
+              const isOpen = openIndex === idx;
+              const panelId = `${baseId}-panel-${areaSlug(area.title)}`;
+              const headerId = `${baseId}-header-${areaSlug(area.title)}`;
 
               return (
-                <div
+                <motion.li
                   key={area.title}
-                  onClick={() => setSelected(area)}
-                  className="
-                  group cursor-pointer
-                  relative rounded-2xl p-7
-                  bg-white/5 backdrop-blur-xl
-                  border border-white/10 overflow-hidden
-
-                  transition-all duration-700
-                  hover:scale-[1.03]
-                  hover:-translate-y-2
-                  hover:shadow-[0_10px_40px_rgba(64,194,222,0.25)]
-                  "
+                  ref={(el) => {
+                    itemRefs.current[idx] = el;
+                  }}
+                  layout
+                  transition={layoutSpring}
+                  variants={listItem}
+                  className={`relative overflow-hidden rounded-2xl border transition-[border-color,box-shadow] duration-500 ease-out ${
+                    isOpen
+                      ? "border-secondary/45 bg-gradient-to-br from-white/[0.07] via-[#0c1424]/90 to-[#080c16] shadow-[0_0_0_1px_rgba(64,194,222,0.12),0_24px_80px_-32px_rgba(37,99,173,0.45),inset_0_1px_0_rgba(255,255,255,0.06)]"
+                      : "border-white/[0.09] bg-white/[0.02] shadow-none hover:border-white/15 hover:bg-white/[0.04]"
+                  }`}
                 >
+                  {isOpen ? (
+                    <motion.div
+                      layout
+                      className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-secondary/25 blur-3xl"
+                      aria-hidden
+                      initial={{ opacity: 0, scale: 0.6 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={reduceMotion ? { duration: 0.15 } : { duration: 0.55, ease: easeOut }}
+                    />
+                  ) : null}
+                  {isOpen ? (
+                    <motion.div
+                      layout
+                      className="pointer-events-none absolute -bottom-28 -left-16 h-48 w-48 rounded-full bg-primary/20 blur-3xl"
+                      aria-hidden
+                      initial={{ opacity: 0, scale: 0.65 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={reduceMotion ? { duration: 0.15 } : { duration: 0.6, ease: easeOut, delay: 0.06 }}
+                    />
+                  ) : null}
 
-                  <div className="
-                    absolute inset-0
-                    bg-gradient-to-br from-primary/10 to-secondary/10
-                    opacity-0 group-hover:opacity-100
-                    transition duration-700
-                  " />
+                  <div className="relative z-[1]">
+                    <motion.button
+                      type="button"
+                      id={headerId}
+                      aria-expanded={isOpen}
+                      aria-controls={panelId}
+                      layout="position"
+                      transition={layoutSpring}
+                      onClick={() => toggle(idx)}
+                      className="flex w-full items-start gap-4 px-4 py-5 text-left md:gap-5 md:px-5 md:py-6"
+                    >
+                      <motion.span
+                        layout
+                        transition={layoutSpring}
+                        animate={
+                          reduceMotion
+                            ? {}
+                            : { scale: isOpen ? 1.08 : 1, rotate: isOpen ? [4, 0] : 0 }
+                        }
+                        className={`mt-0.5 inline-flex shrink-0 rounded-xl border p-2 shadow-inner ${
+                          isOpen ? "border-secondary/35 bg-secondary/10 text-secondary" : "border-white/10 bg-black/25 text-secondary/85"
+                        }`}
+                        aria-hidden
+                      >
+                        <Icon className="h-5 w-5 md:h-[1.15rem] md:w-[1.15rem]" />
+                      </motion.span>
 
-                  <div className="
-                    relative z-10 flex items-center justify-center
-                    w-14 h-14 rounded-full bg-white/10 mb-5
-                    group-hover:scale-110 transition
-                  ">
-                    <Icon className="w-7 h-7 text-white group-hover:text-secondary transition" />
+                      <span className="min-w-0 flex-1 pt-0.5">
+                        <span className={`block font-serif text-lg md:text-xl ${isOpen ? "text-[#faf8f4]" : "text-white/95"}`}>
+                          {area.title}
+                        </span>
+                        <span className="mt-1 block font-sans text-sm font-medium leading-snug text-white/85">
+                          {area.description}
+                        </span>
+                      </span>
+
+                      <motion.span
+                        layout
+                        transition={layoutSpring}
+                        className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-secondary/90"
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        aria-hidden
+                      >
+                        <ChevronDown className="h-5 w-5" />
+                      </motion.span>
+                    </motion.button>
+
+                    <div
+                      className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                        isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                      }`}
+                    >
+                      <div className="min-h-0 overflow-hidden">
+                        <AnimatePresence initial={false} mode="popLayout">
+                          {isOpen ? (
+                            <motion.div
+                              key={area.title}
+                              id={panelId}
+                              role="region"
+                              aria-labelledby={headerId}
+                              initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 12, filter: "blur(6px)" }}
+                              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, filter: "blur(4px)" }}
+                              transition={reduceMotion ? { duration: 0.12 } : { duration: 0.38, ease: easeOut }}
+                              className="border-t border-white/[0.08] px-4 pb-5 pt-1 md:px-5 md:pb-6"
+                            >
+                              <p className="whitespace-pre-line font-sans text-[0.95rem] leading-relaxed text-[#e4e0d8]/92 md:text-base">
+                                {area.full}
+                              </p>
+
+                              <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-5">
+                                <span className="font-sans text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                                  {idx + 1} / {areas.length}
+                                </span>
+                                <div className="flex flex-wrap gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      goPrev();
+                                    }}
+                                    className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-white/[0.07] px-4 py-2.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white/95 transition hover:border-secondary/40 hover:bg-secondary/10 hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+                                  >
+                                    <ChevronLeft className="h-4 w-4 shrink-0" aria-hidden />
+                                    Anterior
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      goNext();
+                                    }}
+                                    className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-white/[0.07] px-4 py-2.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white/95 transition hover:border-secondary/40 hover:bg-secondary/10 hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+                                  >
+                                    Siguiente
+                                    <ChevronRight className="h-4 w-4 shrink-0" aria-hidden />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setOpenIndex(null);
+                                    }}
+                                    className="inline-flex items-center rounded-full border border-white/12 bg-transparent px-4 py-2.5 font-sans text-xs font-medium text-zinc-400 transition hover:border-white/22 hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+                                  >
+                                    Cerrar
+                                  </button>
+                                </div>
+                              </div>
+                            </motion.div>
+                          ) : null}
+                        </AnimatePresence>
+                      </div>
+                    </div>
                   </div>
-
-                  <h3 className="text-xl font-serif text-white mb-2 group-hover:text-secondary transition">
-                    {area.title}
-                  </h3>
-
-                  <p className="text-gray-300 text-sm">
-                    {area.description}
-                  </p>
-
-                  {/* UX MEJORADA */}
-                  <div className="mt-4 text-xs text-gray-500 group-hover:text-secondary transition">
-                    Click para saber mas...
-                  </div>
-
-                  <div className="
-                    absolute bottom-0 left-0
-                    h-[2px] w-0
-                    bg-gradient-to-r from-primary to-secondary
-                    group-hover:w-full
-                    transition-all duration-700
-                  " />
-
-                </div>
+                </motion.li>
               );
             })}
-
-          </div>
-
+          </motion.ul>
+        </LayoutGroup>
         </div>
-
       </div>
-
-      {selected && (
-        <div
-          className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50 animate-fade"
-          onClick={() => setSelected(null)}
-        >
-          {/* Overlay translúcido y blur, NO negro */}
-          <div
-            className="absolute inset-0 bg-transparent backdrop-blur-lg transition-opacity"
-            onClick={() => setSelected(null)}
-          />
-
-          {/* Glow decorativo */}
-          <div className="pointer-events-none absolute -top-16 -left-16 w-72 h-72 bg-primary/30 rounded-full blur-3xl opacity-40 animate-modal-glow" />
-          <div className="pointer-events-none absolute -bottom-20 -right-20 w-80 h-80 bg-secondary/20 rounded-full blur-3xl opacity-20 animate-modal-glow2" />
-
-          {/* Card principal */}
-          <div className="
-            relative z-10
-            bg-gradient-to-br from-[#1a223a] via-[#22345a] to-[#1a223a]
-            bg-opacity-95
-            border border-white/20
-            rounded-3xl p-8 md:p-14 shadow-2xl max-w-xl w-full mx-auto
-            animate-modal-card
-            flex flex-col items-center
-            overflow-hidden
-            backdrop-blur-xl
-          "
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="text-2xl md:text-3xl font-serif text-white mb-4">
-              {selected.title}
-            </h3>
-
-            <p className="text-gray-300 leading-relaxed whitespace-pre-line text-center">
-              {selected.full}
-            </p>
-
-            <button
-              onClick={() => setSelected(null)}
-              className="mt-6 px-6 py-2 rounded-full bg-primary hover:bg-secondary transition text-white"
-            >
-              Cerrar
-            </button>
-          </div>
-
-          {/* Animaciones PRO */}
-          <style>{`
-            @keyframes modalCard {
-              0% {
-                opacity: 0.92;
-                filter: blur(6px);
-                transform: scale(0.98) translateY(24px);
-              }
-              100% {
-                opacity: 1;
-                filter: blur(0);
-                transform: scale(1) translateY(0);
-              }
-            }
-            .animate-modal-card {
-              animation: modalCard 0.7s cubic-bezier(.4,0,.2,1) both;
-            }
-            @keyframes modalGlow {
-              0%,100% { opacity: 0.6; }
-              50% { opacity: 1; }
-            }
-            @keyframes modalGlow2 {
-              0%,100% { opacity: 0.4; }
-              50% { opacity: 0.7; }
-            }
-            .animate-modal-glow {
-              animation: modalGlow 3.5s infinite;
-            }
-            .animate-modal-glow2 {
-              animation: modalGlow2 4.2s infinite;
-            }
-          `}</style>
-        </div>
-      )}
-
-    </SectionWrapper>
+    </PdcPageShell>
   );
 };
 

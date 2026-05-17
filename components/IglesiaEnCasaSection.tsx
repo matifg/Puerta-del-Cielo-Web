@@ -1,108 +1,260 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import type { LucideIcon } from "lucide-react";
+import {
+  BookOpen,
+  CalendarHeart,
+  ChevronDown,
+  Heart,
+  Home,
+  Lightbulb,
+  MessageCircle,
+  Sparkles,
+  UserPlus,
+  Users,
+} from "lucide-react";
+import PdcSegmentBar from "./PdcSegmentBar";
+import { PdcSectionEyebrow, PdcSectionHeader, pdcHeaderScrollMargin, pdcPageHeroTopComfort, pdcPageInnerClass, pdcPageTitleAccentClass, pdcPageTitleClass, pdcPageTitleLineClass } from "./PdcSectionHeader";
+import { whatsappUrl } from "../data/contacto";
 
-const IglesiaEnCasaSection: React.FC = () => (
-  <section
-    className="relative w-full pt-8 pb-20 md:pt-12 md:pb-28 bg-cover bg-center bg-no-repeat overflow-hidden"
-    style={{
-      backgroundImage: "url('/images/iglesia-en-casa.webp')", // Usa tu imagen de fondo
-    }}
-  >
-    {/* Overlay */}
-    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
+const FORM_HREF = "https://forms.gle/2JVBZFS5Nw5BUXHGA";
+const WA_HREF = whatsappUrl("Hola! Quiero info sobre Iglesia en casa");
 
-    <div className="relative z-10 w-full max-w-4xl mx-auto px-6">
-      {/* HERO */}
-      <div className="text-center space-y-6 mb-8">
-        <h2 className="text-4xl md:text-5xl font-serif text-white tracking-tight">
-          Conexión
-        </h2>
-        <p className="text-lg text-gray-200 max-w-2xl mx-auto">
-          Espacios de encuentro semanal para crecer en la fe, compartir la vida y caminar juntos.
-        </p>
-        <a
-          href="https://forms.gle/2JVBZFS5Nw5BUXHGA"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block bg-primary hover:bg-secondary text-white font-semibold rounded-full px-6 py-2.5 transition-all duration-300 hover:scale-105 shadow-lg"
+const bodyText = "text-white/90 font-sans font-medium leading-relaxed";
+const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const ENCUENTRO_ITEMS: readonly { label: string; icon: LucideIcon }[] = [
+  { label: "Predicar la palabra de Dios de manera sencilla", icon: BookOpen },
+  { label: "Encuentros fuera del templo", icon: Home },
+  { label: "Compartir historias y experiencias", icon: MessageCircle },
+  { label: "Escuchar necesidades", icon: Heart },
+  { label: "Acompañamiento cercano", icon: UserPlus },
+  { label: "Fortalecer el compañerismo", icon: Users },
+  { label: "Disfrutar actividades juntos", icon: Sparkles },
+];
+
+const SCROLL_OFFSET = 112;
+
+function scrollToId(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
+  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+}
+
+const IglesiaEnCasaSection: React.FC = () => {
+  const reduceMotion = useReducedMotion();
+
+  const fadeUp = useCallback(
+    (delay = 0) =>
+      reduceMotion
+        ? {}
+        : {
+            initial: { opacity: 0, y: 18 },
+            whileInView: { opacity: 1, y: 0 },
+            viewport: { once: true, margin: "-8% 0px" },
+            transition: { duration: 0.5, ease: easeOut, delay },
+          },
+    [reduceMotion]
+  );
+
+  return (
+    <div className="relative isolate bg-[#030508]">
+      {/* Hero */}
+      <header
+        id="iec-hero"
+        className={`relative flex min-h-0 flex-col items-center justify-start overflow-hidden px-4 pb-14 ${pdcPageHeroTopComfort} text-center sm:px-6 sm:pb-16 ${pdcHeaderScrollMargin}`}
+        aria-labelledby="iec-heading"
+      >
+        <motion.div
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.34] saturate-[1.05]"
+          style={{ backgroundImage: "url('/images/iglesia-en-casa.webp')" }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_95%_70%_at_50%_40%,rgba(37,99,173,0.1)_0%,rgba(3,5,8,0.94)_100%)]"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-b from-[#030508]/95 via-slate-950/60 to-[#030508]"
+          aria-hidden
+        />
+
+        <motion.div
+          className="relative z-10 mx-auto w-full max-w-3xl"
+          initial={reduceMotion ? false : { opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, ease: easeOut }}
         >
-          Quiero ser parte
-        </a>
-      </div>
-
-      {/* CARD */}
-      <div className="bg-black/60 border border-white/10 rounded-2xl p-6 md:p-10 shadow-2xl shadow-black/40 backdrop-blur-sm animate-slide-in-up">
-
-        {/* TEXTO */}
-        <div className="space-y-4 text-gray-100 text-center max-w-2xl mx-auto mb-6">
-          <p>
-            <span className="font-semibold text-white">Grupos pequeños en casa</span> son la estrategia para crear puentes de conexión más estrechos y cercanos.
+          <PdcSectionEyebrow label="Conexión" icon={Home} className="mb-2.5" />
+          <h1 id="iec-heading" className={pdcPageTitleClass}>
+            <span className={pdcPageTitleLineClass}>Iglesia en casa</span>
+            <span className={pdcPageTitleAccentClass}>fe vivida en comunidad</span>
+          </h1>
+          <p className="mx-auto mt-5 max-w-xl font-serif text-lg leading-relaxed text-white/88 md:text-xl">
+            Espacios de encuentro semanal para crecer, compartir la vida y caminar juntos.
           </p>
-          <p>
-            Creemos que el Reino de Dios se construye en comunidad, fortaleciendo vínculos y relaciones saludables para caminar como una{" "}
-            <span className="font-semibold text-white">familia de fe</span>.
+          <p className={`${bodyText} mx-auto mt-3 max-w-lg text-sm md:text-[0.95rem]`}>
+            Grupos pequeños en hogares: más cerca, más real, más familia.
           </p>
+          <PdcSegmentBar size="lg" className="mx-auto mt-6" />
+
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+            <a
+              href={FORM_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pdc-btn-on-dark-accent max-w-none"
+            >
+              <span className="relative z-[1]">Quiero ser parte</span>
+            </a>
+            <button
+              type="button"
+              onClick={() => scrollToId("iec-propuesta")}
+              className="pdc-btn-on-dark max-w-none"
+            >
+              <span className="relative z-[1] flex items-center gap-2">
+                Conocer más
+                <ChevronDown className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+              </span>
+            </button>
+          </div>
+        </motion.div>
+      </header>
+
+      {/* Propuesta */}
+      <section id="iec-propuesta" className={`py-14 md:py-20 ${pdcHeaderScrollMargin}`}>
+        <div className={pdcPageInnerClass}>
+        <motion.div {...fadeUp()} className="mb-10 md:mb-14">
+          <PdcSectionHeader
+            as="h2"
+            variant="block"
+            eyebrow="La propuesta"
+            eyebrowIcon={Lightbulb}
+            title="Un puente más cercano"
+            showSegmentBar
+          />
+        </motion.div>
+
+        <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
+          <motion.div {...fadeUp(0.05)} className="space-y-5">
+            <p className={`${bodyText} text-sm md:text-base`}>
+              <span className="font-semibold text-[#faf8f4]">Grupos pequeños en casa</span> son la
+              estrategia para crear puentes de conexión más estrechos y cercanos que un solo encuentro
+              dominical.
+            </p>
+            <p className={`${bodyText} text-sm md:text-base`}>
+              Creemos que el Reino de Dios se construye en comunidad: vínculos sanos, relaciones que
+              sostienen y una{" "}
+              <span className="font-semibold text-[#faf8f4]">familia de fe</span> que camina unida en lo
+              cotidiano.
+            </p>
+            <p className={`${bodyText} text-sm md:text-[0.95rem]`}>
+              No reemplaza la iglesia local: la complementa con presencia, cuidado y discipulado en el
+              barrio.
+            </p>
+          </motion.div>
+
+          <motion.div
+            {...fadeUp(0.1)}
+            className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-8 md:p-10"
+          >
+            <motion.div
+              className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-secondary/15 blur-3xl"
+              aria-hidden
+            />
+            <p className="relative font-serif text-xl leading-snug text-white md:text-2xl">
+              “Donde dos o tres se reúnen en mi nombre, allí estoy yo en medio de ellos.”
+            </p>
+            <p className="relative mt-4 font-sans text-sm font-medium uppercase tracking-[0.14em] text-secondary/90">
+              Mateo 18:20
+            </p>
+          </motion.div>
         </div>
+        </div>
+      </section>
 
-        {/* LISTA */}
-        <div>
-          <h3 className="text-secondary text-center mb-5 font-medium tracking-[0.08em] uppercase">
-            ¿Qué buscamos en cada encuentro?
-          </h3>
-          <ul className="grid md:grid-cols-2 gap-3 text-gray-200 max-w-2xl mx-auto">
-            {[
-              "Predicar la palabra de Dios de manera sencilla",
-              "Encuentros fuera del templo",
-              "Compartir historias y experiencias",
-              "Escuchar necesidades",
-              "Acompañamiento cercano",
-              "Fortalecer el compañerismo",
-              "Disfrutar actividades juntos",
-            ].map((item, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-2 transition-all duration-300 hover:translate-x-1"
-              >
-                <span className="text-secondary mt-1">•</span>
-                <span className="font-sans font-light">{item}</span>
-              </li>
-            ))}
+      {/* Encuentros */}
+      <section
+        id="iec-encuentros"
+        className={`border-t border-white/10 bg-white/[0.02] ${pdcHeaderScrollMargin}`}
+      >
+        <div className={`${pdcPageInnerClass} py-14 md:py-20`}>
+          <motion.div {...fadeUp()} className="mb-10 md:mb-12">
+            <PdcSectionHeader
+              as="h2"
+              variant="block"
+              eyebrow="Cada encuentro"
+              eyebrowIcon={CalendarHeart}
+              title="¿Qué buscamos juntos?"
+              subtitle="Un ritmo simple y humano: palabra, comunión y cuidado mutuo."
+              showSegmentBar
+            />
+          </motion.div>
+
+          <ul
+            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4"
+            role="list"
+          >
+            {ENCUENTRO_ITEMS.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <motion.li
+                  key={item.label}
+                  {...fadeUp(i * 0.04)}
+                  className="group flex gap-4 rounded-xl border border-white/[0.08] bg-white/[0.04] p-4 transition-colors duration-300 hover:border-secondary/25 hover:bg-white/[0.06] md:p-5"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-secondary/30 bg-secondary/10 text-secondary transition group-hover:border-secondary/50">
+                    <Icon className="h-[1.15rem] w-[1.15rem]" aria-hidden />
+                  </span>
+                  <span className={`${bodyText} text-left text-sm leading-snug`}>{item.label}</span>
+                </motion.li>
+              );
+            })}
           </ul>
         </div>
-      </div>
+      </section>
 
-      <div className="h-20 md:h-28" />
+      {/* Sumate */}
+      <section id="iec-sumate" className={`py-16 md:py-24 text-center ${pdcHeaderScrollMargin}`}>
+        <div className="relative z-10 mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
+        <motion.div {...fadeUp()}>
+          <PdcSectionHeader
+            as="h2"
+            variant="block"
+            eyebrow="Próximo paso"
+            eyebrowIcon={UserPlus}
+            title="Sumate a un grupo"
+            showSegmentBar
+          />
+          <p className={`${bodyText} mx-auto mt-5 max-w-lg text-sm md:text-base`}>
+            Completá el formulario y te contactamos para ubicarte en un encuentro cerca tuyo. Si preferís,
+            escribinos por WhatsApp.
+          </p>
+
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+            <a
+              href={FORM_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pdc-btn-on-dark-accent max-w-none"
+            >
+              <span className="relative z-[1]">Completar formulario</span>
+            </a>
+            <a
+              href={WA_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pdc-btn-on-dark-ghost max-w-none"
+            >
+              <span className="relative z-[1]">Consultar por WhatsApp</span>
+            </a>
+          </div>
+        </motion.div>
+        </div>
+      </section>
     </div>
-
-    {/* Animaciones */}
-    <style>{`
-      @keyframes fadeDown {
-        from {
-          opacity: 0;
-          transform: translateY(-30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      @keyframes slideInUp {
-        from {
-          opacity: 0;
-          transform: translateY(60px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .animate-fade-down {
-        animation: fadeDown 0.8s ease-out;
-      }
-      .animate-slide-in-up {
-        animation: slideInUp 0.9s ease-out;
-      }
-    `}</style>
-  </section>
-);
+  );
+};
 
 export default IglesiaEnCasaSection;

@@ -5,10 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "tsx scripts/generate-sitemap.ts && vite build && tsx scripts/prerender-routes.ts",
+    "build:app": "vite build",
+    "generate:sitemap": "tsx scripts/generate-sitemap.ts",
+    "prerender:routes": "tsx scripts/prerender-routes.ts",
+    "preview": "vite preview",
+    "optimize:ministros": "node scripts/optimize-ministros-images.mjs",
+    "optimize:editorial": "node scripts/optimize-editorial-images.mjs",
+    "crop:vision-instagram": "node scripts/crop-vision-instagram.mjs",
+    "crop:bethel-instagram": "node scripts/crop-bethel-instagram.mjs",
+    "optimize:danza-video": "node scripts/optimize-danza-video.mjs"
   },
   "dependencies": {
+    "framer-motion": "^11.18.2",
     "lucide-react": "^1.7.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -18,8 +27,11 @@
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.5.0",
+    "ffmpeg-static": "^5.3.0",
     "postcss": "^8.5.10",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.19.4",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }

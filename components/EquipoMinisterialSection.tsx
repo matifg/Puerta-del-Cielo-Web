@@ -1,240 +1,277 @@
-import React, { useEffect, useRef, useState } from "react";
-  import SectionWrapper from "./SectionWrapper";
+import React, { useEffect, useState } from "react";
+import { Users } from "lucide-react";
+import type { MinisterSlug } from "../data/ministros";
+import PdcSegmentBar from "./PdcSegmentBar";
+import { PdcMinisterPortrait } from "./PdcMinisterPortrait";
+import { Reveal } from "./bethel/Reveal";
+import { PdcPageShell } from "./PdcPageShell";
+import { PdcSectionHeader, pdcPageInnerWithHeroComfort, pdcPageIntroHeaderClass } from "./PdcSectionHeader";
 
-  type Member = {
-    name: string;
-    role: string;
-    img: string;
-  };
+export const EQUIPO_FOOTER_ROOT_ID = "equipo-footer-root";
 
-  const pastors: Member = {
-    name: "JORGE Y GABRIELA BUGUEÑO",
-    role: "PASTORES GENERALES",
-    img: "/images/ministros/jorge-gabriela.jpg",
-  };
+type Member = {
+  name: string;
+  slug: MinisterSlug;
+  displayName: string;
+  role: string;
+  objectPosition?: string;
+};
 
-  const team: Member[] = [
-    { name: "OSCAR TERMINI", role: "PASTOR ASISTENTE", img: "https://i.pravatar.cc/300?img=21" },
-    { name: "GUSTAVO BECERRO", role: "MINISTRO GENERAL", img: "/images/ministros/gustavo-becerro.jpg" },
-    { name: "SILVIA TAIETI", role: "MINISTRO GENERAL", img: "/images/ministros/silvia-taieti.jpg" },
-    { name: "DAMIAN MARCORA", role: "MINISTRO GENERAL", img: "/images/ministros/damian-marcora.jpg" },
-    { name: "PAOLA VIRRZI", role: "MINISTRO GENERAL", img: "/images/ministros/paola-virrzi.jpg" },
-    { name: "VERONICA MARTINEZ", role: "MINISTRO GENERAL", img: "/images/ministros/veronica-martinez.jpg" },
-    { name: "DEBORA BUGUEÑO", role: "MINISTRO GENERAL", img: "/images/ministros/debora-bugueño.jpg" },
-  ];
+const bodyText = "text-white/90 font-sans font-medium leading-relaxed";
+const mutedRole =
+  "text-secondary/90 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em]";
 
-  const useInView = () => {
-    const ref = useRef<HTMLDivElement | null>(null);
-    const [visible, setVisible] = useState(false);
+function formatDisplayName(upperName: string): string {
+  return upperName
+    .toLowerCase()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
 
-    useEffect(() => {
-      const observer = new IntersectionObserver(
-        ([entry]) => setVisible(entry.isIntersecting),
-        { threshold: 0.3 }
-      );
+const pastors: Member = {
+  name: "JORGE Y GABRIELA BUGUEÑO",
+  slug: "jorge-gabriela",
+  displayName: "Jorge y Gabriela Bugueño",
+  role: "Pastores generales",
+  objectPosition: "center 30%",
+};
 
-      if (ref.current) observer.observe(ref.current);
-      return () => ref.current && observer.unobserve(ref.current);
-    }, []);
+const team: Member[] = [
+  {
+    name: "OSCAR TERMINI",
+    slug: "oscar-termini",
+    displayName: formatDisplayName("OSCAR TERMINI"),
+    role: "Pastor asistente",
+    objectPosition: "center 20%",
+  },
+  {
+    name: "GUSTAVO BECERRO",
+    slug: "gustavo-becerro",
+    displayName: formatDisplayName("GUSTAVO BECERRO"),
+    role: "Ministerio general",
+  },
+  {
+    name: "SILVIA TAIETI",
+    slug: "silvia-taieti",
+    displayName: formatDisplayName("SILVIA TAIETI"),
+    role: "Ministerio general",
+    objectPosition: "center 18%",
+  },
+  {
+    name: "DAMIAN MARCORA",
+    slug: "damian-marcora",
+    displayName: formatDisplayName("DAMIAN MARCORA"),
+    role: "Ministerio general",
+  },
+  {
+    name: "PAOLA VIRRZI",
+    slug: "paola-virrzi",
+    displayName: formatDisplayName("PAOLA VIRRZI"),
+    role: "Ministerio general",
+    objectPosition: "center 16%",
+  },
+  {
+    name: "VERONICA MARTINEZ",
+    slug: "veronica-martinez",
+    displayName: formatDisplayName("VERONICA MARTINEZ"),
+    role: "Ministerio general",
+    objectPosition: "center 20%",
+  },
+  {
+    name: "DEBORA BUGUEÑO",
+    slug: "debora-bugueno",
+    displayName: formatDisplayName("DEBORA BUGUEÑO"),
+    role: "Ministerio general",
+    objectPosition: "center 22%",
+  },
+];
 
-    return { ref, visible };
-  };
+function useRevealOnScroll(threshold = 0.15) {
+  const [root, setRoot] = useState<HTMLDivElement | null>(null);
+  const [revealed, setRevealed] = useState(false);
 
-  const EquipoMinisterialSection: React.FC = () => {
-    const firstRow = team.slice(0, 4);
-    const secondRow = team.slice(4);
+  useEffect(() => {
+    if (!root || revealed) return;
 
-    const { ref, visible } = useInView();
-    const [hovered, setHovered] = useState<string | null>(null);
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setRevealed(true);
+      return;
+    }
 
-    return (
-      <SectionWrapper>
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setRevealed(true);
+      },
+      { threshold, rootMargin: "0px 0px -6% 0px" }
+    );
+    io.observe(root);
+    return () => io.disconnect();
+  }, [root, revealed, threshold]);
 
-        {/* 🔥 SUBIMOS TODO (FIX ESPACIO) */}
-        <div className="-mt-20 md:-mt-24">
+  return { setRevealRef: setRoot, revealed };
+}
 
-          {/* TITULO */}
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-serif text-white">
-              Pastores Generales
+type TeamMemberCardProps = {
+  person: Member;
+  index: number;
+  revealed: boolean;
+  hovered: string | null;
+  onHover: (name: string | null) => void;
+  glow: "primary" | "secondary";
+  translateEnter: "translate-y-8" | "translate-y-10";
+};
+
+const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
+  person,
+  index,
+  revealed,
+  hovered,
+  onHover,
+  glow,
+  translateEnter,
+}) => {
+  const dimOthers = Boolean(hovered && hovered !== person.name);
+  const glowClass = glow === "secondary" ? "bg-secondary/25" : "bg-primary/25";
+
+  return (
+    <div
+      role="listitem"
+      onMouseEnter={() => onHover(person.name)}
+      onMouseLeave={() => onHover(null)}
+      className={`group flex flex-col items-center text-center transition-all duration-500 ease-out motion-reduce:duration-150 max-md:pointer-events-auto md:pointer-events-auto
+        ${revealed ? "opacity-100 translate-y-0" : `opacity-0 ${translateEnter}`}
+        motion-reduce:opacity-100 motion-reduce:translate-y-0
+        ${dimOthers ? "max-md:opacity-100 max-md:scale-100 md:opacity-40 md:scale-[0.98] motion-reduce:md:opacity-100 motion-reduce:md:scale-100" : "opacity-100 scale-100"}
+      `}
+      style={{ transitionDelay: revealed ? `${index * 60}ms` : "0ms" }}
+    >
+      <div className="relative mb-4">
+        <div
+          className={`pointer-events-none absolute inset-0 rounded-full ${glowClass} blur-2xl opacity-0 transition duration-500 group-hover:opacity-100 motion-reduce:opacity-0`}
+          aria-hidden
+        />
+        <PdcMinisterPortrait
+          slug={person.slug}
+          displayName={person.displayName}
+          variant="team"
+          objectPosition={person.objectPosition}
+        />
+      </div>
+      <div className="max-w-[12rem] font-sans text-sm font-semibold leading-snug tracking-wide text-[#faf8f4]">
+        {person.displayName}
+      </div>
+      <PdcSegmentBar size="sm" className="mx-auto my-2" />
+      <div className={`${mutedRole} max-w-[12rem]`}>{person.role}</div>
+    </div>
+  );
+};
+
+const EquipoMinisterialSection: React.FC = () => {
+  const firstRow = team.slice(0, 4);
+  const secondRow = team.slice(4);
+  const { setRevealRef, revealed } = useRevealOnScroll(0.15);
+  const [hovered, setHovered] = useState<string | null>(null);
+
+  return (
+    <PdcPageShell aria-labelledby="equipo-heading">
+      <div className={pdcPageInnerWithHeroComfort}>
+      <Reveal priority>
+      <header id="equipo-intro" className={pdcPageIntroHeaderClass}>
+        <PdcSectionHeader
+          headingId="equipo-heading"
+          eyebrow="Quiénes somos"
+          eyebrowIcon={Users}
+          title="Equipo ministerial"
+          subtitle="Una mirada a quienes pastorean y al equipo que acompaña el día a día en nuestra casa."
+          showSegmentBar
+        />
+      </header>
+      </Reveal>
+
+      <Reveal delayMs={80}>
+      <div id="equipo-pastores" className="mb-12 scroll-mt-28 md:mb-16">
+        <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
+          <div className="space-y-5 text-center md:space-y-6">
+            <h2 className="font-serif text-3xl leading-tight text-white sm:text-4xl md:text-5xl">
+              {pastors.displayName}
             </h2>
-          </div>
-
-          {/* HERO PASTORES */}
-          <div className="max-w-6xl mx-auto mb-24 px-6">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-
-              {/* TEXTO */}
-              <div className="space-y-6 text-center md:text-left">
-                <h3 className="text-4xl md:text-5xl font-serif text-white leading-tight">
-                  {pastors.name}
-                </h3>
-
-                {/* LÍNEAS DECORATIVAS MEJORADAS */}
-                <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start mt-2">
-                  <div className="h-[2px] w-16 bg-primary rounded-full"></div>
-                  <div className="h-[2px] w-10 bg-primary/70 rounded-full"></div>
-                  <div className="h-[2px] w-6 bg-secondary/60 rounded-full"></div>
-                </div>
-                <div className="w-32 md:w-40 h-[2px] bg-gradient-to-r from-primary via-secondary to-transparent rounded-full mt-2 mx-auto md:mx-0"></div>
-
-                <p className="text-secondary uppercase tracking-widest text-sm">
-                  {pastors.role}
-                </p>
-
-                <p className="text-gray-300 leading-relaxed max-w-md">
-                  Son un matrimonio profundamente apasionado por la expansión del Reino
-                  de Dios. Más de 30 años formando personas y levantando líderes.
-                </p>
-              </div>
-
-              {/* 🔥 IMAGEN PRO (NUEVO DISEÑO) */}
-              <div className="flex justify-center md:justify-start">
-                <div className="relative group flex flex-col items-center">
-                  {/* Glow */}
-                  <div className="absolute inset-0 w-full h-full flex items-center justify-center">
-                    <div className="w-96 h-96 rounded-full bg-secondary/30 blur-2xl opacity-70 group-hover:opacity-100 transition duration-700"></div>
-                  </div>
-                  <img
-                    src={pastors.img}
-                    alt={pastors.name}
-                    className="
-        relative
-        w-80 h-80
-        md:w-96 md:h-96
-        rounded-full
-        object-cover
-        border-4 border-white/20
-        shadow-2xl
-        bg-black/10
-        transition-all duration-700
-        group-hover:scale-105
-      "
-                    style={{
-                      objectPosition: "center 30%",
-                    }}
-                  />
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* TITULO EQUIPO */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-serif text-white">
-              Equipo Ministerial
-            </h2>
-            {/* LÍNEAS DECORATIVAS AJUSTADAS */}
-            <div className="flex justify-center items-center gap-3 mt-4">
-              <div className="h-[2px] w-20 bg-white/60 rounded-full"></div>
-              <div className="h-[2px] w-12 bg-primary/80 rounded-full"></div>
-              <div className="h-[2px] w-8 bg-secondary/80 rounded-full"></div>
-            </div>
-            <p className="text-primary/80 mt-4">
-              Personas comprometidas con servir, acompañar y transformar vidas.
+            <div
+              className="mx-auto h-px w-20 bg-gradient-to-r from-transparent via-secondary/65 to-transparent md:w-28"
+              aria-hidden
+            />
+            <p className={`${mutedRole} tracking-[0.22em]`}>{pastors.role}</p>
+            <p className={`${bodyText} mx-auto max-w-md text-[0.95rem] md:text-base`}>
+              Son un matrimonio profundamente apasionado por la expansión del Reino de Dios. Más de 30 años
+              formando personas y levantando líderes.
             </p>
           </div>
 
-          {/* GRID */}
-          <div ref={ref} className="flex flex-col gap-24">
-
-            {/* FILA 1 */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-20 justify-items-center">
-              {firstRow.map((person, i) => (
-                <div
-                  key={person.name}
-                  onMouseEnter={() => setHovered(person.name)}
-                  onMouseLeave={() => setHovered(null)}
-                  className={`group flex flex-col items-center text-center
-                  transition-all duration-[2000ms]
-                  ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}
-                  ${hovered && hovered !== person.name ? "opacity-40 scale-95" : "opacity-100"}
-                  `}
-                  style={{ transitionDelay: `${i * 150}ms` }}
-                >
-
-                  <div className="relative mb-4">
-                    <div className="absolute inset-0 bg-secondary/30 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition duration-700"></div>
-
-                    <img
-                      src={person.img}
-                      alt={person.name}
-                      className="
-                      w-32 h-32
-                      rounded-full
-                      object-cover
-                      border-2 border-secondary
-                      transition-all duration-500
-                      grayscale
-                      group-hover:grayscale-0
-                      group-hover:scale-110
-                      "
-                    />
-                  </div>
-
-                  <div className="text-white font-semibold text-sm">
-                    {person.name}
-                  </div>
-
-                  <div className="text-gray-400 text-xs mt-2">
-                    {person.role}
-                  </div>
-                </div>
-              ))}
+          <div className="flex justify-center">
+            <div className="group relative flex flex-col items-center">
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
+                <div className="h-[min(24rem,calc(100vw-2rem))] w-[min(24rem,calc(100vw-2rem))] rounded-full bg-secondary/25 blur-2xl opacity-70 transition duration-500 group-hover:opacity-100 motion-reduce:opacity-80" />
+              </div>
+              <PdcMinisterPortrait
+                slug={pastors.slug}
+                displayName={pastors.displayName}
+                variant="lead"
+                objectPosition={pastors.objectPosition}
+                loading="eager"
+                fetchPriority="high"
+              />
             </div>
-
-            {/* FILA 2 */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-20 justify-items-center max-w-5xl mx-auto">
-              {secondRow.map((person, i) => (
-                <div
-                  key={person.name}
-                  onMouseEnter={() => setHovered(person.name)}
-                  onMouseLeave={() => setHovered(null)}
-                  className={`group flex flex-col items-center text-center
-                  transition-all duration-[2000ms]
-                  ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}
-                  ${hovered && hovered !== person.name ? "opacity-40 scale-95" : "opacity-100"}
-                  `}
-                  style={{ transitionDelay: `${i * 150}ms` }}
-                >
-
-                  <div className="relative mb-4">
-                    <div className="absolute inset-0 bg-primary/30 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition duration-700"></div>
-
-                    <img
-                      src={person.img}
-                      alt={person.name}
-                      className="
-                      w-32 h-32
-                      rounded-full
-                      object-cover
-                      border-2 border-secondary
-                      transition-all duration-500
-                      grayscale
-                      group-hover:grayscale-0
-                      group-hover:scale-110
-                      "
-                    />
-                  </div>
-
-                  <div className="text-white font-semibold text-sm">
-                    {person.name}
-                  </div>
-
-                  <div className="text-gray-400 text-xs mt-2">
-                    {person.role}
-                  </div>
-                </div>
-              ))}
-            </div>
-
           </div>
+        </div>
+      </div>
+      </Reveal>
 
+      <div
+        id="equipo-ministros"
+        className="mb-10 scroll-mt-28 border-t border-white/10 pt-10 text-center md:mb-12 md:pt-12"
+      >
+        <h2 className="font-serif text-2xl text-white md:text-3xl">Ministros y liderazgo</h2>
+        <p className={`${bodyText} mx-auto mt-4 max-w-xl text-sm md:text-base`}>
+          Personas comprometidas con servir, acompañar y transformar vidas.
+        </p>
+      </div>
+
+      <div id="equipo-grid" ref={setRevealRef} className="scroll-mt-28 flex flex-col gap-14 md:gap-20" role="list">
+        <div className="grid grid-cols-2 justify-items-center gap-x-6 gap-y-12 md:grid-cols-4 md:gap-x-8 md:gap-y-14">
+          {firstRow.map((person, i) => (
+            <TeamMemberCard
+              key={person.name}
+              person={person}
+              index={i}
+              revealed={revealed}
+              hovered={hovered}
+              onHover={setHovered}
+              glow="secondary"
+              translateEnter="translate-y-8"
+            />
+          ))}
         </div>
 
-      </SectionWrapper>
-    );
-  };
+        <div className="mx-auto grid max-w-3xl grid-cols-2 justify-items-center gap-x-6 gap-y-12 md:grid-cols-3 md:gap-x-10 md:gap-y-14">
+          {secondRow.map((person, i) => (
+            <TeamMemberCard
+              key={person.name}
+              person={person}
+              index={i + firstRow.length}
+              revealed={revealed}
+              hovered={hovered}
+              onHover={setHovered}
+              glow="primary"
+              translateEnter="translate-y-10"
+            />
+          ))}
+        </div>
+      </div>
 
-  export default EquipoMinisterialSection;
+      </div>
+    </PdcPageShell>
+  );
+};
+
+export default EquipoMinisterialSection;
+
