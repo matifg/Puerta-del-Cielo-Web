@@ -6,7 +6,6 @@ import { Anuncios } from './components/Anuncios.tsx';
 import { Eventos } from './components/Eventos.tsx';
 import { Devocional } from './components/Devocional.tsx';
 import { Multimedia } from './components/Multimedia.tsx';
-import { Footer } from './components/Footer.tsx';
 import { Team } from './components/Team.tsx';
 import { Navbar } from "./components/Navbar";
 
@@ -16,20 +15,23 @@ import AreaEducativa from "./pages/AreaEducativa.tsx";
 import Conexion from "./pages/Conexion.tsx";
 import Bethel from "./pages/Bethel.tsx";
 import ContactoPage from "./pages/ContactoPage";
-import VisionSection from "./sections/VisionSection";
-import EquipoMinisterialSection from "./components/EquipoMinisterialSection";
-import AreasServicioSection from "./components/AreasServicioSection";
+import VisionPage from "./pages/VisionPage";
+import EquipoMinisterialPage from "./pages/EquipoMinisterialPage";
+import AreasServicioPage from "./pages/AreasServicioPage";
 import SePartePage from "./pages/SePartePage";
 import ConexionPage from "./pages/ConexionPage";
-import DiscipuladoSection from "./components/DiscipuladoSection";
-import DanzaArtesSection from "./components/DanzaArtesSection";
-import IntercesionSection from "./components/IntercesionSection";
-import LiderazgoSection from "./components/LiderazgoSection";
-import ServicioComunidadSection from "./components/ServicioComunidadSection";
+import DiscipuladoPage from "./pages/DiscipuladoPage";
+import DanzaArtesPage from "./pages/DanzaArtesPage";
+import IntercesionPage from "./pages/IntercesionPage";
+import LiderazgoPage from "./pages/LiderazgoPage";
+import ServicioComunidadPage from "./pages/ServicioComunidadPage";
+import { whatsappBaseUrl } from "./data/contacto";
+import { ScrollToTop } from "./components/ScrollToTop";
+import { PageSeo } from "./components/PageSeo";
 
 const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [maintenanceMode] = useState(true);
+  const [maintenanceMode] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -153,33 +155,36 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter>
+      <PageSeo />
+      <ScrollToTop />
       <Navbar />
-      <div className="pt-16 bg-black min-h-screen">        <Routes>
+      <div className="min-h-screen bg-black pt-[4.25rem] md:pt-[4.5rem]">
+        <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/quienes-somos" element={<QuienesSomos />}>
-          <Route index element={<VisionSection />} />
-          <Route path="vision" element={<VisionSection />} />
-          <Route path="equipo-ministerial" element={<EquipoMinisterialSection />} />
-          <Route path="areas-servicio" element={<AreasServicioSection />} />
+          <Route index element={<VisionPage />} />
+          <Route path="vision" element={<VisionPage />} />
+          <Route path="equipo-ministerial" element={<EquipoMinisterialPage />} />
+          <Route path="areas-servicio" element={<AreasServicioPage />} />
         </Route>
         <Route path="/area-educativa" element={<AreaEducativa />} />
         <Route path="/conexion" element={<Conexion />} />
         <Route path="/bethel" element={<Bethel />} />
         <Route path="/contacto" element={<ContactoPage />} />
         <Route path="/conexion/iglesia-en-casa" element={<ConexionPage />} />
-        <Route path="/area-educativa/discipulado" element={<DiscipuladoSection />} />
-        <Route path="/area-educativa/danza-artes" element={<DanzaArtesSection />} />
-        <Route path="/area-educativa/intercesion" element={<IntercesionSection />} />
-        <Route path="/liderazgo" element={<LiderazgoSection />} />
-        <Route path="/area-educativa/liderazgo" element={<LiderazgoSection />} />
-        <Route path="/servicio-comunidad" element={<ServicioComunidadSection />} />
-        <Route path="/area-servicio/comunidad" element={<ServicioComunidadSection />} />
+        <Route path="/area-educativa/discipulado" element={<DiscipuladoPage />} />
+        <Route path="/area-educativa/danza-artes" element={<DanzaArtesPage />} />
+        <Route path="/area-educativa/intercesion" element={<IntercesionPage />} />
+        <Route path="/liderazgo" element={<LiderazgoPage />} />
+        <Route path="/area-educativa/liderazgo" element={<LiderazgoPage />} />
+        <Route path="/servicio-comunidad" element={<ServicioComunidadPage />} />
+        <Route path="/area-servicio/comunidad" element={<ServicioComunidadPage />} />
       </Routes>
       </div>
 
       {/* BOTÓN WHATSAPP PRO */}
       <a
-        href="https://wa.me/549123456789"
+        href={whatsappBaseUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-5 right-5 z-[9999] w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-2xl"

@@ -3,13 +3,338 @@
 @tailwind utilities;
 
 body {
-  @apply font-sans;
+  @apply font-sans bg-[#030508] text-[#ece8e2] antialiased;
+}
+
+/* Navbar: evita que herede texto oscuro si falta una utilidad de Tailwind */
+nav[aria-label="Principal"] {
+  color: #faf8f4;
+  background-color: #030508;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE y Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Botones Puerta del Cielo — glass, glow y hover unificados */
+@layer components {
+  .pdc-btn-glass,
+  .pdc-btn-accent,
+  .pdc-btn-on-dark,
+  .pdc-btn-on-dark-accent,
+  .pdc-btn-on-dark-ghost {
+    @apply relative overflow-hidden transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.98];
+  }
+
+  .pdc-btn-glass::before,
+  .pdc-btn-accent::before,
+  .pdc-btn-on-dark::before,
+  .pdc-btn-on-dark-accent::before,
+  .pdc-btn-on-dark-ghost::before {
+    content: "";
+    @apply pointer-events-none absolute -inset-px rounded-full opacity-0 blur-xl transition duration-500;
+    background: rgba(64, 194, 222, 0.25);
+  }
+
+  .pdc-btn-glass:hover::before,
+  .pdc-btn-accent:hover::before,
+  .pdc-btn-on-dark:hover::before,
+  .pdc-btn-on-dark-accent:hover::before,
+  .pdc-btn-on-dark-ghost:hover::before {
+    @apply opacity-60;
+  }
+
+  .pdc-btn-glass::after,
+  .pdc-btn-accent::after,
+  .pdc-btn-on-dark::after,
+  .pdc-btn-on-dark-accent::after,
+  .pdc-btn-on-dark-ghost::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 rounded-full opacity-0 transition duration-300;
+    background: linear-gradient(
+      115deg,
+      rgba(64, 194, 222, 0.16) 0%,
+      rgba(37, 99, 173, 0.08) 42%,
+      transparent 58%
+    );
+  }
+
+  .pdc-btn-glass:hover::after,
+  .pdc-btn-accent:hover::after,
+  .pdc-btn-on-dark:hover::after,
+  .pdc-btn-on-dark-accent:hover::after,
+  .pdc-btn-on-dark-ghost:hover::after {
+    @apply opacity-100;
+  }
+
+  .pdc-btn-glass {
+    @apply inline-flex min-h-[3.25rem] flex-1 items-center justify-center gap-2.5 rounded-full px-8 py-3.5 font-sans text-sm font-medium tracking-[0.05em] backdrop-blur-xl sm:min-w-[13rem] sm:flex-initial;
+    border: 1px solid rgba(37, 99, 173, 0.32);
+    background: rgba(2, 6, 23, 0.5);
+    color: #faf8f4;
+    box-shadow:
+      0 8px 36px rgba(37, 99, 173, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .pdc-btn-glass:hover {
+    border-color: rgba(64, 194, 222, 0.55);
+    background: rgba(15, 23, 42, 0.6);
+    box-shadow: 0 14px 44px rgba(37, 99, 173, 0.32);
+  }
+
+  .pdc-btn-glass:focus-visible {
+    outline-color: #40c2de;
+  }
+
+  .pdc-btn-accent {
+    @apply inline-flex min-h-[3.25rem] flex-1 items-center justify-center gap-2.5 rounded-full px-8 py-3.5 font-sans text-sm font-semibold tracking-[0.05em] backdrop-blur-xl sm:min-w-[13rem] sm:flex-initial;
+    border: 1px solid rgba(64, 194, 222, 0.5);
+    background: linear-gradient(
+      to right,
+      rgba(64, 194, 222, 0.22),
+      rgba(64, 194, 222, 0.18),
+      rgba(37, 99, 173, 0.15)
+    );
+    color: #f5fcfe;
+    box-shadow:
+      0 8px 36px rgba(37, 99, 173, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .pdc-btn-accent:hover {
+    border-color: rgba(64, 194, 222, 0.65);
+    background: linear-gradient(
+      to right,
+      rgba(64, 194, 222, 0.32),
+      rgba(64, 194, 222, 0.24),
+      rgba(37, 99, 173, 0.22)
+    );
+    box-shadow:
+      0 14px 48px rgba(64, 194, 222, 0.2),
+      0 12px 40px rgba(37, 99, 173, 0.28);
+  }
+
+  .pdc-btn-accent:focus-visible {
+    outline-color: #40c2de;
+  }
+
+  .pdc-btn-on-dark {
+    @apply inline-flex min-h-[3.25rem] items-center justify-center gap-2.5 rounded-full px-7 py-3.5 font-sans text-sm font-semibold tracking-wide text-white backdrop-blur-md duration-500 md:px-8 md:text-[0.95rem];
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      0 20px 52px -10px rgba(0, 0, 0, 0.6),
+      0 0 36px -10px rgba(125, 211, 234, 0.22);
+    --tw-ring-color: rgba(255, 255, 255, 0.15);
+    @apply ring-1;
+  }
+
+  .pdc-btn-on-dark:hover {
+    border-color: rgba(64, 194, 222, 0.55);
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  .pdc-btn-on-dark:focus-visible {
+    outline-color: #fff;
+  }
+
+  .pdc-btn-on-dark-accent {
+    @apply inline-flex min-h-[3.35rem] w-full max-w-[20rem] items-center justify-center gap-2.5 rounded-full px-7 py-3.5 font-sans text-sm font-semibold text-white backdrop-blur-md duration-500 sm:w-auto md:px-9 md:text-base;
+    border: 1px solid rgba(64, 194, 222, 0.45);
+    background: linear-gradient(
+      to right,
+      rgba(64, 194, 222, 0.22),
+      rgba(64, 194, 222, 0.16),
+      rgba(37, 99, 173, 0.12)
+    );
+    box-shadow:
+      0 10px 40px rgba(37, 99, 173, 0.3),
+      0 0 44px -10px rgba(125, 211, 234, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    --tw-ring-color: rgba(64, 194, 222, 0.35);
+    @apply ring-1;
+  }
+
+  .pdc-btn-on-dark-accent:hover {
+    border-color: rgba(64, 194, 222, 0.6);
+    background: linear-gradient(
+      to right,
+      rgba(64, 194, 222, 0.32),
+      rgba(64, 194, 222, 0.2),
+      rgba(37, 99, 173, 0.16)
+    );
+    box-shadow:
+      0 14px 52px rgba(64, 194, 222, 0.22),
+      0 0 56px -6px rgba(125, 211, 234, 0.55);
+  }
+
+  .pdc-btn-on-dark-accent:focus-visible {
+    outline-color: #40c2de;
+  }
+
+  .pdc-btn-on-dark-ghost {
+    @apply inline-flex min-h-[3.35rem] w-full max-w-[20rem] items-center justify-center gap-2.5 rounded-full px-7 py-3.5 font-sans text-sm font-semibold backdrop-blur-md duration-500 sm:w-auto md:px-9 md:text-base;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.97);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.38),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    --tw-ring-color: rgba(255, 255, 255, 0.1);
+    @apply ring-1;
+  }
+
+  .pdc-btn-on-dark-ghost:hover {
+    border-color: rgba(255, 255, 255, 0.48);
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+  }
+
+  .pdc-btn-on-dark-ghost:focus-visible {
+    outline-color: #fff;
+  }
+
+  .pdc-btn-fab {
+    @apply relative flex items-center justify-center gap-2 rounded-full text-white backdrop-blur-md transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:scale-[0.97] max-lg:min-h-[3.35rem] max-lg:px-5 max-lg:py-3 lg:h-[4.5rem] lg:w-[4.5rem] lg:flex-col lg:gap-0 lg:px-0 lg:py-0;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+  }
+
+  .pdc-btn-fab:hover {
+    border-color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.26);
+  }
+
+  .pdc-btn-fab-pill {
+    @apply flex items-center gap-2.5 rounded-full px-4 py-3 font-sans text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-white backdrop-blur-md transition duration-300;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    background: rgba(255, 255, 255, 0.18);
+    box-shadow:
+      0 10px 40px rgba(0, 0, 0, 0.55),
+      0 0 28px -8px rgba(125, 211, 234, 0.22);
+    --tw-ring-color: rgba(255, 255, 255, 0.22);
+    @apply ring-1;
+  }
+
+  .pdc-btn-fab-pill:hover {
+    border-color: rgba(255, 255, 255, 0.58);
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  .pdc-dock {
+    @apply pointer-events-auto flex items-stretch gap-1 rounded-[1.5rem] p-1.5 backdrop-blur-xl transition duration-300 sm:gap-1.5;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(10, 21, 36, 0.95);
+    box-shadow:
+      0 20px 56px rgba(0, 0, 0, 0.58),
+      0 0 40px -8px rgba(125, 211, 234, 0.28);
+    --tw-ring-color: rgba(64, 194, 222, 0.3);
+    @apply ring-1;
+  }
+
+  .pdc-dock:hover {
+    border-color: rgba(64, 194, 222, 0.45);
+  }
+
+  .pdc-dock-btn {
+    @apply flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-3.5 py-3 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.11em] transition duration-300 sm:px-4 sm:text-[0.74rem] sm:tracking-[0.12em];
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .pdc-dock-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+  }
+
+  /* FAB explorar / inicio — Home */
+  .pdc-scroll-fab {
+    @apply relative flex w-full min-w-[9.25rem] max-w-[11.75rem] flex-col items-stretch gap-1 overflow-hidden rounded-full px-4 py-3 text-left backdrop-blur-md transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.98];
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 16px 48px -8px rgba(0, 0, 0, 0.55),
+      0 0 32px -10px rgba(125, 211, 234, 0.2);
+    --tw-ring-color: rgba(255, 255, 255, 0.12);
+    @apply ring-1;
+  }
+
+  .pdc-scroll-fab::before {
+    content: "";
+    @apply pointer-events-none absolute -inset-px rounded-full opacity-0 blur-xl transition duration-500;
+    background: rgba(64, 194, 222, 0.22);
+  }
+
+  .pdc-scroll-fab:hover::before {
+    @apply opacity-50;
+  }
+
+  .pdc-scroll-fab:hover {
+    border-color: rgba(64, 194, 222, 0.42);
+    background: rgba(255, 255, 255, 0.14);
+  }
+
+  .pdc-scroll-fab:focus-visible {
+    outline-color: #40c2de;
+  }
+
+  .pdc-scroll-fab--up {
+    border-color: rgba(64, 194, 222, 0.38);
+    background: rgba(255, 255, 255, 0.11);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      0 16px 48px -8px rgba(0, 0, 0, 0.55),
+      0 0 36px -8px rgba(125, 211, 234, 0.28);
+  }
+
+  .pdc-scroll-fab--up:hover {
+    border-color: rgba(64, 194, 222, 0.55);
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .pdc-scroll-fab-title-in {
+    animation: pdc-scroll-fab-title-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes pdc-scroll-fab-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdc-scroll-fab-title-in {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pdc-btn-fab-glow {
+    animation: pdc-fab-glow 2.2s ease-in-out infinite;
+  }
+}
+
+@keyframes pdc-fab-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 40px rgba(0, 0, 0, 0.55),
+      0 0 28px -8px rgba(125, 211, 234, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 12px 48px rgba(0, 0, 0, 0.55),
+      0 0 40px -4px rgba(125, 211, 234, 0.38);
+  }
 }

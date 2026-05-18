@@ -1,7 +1,6 @@
-import IglesiaEnCasaSection from "../components/IglesiaEnCasaSection";
+import ConexionPage from "./ConexionPage";
 
-const Conexion = () => (
-  <IglesiaEnCasaSection />
-);
+/** Ruta /conexion — misma experiencia que Iglesia en casa */
+const Conexion = () => <ConexionPage />;
 
 export default Conexion;

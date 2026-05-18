@@ -1,146 +1,598 @@
-import { Clock, Calendar } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+  type Variants,
+} from "framer-motion";
+import type { LucideIcon } from "lucide-react";
+import {
+  BookOpen,
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  Download,
+  FileText,
+  Gift,
+  Heart,
+  MapPin,
+  MessageCircle,
+  Mic2,
+  Sparkles,
+  Target,
+  Users,
+} from "lucide-react";
+import { whatsappUrl } from "../data/contacto";
+import { PdcScrollFabButton } from "./PdcScrollFabButton";
+import {
+  PdcSectionEyebrow,
+  pdcHeaderScrollMargin,
+  pdcPageHeroTopComfort,
+  pdcPageTitleAccentClass,
+  pdcPageTitleClass,
+  pdcPageTitleLineClass,
+} from "./PdcSectionHeader";
+
+const PDF_HREF = "/docs/escuela-discipulado.pdf";
+const WA_HREF = whatsappUrl("Hola! Quiero info sobre Discipulado");
+const MAPS_HREF = "https://www.google.com/maps?q=Manuel+Belgrano+2053+Baradero";
+
+const sectionIds = ["disc-hero", "disc-resumen", "disc-pilares", "disc-programa", "disc-cta"] as const;
+
+const FAB_INSET =
+  "bottom-24 right-4 sm:bottom-28 sm:right-6 lg:right-[max(1.5rem,env(safe-area-inset-right,0px))]";
+
+const FAB_INSET_NEAR_FOOTER =
+  "bottom-[7.25rem] right-4 sm:bottom-[7.5rem] sm:right-5 lg:bottom-[7.75rem] lg:right-[max(1.5rem,env(safe-area-inset-right,0px))]";
+
+const DISC_FAB_LABELS: Record<string, string> = {
+  "disc-resumen": "Resumen",
+  "disc-pilares": "Pilares",
+  "disc-programa": "Programa",
+  "disc-cta": "Inscribite",
+};
+
+function nextDiscFabTitle(activeIdx: number): string {
+  const nextId = sectionIds[activeIdx + 1];
+  if (!nextId) return "Siguiente";
+  return DISC_FAB_LABELS[nextId] ?? "Siguiente";
+}
+
+export const DISC_FOOTER_ROOT_ID = "disc-footer-root";
+
+const FEATURES: readonly { label: string; icon: LucideIcon }[] = [
+  { label: "Enseñanza bíblica", icon: BookOpen },
+  { label: "Formación espiritual", icon: Heart },
+  { label: "Material actualizado", icon: Sparkles },
+  { label: "Desarrollo de dones", icon: Gift },
+  { label: "Comunidad real", icon: Users },
+  { label: "Espacios de consulta", icon: MessageCircle },
+  { label: "Hábitos saludables", icon: Clock },
+  { label: "Ministración", icon: Mic2 },
+];
+
+const INFO_CARDS: readonly {
+  eyebrow: string;
+  title: string;
+  body: string;
+  icon: LucideIcon;
+  accent?: boolean;
+}[] = [
+  {
+    eyebrow: "Duración",
+    title: "2 años",
+    body: "Ritmo sostenible que respeta tu vida, familia y servicio.",
+    icon: Clock,
+  },
+  {
+    eyebrow: "Modalidad",
+    title: "Quincenal",
+    body: "Encuentros espaciados para integrar lo aprendido en la semana.",
+    icon: Calendar,
+    accent: true,
+  },
+  {
+    eyebrow: "Para quién es",
+    title: "Todos los caminos",
+    body: "Nuevos en la fe, crecimiento personal y líderes en formación.",
+    icon: Target,
+  },
+  {
+    eyebrow: "Material",
+    title: "Programa PDF",
+    body: "Contenido ordenado por etapas. Descargalo o consultanos por WhatsApp.",
+    icon: FileText,
+  },
+];
+
+const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const SCROLL_NAV_OFFSET = 112;
+
+const staggerChildren: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
+};
+
+const staggerItem: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.48, ease: easeOut } },
+};
+
+function readGuideSectionIndex(): number {
+  const vh = window.innerHeight;
+  const footerEl = document.getElementById(DISC_FOOTER_ROOT_ID);
+  if (footerEl) {
+    const fr = footerEl.getBoundingClientRect();
+    const footerVisible = Math.max(0, Math.min(fr.bottom, vh) - Math.max(fr.top, 0));
+    if (footerVisible > vh * 0.12) return sectionIds.length - 1;
+  }
+
+  let best = 0;
+  let bestVisible = -1;
+  for (let i = 0; i < sectionIds.length; i++) {
+    const el = document.getElementById(sectionIds[i]);
+    if (!el) continue;
+    const r = el.getBoundingClientRect();
+    const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
+    if (visible > bestVisible) {
+      bestVisible = visible;
+      best = i;
+    }
+  }
+  return best;
+}
+
+function useGuideSectionIndex(): number {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const measure = useCallback(() => setActiveIdx(readGuideSectionIndex()), []);
+
+  useEffect(() => {
+    measure();
+    const t = window.setTimeout(measure, 320);
+    window.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+    };
+  }, [measure]);
+
+  return activeIdx;
+}
+
+function useNearFooter(): boolean {
+  const [nearFooter, setNearFooter] = useState(false);
+
+  useEffect(() => {
+    const observe = () => {
+      const el = document.getElementById(DISC_FOOTER_ROOT_ID);
+      if (!el) {
+        setNearFooter(false);
+        return;
+      }
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
+      setNearFooter(visible > vh * 0.12);
+    };
+    observe();
+    const t = window.setTimeout(observe, 400);
+    window.addEventListener("scroll", observe, { passive: true });
+    window.addEventListener("resize", observe);
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("scroll", observe);
+      window.removeEventListener("resize", observe);
+    };
+  }, []);
+
+  return nearFooter;
+}
+
+/** Muestra botón “Subir” auxiliar tras bajar del hero. */
+function useScrolledPast(threshold = 420): boolean {
+  const [past, setPast] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setPast(window.scrollY > threshold);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [threshold]);
+
+  return past;
+}
+
+function FloatingDiscipuladoDock() {
+  return (
+      <motion.div
+      className="pointer-events-none fixed left-3 z-[10010] max-w-[calc(100vw-6rem)] sm:left-5 sm:max-w-none"
+      style={{
+        bottom: "max(1.35rem, calc(1.35rem + env(safe-area-inset-bottom, 0px)))",
+      }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.4, ease: easeOut }}
+      aria-label="Acciones: programa y consulta"
+    >
+      <motion.div className="pdc-dock">
+        <a href={PDF_HREF} target="_blank" rel="noopener noreferrer" className="pdc-dock-btn" aria-label="Abrir programa en PDF">
+          <FileText className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
+          <span className="hidden min-[360px]:inline">Abrir</span>
+        </a>
+        <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
+        <a href={PDF_HREF} download className="pdc-dock-btn" aria-label="Descargar programa PDF">
+          <Download className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
+          <span className="hidden min-[360px]:inline">Bajar</span>
+        </a>
+        <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
+        <a
+          href={WA_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pdc-dock-btn text-secondary hover:bg-secondary/15"
+          aria-label="Consultar por WhatsApp sobre Discipulado"
+        >
+          <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
+          <span className="hidden min-[360px]:inline">Consultar</span>
+        </a>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 const DiscipuladoSection = () => {
+  const reduceMotion = useReducedMotion() ?? false;
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const activeIdx = useGuideSectionIndex();
+  const nearFooter = useNearFooter();
+
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 32, damping: 24, mass: 0.55 });
+  const sy = useSpring(my, { stiffness: 32, damping: 24, mass: 0.55 });
+  const orb1x = useTransform(sx, (v) => v * 10);
+  const orb1y = useTransform(sy, (v) => v * 8);
+  const orb2x = useTransform(sx, (v) => -v * 7);
+  const orb2y = useTransform(sy, (v) => -v * 6);
+
+  const progress = useMemo(
+    () => (nearFooter ? 100 : ((activeIdx + 1) / sectionIds.length) * 100),
+    [activeIdx, nearFooter]
+  );
+
+  const scrollToId = useCallback(
+    (id: string) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const behavior = reduceMotion ? "auto" : ("smooth" as ScrollBehavior);
+      const docTop = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: Math.max(0, docTop - SCROLL_NAV_OFFSET), behavior });
+    },
+    [reduceMotion]
+  );
+
+  const scrollToHero = useCallback(() => {
+    scrollToId(sectionIds[0]);
+  }, [scrollToId]);
+
+  const onFabClick = useCallback(() => {
+    const current = readGuideSectionIndex();
+    const atEnd = current >= sectionIds.length - 1 || nearFooter;
+    if (atEnd) {
+      scrollToHero();
+      return;
+    }
+    scrollToId(sectionIds[current + 1]);
+  }, [scrollToId, nearFooter, scrollToHero]);
+
+  const fabIsLast = activeIdx >= sectionIds.length - 1 || nearFooter;
+  const fabEyebrow = fabIsLast ? "Inicio" : "Explorar";
+  const fabPrimaryLine = fabIsLast ? "Subir" : nextDiscFabTitle(activeIdx);
+  const fabSrLabel = fabIsLast
+    ? "Subir al inicio del programa de Discipulado"
+    : `Ir a ${fabPrimaryLine}`;
+
+  const variants = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: reduceMotion ? 0 : 24 },
+      show: { opacity: 1, y: 0, transition: { duration: reduceMotion ? 0.12 : 0.52, ease: easeOut } },
+    }),
+    [reduceMotion]
+  );
+
+  const onSectionMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (reduceMotion || !sectionRef.current) return;
+    const r = sectionRef.current.getBoundingClientRect();
+    mx.set((e.clientX - (r.left + r.width / 2)) / 48);
+    my.set((e.clientY - (r.top + r.height / 2)) / 48);
+  };
+
+  const resetParallax = () => {
+    mx.set(0);
+    my.set(0);
+  };
+
   return (
-    <section
-      className="relative w-full pt-10 pb-16 md:pt-16 md:pb-24 bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: "url('/images/discipulado.webp')",
-      }}
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/50" />
-
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
-        
-        {/* HERO */}
-        <div className="text-center space-y-4 mb-6 animate-fade-in-left">
-          <h2 className="text-4xl md:text-5xl font-bold text-white font-serif">
-            Discipulado
-          </h2>
-
-          <p className="text-lg text-gray-200 max-w-2xl mx-auto">
-            Un proceso real de crecimiento espiritual donde cada persona es formada, acompañada y activada en su propósito.
-          </p>
-        </div>
-
-        {/* CARD */}
-        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 md:p-8 shadow-2xl animate-fade-in-up">
-          
-          <p className="text-gray-100 text-center max-w-2xl mx-auto mb-6">
-            A través de la Palabra, la oración y la comunidad, cada discípulo es equipado para vivir su llamado con claridad y propósito.
-          </p>
-
-          {/* INFO */}
-          <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-6">
-            
-            <div className="bg-white/10 rounded-xl p-5 text-center">
-              <Clock className="w-6 h-6 text-primary mx-auto mb-2" />
-              <p className="text-xs text-gray-300 uppercase">Duración</p>
-              <p className="text-white font-semibold">2 años</p>
-            </div>
-
-            <div className="bg-white/10 rounded-xl p-5 text-center">
-              <Calendar className="w-6 h-6 text-primary mx-auto mb-2" />
-              <p className="text-xs text-gray-300 uppercase">Modalidad</p>
-              <p className="text-white font-semibold">Quincenal</p>
-            </div>
-
-          </div>
-
-          {/* LISTA */}
-          <div className="mb-6">
-            <h3 className="text-secondary text-center mb-4 font-semibold">
-              ¿Qué vas a vivir?
-            </h3>
-
-            <ul className="grid md:grid-cols-2 gap-3 text-gray-200 max-w-2xl mx-auto">
-              {[
-                "Enseñanza bíblica",
-                "Formación espiritual",
-                "Material actualizado",
-                "Desarrollo de dones",
-                "Comunidad real",
-                "Espacios de consulta",
-                "Hábitos saludables",
-                "Ministración",
-              ].map((item, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-2 animate-fade-in-list"
-                  style={{ animationDelay: `${i * 80 + 300}ms` }}
-                >
-                  <span className="text-secondary">•</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* CTA */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: "900ms" }}>
-            
-            {/* Ver programa */}
-            <a
-              href="/docs/escuela-discipulado.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-primary text-white px-6 py-2.5 rounded-full hover:bg-secondary transition text-center"
-            >
-              Ver programa
-            </a>
-
-            {/* Descargar */}
-            <a
-              href="/docs/escuela-discipulado.pdf"
-              download
-              className="border border-white text-white px-6 py-2.5 rounded-full hover:bg-white/10 transition text-center"
-            >
-              Descargar
-            </a>
-
-            {/* WhatsApp */}
-            <a
-              href="https://wa.me/549123456789?text=Hola!%20Quiero%20info%20sobre%20Discipulado"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border border-secondary text-secondary px-6 py-2.5 rounded-full hover:bg-secondary/10 transition text-center"
-            >
-              Info por WhatsApp
-            </a>
-
-          </div>
-        </div>
-
-        {/* ESPACIO FINAL */}
-        <div className="h-16 md:h-24" />
+    <div ref={sectionRef as React.RefObject<HTMLDivElement>} className="relative isolate bg-[#030508]">
+      {/* Progreso */}
+      <div className="pointer-events-none fixed left-0 top-0 z-[9970] h-0.5 w-full bg-white/[0.06]" aria-hidden>
+        <motion.div
+          className="h-full bg-gradient-to-r from-primary to-secondary"
+          style={{ width: `${progress}%` }}
+          transition={{ duration: 0.3 }}
+        />
       </div>
 
-      {/* Animaciones */}
-      <style>{`
-        @keyframes fadeInLeft {
-          from { opacity: 0; transform: translateX(-40px);}
-          to { opacity: 1; transform: translateX(0);}
-        }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(40px);}
-          to { opacity: 1; transform: translateY(0);}
-        }
-        @keyframes fadeInList {
-          from { opacity: 0; transform: translateX(24px);}
-          to { opacity: 1; transform: translateX(0);}
-        }
-        .animate-fade-in-left {
-          animation: fadeInLeft 0.8s cubic-bezier(.4,0,.2,1) both;
-        }
-        .animate-fade-in-up {
-          animation: fadeInUp 0.9s cubic-bezier(.4,0,.2,1) both;
-        }
-        .animate-fade-in-list {
-          animation: fadeInList 0.7s cubic-bezier(.4,0,.2,1) both;
-        }
-      `}</style>
-    </section>
+      {/* Hero */}
+      <header
+        id="disc-hero"
+        className={`relative flex min-h-0 flex-col items-center justify-start overflow-hidden px-4 pb-14 ${pdcPageHeroTopComfort} text-center sm:px-6 sm:pb-16 ${pdcHeaderScrollMargin}`}
+        onMouseMove={onSectionMove}
+        onMouseLeave={resetParallax}
+        aria-labelledby="discipulado-heading"
+      >
+        <motion.div
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.32] saturate-[1.05]"
+          style={{ backgroundImage: "url('/images/discipulado.jpeg')" }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_95%_75%_at_50%_38%,rgba(37,99,173,0.08)_0%,rgba(3,5,8,0.92)_100%)]"
+          aria-hidden
+        />
+        <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-b from-[#030508]/90 via-slate-950/55 to-[#030508]" aria-hidden />
+
+        {!reduceMotion ? (
+          <>
+            <motion.div
+              style={{ x: orb1x, y: orb1y }}
+              className="pointer-events-none absolute -left-28 top-1/4 z-[3] h-72 w-72 rounded-full bg-secondary/12 blur-[100px]"
+              aria-hidden
+            />
+            <motion.div
+              style={{ x: orb2x, y: orb2y }}
+              className="pointer-events-none absolute -right-24 bottom-1/3 z-[3] h-64 w-64 rounded-full bg-primary/14 blur-[90px]"
+              aria-hidden
+            />
+          </>
+        ) : null}
+
+        <div className="relative z-10 mx-auto w-full max-w-3xl">
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, ease: easeOut }}
+          >
+            <PdcSectionEyebrow label="Área educativa" icon={BookOpen} />
+            <h1 id="discipulado-heading" className={pdcPageTitleClass}>
+              <span className={pdcPageTitleLineClass}>Discipulado</span>
+              <span className={pdcPageTitleAccentClass}>formación con propósito</span>
+            </h1>
+            <p className="mx-auto mt-5 max-w-xl font-serif text-lg leading-relaxed text-white/85 md:text-xl">
+              Crecimiento real: formación, acompañamiento y activación en el llamado.
+            </p>
+            <p className="mx-auto mt-3 max-w-lg font-sans text-sm font-medium leading-relaxed text-white/75 md:text-[0.95rem]">
+              Palabra, oración y comunidad — claridad en cada etapa del camino.
+            </p>
+
+            <div className="mx-auto mt-8 flex justify-center">
+              <motion.button
+                type="button"
+                onClick={() => scrollToId("disc-resumen")}
+                className="pdc-btn-on-dark"
+                whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+              >
+                <motion.span
+                  className="relative z-[1] flex shrink-0 text-secondary"
+                  animate={reduceMotion ? undefined : { y: [0, 5, 0] }}
+                  transition={{ duration: 1.65, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <ChevronDown className="h-5 w-5" strokeWidth={2.25} aria-hidden />
+                </motion.span>
+                <span className="relative z-[1]">Ver programa</span>
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      </header>
+
+      {/* Resumen — cards */}
+      <motion.section
+        id="disc-resumen"
+        className={`relative px-4 py-14 sm:px-6 md:py-16 lg:px-10 ${pdcHeaderScrollMargin}`}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-8% 0px" }}
+        variants={variants}
+      >
+        <motion.div className="mx-auto max-w-6xl" variants={staggerChildren} initial="hidden" whileInView="show" viewport={{ once: true }}>
+          <motion.h2 variants={staggerItem} className="mb-3 text-center font-serif text-2xl text-white md:text-3xl">
+            Lo esencial del programa
+          </motion.h2>
+          <motion.p variants={staggerItem} className="mx-auto mb-10 max-w-xl text-center font-sans text-sm text-white/65 md:text-base">
+            Dos años de formación con ritmo quincenal, pensado para integrar fe y vida cotidiana.
+          </motion.p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:gap-5">
+            {INFO_CARDS.map(({ eyebrow, title, body, icon: Icon, accent }) => (
+              <motion.article
+                key={eyebrow}
+                variants={staggerItem}
+                whileHover={reduceMotion ? undefined : { y: -4, transition: { duration: 0.22 } }}
+                className={`group relative overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors md:p-7 ${
+                  accent
+                    ? "border-secondary/30 bg-secondary/[0.08] shadow-[0_20px_60px_-28px_rgba(64,194,222,0.25)]"
+                    : "border-white/10 bg-white/[0.04] shadow-[0_20px_60px_-26px_rgba(0,0,0,0.45)] hover:border-secondary/25"
+                }`}
+              >
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.06]">
+                  <Icon className="h-6 w-6 text-secondary" aria-hidden />
+                </div>
+                <p className="font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-secondary/80">{eyebrow}</p>
+                <p className="mt-1.5 font-serif text-2xl font-semibold text-white md:text-3xl">{title}</p>
+                <p className="mt-2 font-sans text-sm leading-relaxed text-white/65">{body}</p>
+              </motion.article>
+            ))}
+          </div>
+        </motion.div>
+      </motion.section>
+
+      {/* Pilares */}
+      <motion.section
+        id="disc-pilares"
+        className={`relative border-t border-white/[0.06] px-4 py-14 sm:px-6 md:py-16 lg:px-10 ${pdcHeaderScrollMargin}`}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-8% 0px" }}
+        variants={variants}
+      >
+        <motion.div className="mx-auto max-w-6xl" variants={staggerChildren} initial="hidden" whileInView="show" viewport={{ once: true }}>
+          <motion.h2 variants={staggerItem} className="mb-2 text-center font-serif text-2xl text-white md:text-3xl">
+            ¿Qué vas a <span className="text-secondary">vivir</span>?
+          </motion.h2>
+          <motion.p variants={staggerItem} className="mx-auto mb-10 max-w-lg text-center font-sans text-sm text-white/65">
+            Ocho pilares que marcan el camino — lo esencial, con el mismo cuidado que en casa.
+          </motion.p>
+          <motion.ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4" variants={staggerChildren}>
+            {FEATURES.map(({ label, icon: Icon }) => (
+              <motion.li
+                key={label}
+                variants={staggerItem}
+                whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                className="group flex gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] px-4 py-3.5 backdrop-blur-sm transition hover:border-secondary/30 hover:bg-white/[0.07]"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-[#0a1524]/80 text-secondary transition group-hover:border-secondary/40 group-hover:bg-secondary/10">
+                  <Icon className="h-[1.1rem] w-[1.1rem]" aria-hidden />
+                </div>
+                <span className="pt-1.5 font-sans text-sm font-medium leading-snug text-white/85 group-hover:text-white">
+                  {label}
+                </span>
+              </motion.li>
+            ))}
+          </motion.ul>
+        </motion.div>
+      </motion.section>
+
+      {/* Programa PDF */}
+      <motion.section
+        id="disc-programa"
+        className={`relative px-4 py-14 sm:px-6 md:py-16 lg:px-10 ${pdcHeaderScrollMargin}`}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-8% 0px" }}
+        variants={variants}
+      >
+        <motion.div
+          className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.08] to-[#0a1524]/80 p-8 shadow-[0_32px_90px_-24px_rgba(37,99,173,0.35)] backdrop-blur-md md:p-10"
+          variants={staggerItem}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+        >
+          <div className="flex flex-col items-center text-center md:flex-row md:items-start md:gap-8 md:text-left">
+            <div className="mb-6 flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-secondary/30 bg-secondary/10 md:mb-0">
+              <BookOpen className="h-8 w-8 text-secondary" aria-hidden />
+            </div>
+            <motion.div className="flex-1">
+              <h2 className="font-serif text-2xl text-white md:text-3xl">Programa completo en PDF</h2>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-white/70 md:text-base">
+                Descargá o abrí el programa de la Escuela de Discipulado: etapas, temas y orientación para cada encuentro.
+                También podés consultarnos por WhatsApp si tenés dudas sobre horarios o inscripción.
+              </p>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
+                <motion.a
+                  href={PDF_HREF}
+                  download
+                  className="pdc-btn-on-dark-accent"
+                  whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                >
+                  <Download className="relative z-[1] h-5 w-5 text-secondary" aria-hidden />
+                  <span className="relative z-[1]">Descargar PDF</span>
+                </motion.a>
+                <motion.a
+                  href={PDF_HREF}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pdc-btn-on-dark-ghost"
+                  whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                >
+                  <FileText className="relative z-[1] h-5 w-5 text-secondary" aria-hidden />
+                  <span className="relative z-[1]">Abrir en el navegador</span>
+                </motion.a>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      </motion.section>
+
+      {/* CTA final */}
+      <motion.section
+        id="disc-cta"
+        className={`relative border-t border-white/[0.06] px-4 pb-24 pt-14 sm:px-6 md:pb-28 lg:px-10 ${pdcHeaderScrollMargin}`}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        variants={variants}
+      >
+        <motion.div className="mx-auto max-w-2xl text-center" variants={staggerItem} initial="hidden" whileInView="show" viewport={{ once: true }}>
+          <h2 className="font-serif text-2xl text-white md:text-3xl">¿Listo para dar el paso?</h2>
+          <p className="mt-4 font-sans text-sm leading-relaxed text-white/70 md:text-base">
+            Escribinos por WhatsApp o visitanos en Baradero. Te acompañamos en el proceso.
+          </p>
+          <motion.div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
+            <motion.a
+              href={WA_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pdc-btn-on-dark-accent"
+              whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+            >
+              <MessageCircle className="relative z-[1] h-5 w-5 text-secondary" aria-hidden />
+              <span className="relative z-[1]">Consultar por WhatsApp</span>
+            </motion.a>
+            <motion.a
+              href={MAPS_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pdc-btn-on-dark-ghost"
+              whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+            >
+              <MapPin className="relative z-[1] h-5 w-5 text-secondary" aria-hidden />
+              <span className="relative z-[1]">Cómo llegar</span>
+            </motion.a>
+          </motion.div>
+        </motion.div>
+      </motion.section>
+
+      <FloatingDiscipuladoDock />
+
+      {/* FAB unificado */}
+      <div
+        className={`pointer-events-none fixed z-[10015] flex flex-col items-end max-lg:pb-[max(0.35rem,env(safe-area-inset-bottom,0px))] ${
+          fabIsLast ? FAB_INSET_NEAR_FOOTER : FAB_INSET
+        } ${activeIdx === 0 ? "hidden" : ""}`}
+      >
+        <PdcScrollFabButton
+          onClick={onFabClick}
+          eyebrow={fabEyebrow}
+          primaryLine={fabPrimaryLine}
+          pinToTop={fabIsLast}
+          ariaLabel={fabSrLabel}
+          titleKey={`${activeIdx}-${fabPrimaryLine}`}
+          className="pointer-events-auto"
+        />
+      </div>
+    </div>
   );
 };
 
