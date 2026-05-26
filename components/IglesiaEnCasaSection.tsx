@@ -13,6 +13,8 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
+import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
+import { IecComunidadGallery } from "./IecComunidadGallery";
 import PdcSegmentBar from "./PdcSegmentBar";
 import { PdcSectionEyebrow, PdcSectionHeader, pdcHeaderScrollMargin, pdcPageHeroTopComfort, pdcPageInnerClass, pdcPageTitleAccentClass, pdcPageTitleClass, pdcPageTitleLineClass } from "./PdcSectionHeader";
 import { whatsappUrl } from "../data/contacto";
@@ -33,17 +35,15 @@ const ENCUENTRO_ITEMS: readonly { label: string; icon: LucideIcon }[] = [
   { label: "Disfrutar actividades juntos", icon: Sparkles },
 ];
 
-const SCROLL_OFFSET = 112;
-
-function scrollToId(id: string) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
-  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-}
-
 const IglesiaEnCasaSection: React.FC = () => {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() ?? false;
+
+  const scrollToSection = useCallback(
+    (id: string) => {
+      scrollToPdcSectionId(id, { behavior: reduceMotion ? "auto" : "smooth" });
+    },
+    [reduceMotion]
+  );
 
   const fadeUp = useCallback(
     (delay = 0) =>
@@ -68,7 +68,7 @@ const IglesiaEnCasaSection: React.FC = () => {
       >
         <motion.div
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.34] saturate-[1.05]"
-          style={{ backgroundImage: "url('/images/iglesia-en-casa.webp')" }}
+          style={{ backgroundImage: "url('/images/celula/celula1.jpeg')" }}
           aria-hidden
         />
         <div
@@ -110,7 +110,7 @@ const IglesiaEnCasaSection: React.FC = () => {
             </a>
             <button
               type="button"
-              onClick={() => scrollToId("iec-propuesta")}
+              onClick={() => scrollToSection("iec-comunidad")}
               className="pdc-btn-on-dark max-w-none"
             >
               <span className="relative z-[1] flex items-center gap-2">
@@ -121,6 +121,20 @@ const IglesiaEnCasaSection: React.FC = () => {
           </div>
         </motion.div>
       </header>
+
+      {/* Comunidad — invitación visual */}
+      <section
+        id="iec-comunidad"
+        className={`border-t border-white/[0.06] py-14 md:py-20 ${pdcHeaderScrollMargin}`}
+        aria-labelledby="iec-comunidad-heading"
+      >
+        <div className={pdcPageInnerClass}>
+          <h2 id="iec-comunidad-heading" className="sr-only">
+            Así nos reunimos en Iglesia en casa
+          </h2>
+          <IecComunidadGallery formHref={FORM_HREF} />
+        </div>
+      </section>
 
       {/* Propuesta */}
       <section id="iec-propuesta" className={`py-14 md:py-20 ${pdcHeaderScrollMargin}`}>

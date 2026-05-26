@@ -59,7 +59,7 @@ const ROUTE_OG_IMAGE_PATH: Record<string, string> = {
   "/area-educativa/liderazgo": "/images/editorial/contacto-equipo-1080.webp",
   "/area-servicio/comunidad": "/images/editorial/contacto-lugares-1080.webp",
   "/conexion": "/images/editorial/santa-cena-mesa-960.webp",
-  "/conexion/iglesia-en-casa": "/images/editorial/santa-cena-mesa-960.webp",
+  "/conexion/iglesia-en-casa": "/images/celula/celula1.jpeg",
   "/bethel": "/images/editorial/bethel-encuentro-1080.webp",
   "/contacto": "/images/editorial/contacto-lugares-1080.webp",
 };

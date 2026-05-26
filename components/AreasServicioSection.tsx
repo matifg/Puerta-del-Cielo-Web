@@ -32,6 +32,11 @@ type Area = {
   description: string;
   full: string;
   icon: LucideIcon;
+  image?: {
+    src: string;
+    alt: string;
+    objectPosition?: string;
+  };
 };
 
 const areas: Area[] = [
@@ -42,6 +47,11 @@ const areas: Area[] = [
 con habilidad musical y sensibilidad espiritual, guían a otros en adoración
 y construyen ambientes para que la gloria de Dios se manifieste.`,
     icon: Music,
+    image: {
+      src: "/images/areasServicio/areaservicio2.jpeg",
+      alt: "Alabanza y adoración: músicos y equipo ministrando en la reunión",
+      objectPosition: "center 38%",
+    },
   },
   {
     title: "Intercesión",
@@ -361,10 +371,15 @@ const AreasServicioSection: React.FC = () => {
                       <motion.span
                         layout
                         transition={layoutSpring}
-                        className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-secondary/90"
+                        className="mt-1 flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-3 py-1.5 text-secondary/90"
                         animate={{ rotate: isOpen ? 180 : 0 }}
                         aria-hidden
                       >
+                        {!isOpen ? (
+                          <span className="hidden font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-zinc-300/80 sm:inline">
+                            Ver más
+                          </span>
+                        ) : null}
                         <ChevronDown className="h-5 w-5" />
                       </motion.span>
                     </motion.button>
@@ -388,6 +403,25 @@ const AreasServicioSection: React.FC = () => {
                               transition={reduceMotion ? { duration: 0.12 } : { duration: 0.38, ease: easeOut }}
                               className="border-t border-white/[0.08] px-4 pb-5 pt-1 md:px-5 md:pb-6"
                             >
+                              {area.image ? (
+                                <div className="mt-5 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-[0_20px_60px_-28px_rgba(0,0,0,0.75)]">
+                                  <div className="relative aspect-[16/9] w-full">
+                                    <img
+                                      src={area.image.src}
+                                      alt={area.image.alt}
+                                      loading="lazy"
+                                      decoding="async"
+                                      className="absolute inset-0 h-full w-full object-cover"
+                                      style={area.image.objectPosition ? { objectPosition: area.image.objectPosition } : undefined}
+                                    />
+                                    <div
+                                      className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/55 via-transparent to-[#030508]/10"
+                                      aria-hidden
+                                    />
+                                  </div>
+                                </div>
+                              ) : null}
+
                               <p className="whitespace-pre-line font-sans text-[0.95rem] leading-relaxed text-[#e4e0d8]/92 md:text-base">
                                 {area.full}
                               </p>
@@ -397,28 +431,6 @@ const AreasServicioSection: React.FC = () => {
                                   {idx + 1} / {areas.length}
                                 </span>
                                 <div className="flex flex-wrap gap-2">
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      goPrev();
-                                    }}
-                                    className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-white/[0.07] px-4 py-2.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white/95 transition hover:border-secondary/40 hover:bg-secondary/10 hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
-                                  >
-                                    <ChevronLeft className="h-4 w-4 shrink-0" aria-hidden />
-                                    Anterior
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      goNext();
-                                    }}
-                                    className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-white/[0.07] px-4 py-2.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white/95 transition hover:border-secondary/40 hover:bg-secondary/10 hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
-                                  >
-                                    Siguiente
-                                    <ChevronRight className="h-4 w-4 shrink-0" aria-hidden />
-                                  </button>
                                   <button
                                     type="button"
                                     onClick={(e) => {

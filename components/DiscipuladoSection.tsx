@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   motion,
   useMotionValue,
@@ -12,7 +13,6 @@ import {
   BookOpen,
   Calendar,
   ChevronDown,
-  ChevronUp,
   Clock,
   Download,
   FileText,
@@ -26,6 +26,9 @@ import {
   Users,
 } from "lucide-react";
 import { whatsappUrl } from "../data/contacto";
+import { usePdcSectionFab } from "../hooks/usePdcSectionFab";
+import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
+import { DiscipuladoMomentsBento } from "./DiscipuladoMomentsBento";
 import { PdcScrollFabButton } from "./PdcScrollFabButton";
 import {
   PdcSectionEyebrow,
@@ -42,24 +45,12 @@ const MAPS_HREF = "https://www.google.com/maps?q=Manuel+Belgrano+2053+Baradero";
 
 const sectionIds = ["disc-hero", "disc-resumen", "disc-pilares", "disc-programa", "disc-cta"] as const;
 
-const FAB_INSET =
-  "bottom-24 right-4 sm:bottom-28 sm:right-6 lg:right-[max(1.5rem,env(safe-area-inset-right,0px))]";
-
-const FAB_INSET_NEAR_FOOTER =
-  "bottom-[7.25rem] right-4 sm:bottom-[7.5rem] sm:right-5 lg:bottom-[7.75rem] lg:right-[max(1.5rem,env(safe-area-inset-right,0px))]";
-
 const DISC_FAB_LABELS: Record<string, string> = {
   "disc-resumen": "Resumen",
   "disc-pilares": "Pilares",
   "disc-programa": "Programa",
   "disc-cta": "Inscribite",
 };
-
-function nextDiscFabTitle(activeIdx: number): string {
-  const nextId = sectionIds[activeIdx + 1];
-  if (!nextId) return "Siguiente";
-  return DISC_FAB_LABELS[nextId] ?? "Siguiente";
-}
 
 export const DISC_FOOTER_ROOT_ID = "disc-footer-root";
 
@@ -110,8 +101,6 @@ const INFO_CARDS: readonly {
 
 const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-const SCROLL_NAV_OFFSET = 112;
-
 const staggerChildren: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
@@ -122,135 +111,118 @@ const staggerItem: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.48, ease: easeOut } },
 };
 
-function readGuideSectionIndex(): number {
-  const vh = window.innerHeight;
-  const footerEl = document.getElementById(DISC_FOOTER_ROOT_ID);
-  if (footerEl) {
-    const fr = footerEl.getBoundingClientRect();
-    const footerVisible = Math.max(0, Math.min(fr.bottom, vh) - Math.max(fr.top, 0));
-    if (footerVisible > vh * 0.12) return sectionIds.length - 1;
-  }
+const DISC_CHROME_Z = "z-[10030]";
 
-  let best = 0;
-  let bestVisible = -1;
-  for (let i = 0; i < sectionIds.length; i++) {
-    const el = document.getElementById(sectionIds[i]);
-    if (!el) continue;
-    const r = el.getBoundingClientRect();
-    const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
-    if (visible > bestVisible) {
-      bestVisible = visible;
-      best = i;
-    }
-  }
-  return best;
-}
+type DiscipuladoChromePortalsProps = {
+  hideFab: boolean;
+  fabInsetClass: string;
+  onFabClick: () => void;
+  fabEyebrow: string;
+  fabPrimaryLine: string;
+  fabIsLast: boolean;
+  fabSrLabel: string;
+  fabTitleKey: string;
+};
 
-function useGuideSectionIndex(): number {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const measure = useCallback(() => setActiveIdx(readGuideSectionIndex()), []);
+/** Dock y FAB en `body` para quedar por encima del footer (hermano posterior en el DOM). */
+function DiscipuladoChromePortals({
+  hideFab,
+  fabInsetClass,
+  onFabClick,
+  fabEyebrow,
+  fabPrimaryLine,
+  fabIsLast,
+  fabSrLabel,
+  fabTitleKey,
+}: DiscipuladoChromePortalsProps) {
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    measure();
-    const t = window.setTimeout(measure, 320);
-    window.addEventListener("scroll", measure, { passive: true });
-    window.addEventListener("resize", measure);
-    return () => {
-      window.clearTimeout(t);
-      window.removeEventListener("scroll", measure);
-      window.removeEventListener("resize", measure);
-    };
-  }, [measure]);
-
-  return activeIdx;
-}
-
-function useNearFooter(): boolean {
-  const [nearFooter, setNearFooter] = useState(false);
-
-  useEffect(() => {
-    const observe = () => {
-      const el = document.getElementById(DISC_FOOTER_ROOT_ID);
-      if (!el) {
-        setNearFooter(false);
-        return;
-      }
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
-      setNearFooter(visible > vh * 0.12);
-    };
-    observe();
-    const t = window.setTimeout(observe, 400);
-    window.addEventListener("scroll", observe, { passive: true });
-    window.addEventListener("resize", observe);
-    return () => {
-      window.clearTimeout(t);
-      window.removeEventListener("scroll", observe);
-      window.removeEventListener("resize", observe);
-    };
+    setMounted(true);
   }, []);
 
-  return nearFooter;
-}
+  if (!mounted) return null;
 
-/** Muestra botón “Subir” auxiliar tras bajar del hero. */
-function useScrolledPast(threshold = 420): boolean {
-  const [past, setPast] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setPast(window.scrollY > threshold);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [threshold]);
-
-  return past;
-}
-
-function FloatingDiscipuladoDock() {
-  return (
+  return createPortal(
+    <>
       <motion.div
-      className="pointer-events-none fixed left-3 z-[10010] max-w-[calc(100vw-6rem)] sm:left-5 sm:max-w-none"
-      style={{
-        bottom: "max(1.35rem, calc(1.35rem + env(safe-area-inset-bottom, 0px)))",
-      }}
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.4, ease: easeOut }}
-      aria-label="Acciones: programa y consulta"
-    >
-      <motion.div className="pdc-dock">
-        <a href={PDF_HREF} target="_blank" rel="noopener noreferrer" className="pdc-dock-btn" aria-label="Abrir programa en PDF">
-          <FileText className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
-          <span className="hidden min-[360px]:inline">Abrir</span>
-        </a>
-        <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
-        <a href={PDF_HREF} download className="pdc-dock-btn" aria-label="Descargar programa PDF">
-          <Download className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
-          <span className="hidden min-[360px]:inline">Bajar</span>
-        </a>
-        <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
-        <a
-          href={WA_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pdc-dock-btn text-secondary hover:bg-secondary/15"
-          aria-label="Consultar por WhatsApp sobre Discipulado"
-        >
-          <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
-          <span className="hidden min-[360px]:inline">Consultar</span>
-        </a>
+        className={`pointer-events-none fixed left-3 max-w-[min(calc(100vw-12.5rem),20rem)] sm:left-5 ${DISC_CHROME_Z}`}
+        style={{
+          bottom: "max(1.35rem, calc(1.35rem + env(safe-area-inset-bottom, 0px)))",
+        }}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4, ease: easeOut }}
+        aria-label="Acciones: programa y consulta"
+      >
+        <motion.div className="pdc-dock">
+          <a href={PDF_HREF} target="_blank" rel="noopener noreferrer" className="pdc-dock-btn" aria-label="Abrir programa en PDF">
+            <FileText className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
+            <span className="hidden min-[360px]:inline">Abrir</span>
+          </a>
+          <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
+          <a href={PDF_HREF} download className="pdc-dock-btn" aria-label="Descargar programa PDF">
+            <Download className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
+            <span className="hidden min-[360px]:inline">Bajar</span>
+          </a>
+          <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
+          <a
+            href={WA_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pdc-dock-btn text-secondary hover:bg-secondary/15"
+            aria-label="Consultar por WhatsApp sobre Discipulado"
+          >
+            <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
+            <span className="hidden min-[360px]:inline">Consultar</span>
+          </a>
+        </motion.div>
       </motion.div>
-    </motion.div>
+
+      {!hideFab ? (
+        <div
+          className={`pointer-events-none fixed flex flex-col items-end max-lg:pb-[max(0.35rem,env(safe-area-inset-bottom,0px))] ${DISC_CHROME_Z} ${fabInsetClass}`}
+        >
+          <PdcScrollFabButton
+            onClick={onFabClick}
+            eyebrow={fabEyebrow}
+            primaryLine={fabPrimaryLine}
+            pinToTop={fabIsLast}
+            ariaLabel={fabSrLabel}
+            titleKey={fabTitleKey}
+            className="pointer-events-auto"
+          />
+        </div>
+      ) : null}
+    </>,
+    document.body
   );
 }
 
 const DiscipuladoSection = () => {
   const reduceMotion = useReducedMotion() ?? false;
   const sectionRef = useRef<HTMLDivElement>(null);
-  const activeIdx = useGuideSectionIndex();
-  const nearFooter = useNearFooter();
+  const {
+    activeIdx,
+    nearFooter,
+    fabIsLast,
+    fabEyebrow,
+    fabPrimaryLine,
+    onFabClick,
+    hideAtStart,
+    fabInsetClass,
+  } = usePdcSectionFab(sectionIds, DISC_FOOTER_ROOT_ID, DISC_FAB_LABELS);
+
+  const fabSrLabel = fabIsLast
+    ? "Subir al inicio del programa de Discipulado"
+    : `Ir a ${fabPrimaryLine}`;
+
+  const scrollToSection = useCallback(
+    (id: string) => {
+      scrollToPdcSectionId(id, { behavior: reduceMotion ? "auto" : "smooth" });
+    },
+    [reduceMotion]
+  );
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -265,38 +237,6 @@ const DiscipuladoSection = () => {
     () => (nearFooter ? 100 : ((activeIdx + 1) / sectionIds.length) * 100),
     [activeIdx, nearFooter]
   );
-
-  const scrollToId = useCallback(
-    (id: string) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const behavior = reduceMotion ? "auto" : ("smooth" as ScrollBehavior);
-      const docTop = el.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: Math.max(0, docTop - SCROLL_NAV_OFFSET), behavior });
-    },
-    [reduceMotion]
-  );
-
-  const scrollToHero = useCallback(() => {
-    scrollToId(sectionIds[0]);
-  }, [scrollToId]);
-
-  const onFabClick = useCallback(() => {
-    const current = readGuideSectionIndex();
-    const atEnd = current >= sectionIds.length - 1 || nearFooter;
-    if (atEnd) {
-      scrollToHero();
-      return;
-    }
-    scrollToId(sectionIds[current + 1]);
-  }, [scrollToId, nearFooter, scrollToHero]);
-
-  const fabIsLast = activeIdx >= sectionIds.length - 1 || nearFooter;
-  const fabEyebrow = fabIsLast ? "Inicio" : "Explorar";
-  const fabPrimaryLine = fabIsLast ? "Subir" : nextDiscFabTitle(activeIdx);
-  const fabSrLabel = fabIsLast
-    ? "Subir al inicio del programa de Discipulado"
-    : `Ir a ${fabPrimaryLine}`;
 
   const variants = useMemo(
     () => ({
@@ -384,7 +324,7 @@ const DiscipuladoSection = () => {
             <div className="mx-auto mt-8 flex justify-center">
               <motion.button
                 type="button"
-                onClick={() => scrollToId("disc-resumen")}
+                onClick={() => scrollToSection("disc-resumen")}
                 className="pdc-btn-on-dark"
                 whileHover={reduceMotion ? undefined : { scale: 1.02 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.98 }}
@@ -440,6 +380,8 @@ const DiscipuladoSection = () => {
               </motion.article>
             ))}
           </div>
+
+          <DiscipuladoMomentsBento className="mt-14 md:mt-16" />
         </motion.div>
       </motion.section>
 
@@ -482,7 +424,7 @@ const DiscipuladoSection = () => {
       {/* Programa PDF */}
       <motion.section
         id="disc-programa"
-        className={`relative px-4 py-14 sm:px-6 md:py-16 lg:px-10 ${pdcHeaderScrollMargin}`}
+        className={`relative scroll-mt-28 px-4 py-14 sm:px-6 md:min-h-[min(42vh,360px)] md:py-16 lg:px-10 ${pdcHeaderScrollMargin}`}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-8% 0px" }}
@@ -500,7 +442,9 @@ const DiscipuladoSection = () => {
               <BookOpen className="h-8 w-8 text-secondary" aria-hidden />
             </div>
             <motion.div className="flex-1">
-              <h2 className="font-serif text-2xl text-white md:text-3xl">Programa completo en PDF</h2>
+              <h2 data-pdc-scroll-focus className="font-serif text-2xl text-white md:text-3xl">
+                Programa completo en PDF
+              </h2>
               <p className="mt-3 font-sans text-sm leading-relaxed text-white/70 md:text-base">
                 Descargá o abrí el programa de la Escuela de Discipulado: etapas, temas y orientación para cada encuentro.
                 También podés consultarnos por WhatsApp si tenés dudas sobre horarios o inscripción.
@@ -574,24 +518,16 @@ const DiscipuladoSection = () => {
         </motion.div>
       </motion.section>
 
-      <FloatingDiscipuladoDock />
-
-      {/* FAB unificado */}
-      <div
-        className={`pointer-events-none fixed z-[10015] flex flex-col items-end max-lg:pb-[max(0.35rem,env(safe-area-inset-bottom,0px))] ${
-          fabIsLast ? FAB_INSET_NEAR_FOOTER : FAB_INSET
-        } ${activeIdx === 0 ? "hidden" : ""}`}
-      >
-        <PdcScrollFabButton
-          onClick={onFabClick}
-          eyebrow={fabEyebrow}
-          primaryLine={fabPrimaryLine}
-          pinToTop={fabIsLast}
-          ariaLabel={fabSrLabel}
-          titleKey={`${activeIdx}-${fabPrimaryLine}`}
-          className="pointer-events-auto"
-        />
-      </div>
+      <DiscipuladoChromePortals
+        hideFab={hideAtStart}
+        fabInsetClass={fabInsetClass}
+        onFabClick={onFabClick}
+        fabEyebrow={fabEyebrow}
+        fabPrimaryLine={fabPrimaryLine}
+        fabIsLast={fabIsLast}
+        fabSrLabel={fabSrLabel}
+        fabTitleKey={`${activeIdx}-${fabPrimaryLine}`}
+      />
     </div>
   );
 };

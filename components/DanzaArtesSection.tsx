@@ -33,27 +33,27 @@ const INFO_CARDS: readonly {
   {
     eyebrow: "Duración",
     title: "1 año",
-    body: "Formación completa con ritmo que permite integrar práctica y vida diaria.",
+    body: "Formación completa e integradora: movimiento que se vuelve vida.",
     icon: Clock,
   },
   {
     eyebrow: "Modalidad",
     title: "2 sábados / mes",
-    body: "Últimos dos sábados de cada mes, en encuentros presenciales.",
+    body: "Presencial, 2 sábados al mes: palabra, práctica y comunidad.",
     icon: Calendar,
     accent: true,
   },
 ];
 
-const LIST_ITEMS = [
-  "Fundamentos bíblicos sólidos",
+const LIVE_CHIPS = [
+  "Palabra y fundamentos",
   "Formación espiritual",
-  "Entrenamiento en danza",
-  "Desarrollo de creatividad",
+  "Técnica y entrenamiento",
+  "Creatividad con propósito",
   "Comunidad real",
   "Espacios de práctica",
-  "Acompañamiento cercano",
-  "Tiempos de ministración",
+  "Acompañamiento",
+  "Ministración",
 ] as const;
 
 const cardVariants = {
@@ -161,8 +161,8 @@ const DanzaArtesSection = () => (
       <Reveal delayMs={80}>
         <div id="danza-contenido" className={`${glassCard} scroll-mt-28 p-6 md:p-10`}>
           <p className="mx-auto mb-10 max-w-2xl text-center font-sans text-sm font-medium leading-relaxed text-white/92 md:text-base">
-            La Escuela de Danza y Artes Dinámicas forma personas con identidad, sensibilidad espiritual y excelencia,
-            entendiendo el arte como un medio para manifestar la presencia de Dios.
+            Danza y Artes es un espacio para crecer en identidad y adoración.
+            Entrenás, creás y ministrás con propósito.
           </p>
 
           <div className="mx-auto mb-10 grid max-w-3xl gap-4 sm:grid-cols-2">
@@ -202,24 +202,24 @@ const DanzaArtesSection = () => (
           </div>
 
           <div className="mb-10">
-            <h3 className="mb-6 flex items-center justify-center gap-2 font-serif text-xl font-medium text-[#faf8f4] md:text-2xl">
+            <h3 className="mb-3 flex items-center justify-center gap-2 font-serif text-xl font-medium text-[#faf8f4] md:text-2xl">
               <Sparkles className="h-5 w-5 text-secondary" aria-hidden />
-              ¿Qué vas a vivir?
+              Lo que vas a vivir
             </h3>
-            <ul className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-2">
-              {LIST_ITEMS.map((item, i) => (
+            <p className="mb-6 text-center font-sans text-sm text-zinc-400 md:text-base">
+              Palabra + práctica + momentos de ministración
+            </p>
+            <ul className="mx-auto flex max-w-3xl flex-wrap justify-center gap-2.5 sm:gap-3" role="list">
+              {LIVE_CHIPS.map((item, i) => (
                 <motion.li
                   key={item}
-                  className="flex items-start gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 font-sans text-sm text-white/90 transition hover:border-secondary/20 hover:bg-white/[0.06]"
-                  initial={{ opacity: 0, x: -8 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.04, duration: 0.4, ease }}
+                  transition={{ delay: i * 0.035, duration: 0.35, ease }}
+                  className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 font-sans text-sm font-medium text-white/85 backdrop-blur-sm transition hover:border-secondary/25 hover:bg-white/[0.06]"
                 >
-                  <span className="mt-0.5 text-secondary" aria-hidden>
-                    •
-                  </span>
-                  <span>{item}</span>
+                  {item}
                 </motion.li>
               ))}
             </ul>

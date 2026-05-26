@@ -297,15 +297,11 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
               />
             );
           })}
-          <span className="w-full text-center font-sans text-[0.65rem] text-zinc-500 sm:w-auto sm:pl-2">
-            {isVideoSlide
-              ? playClip
-                ? "Clip en bucle"
-                : "Imagen estática (ahorro de datos)"
-              : paused
-                ? "Pausado"
-                : `Cambia cada ${seconds} s`}
-          </span>
+          {!isVideoSlide ? (
+            <span className="w-full text-center font-sans text-[0.65rem] text-zinc-500 sm:w-auto sm:pl-2">
+              {paused ? "Pausado" : `Cambia cada ${seconds} s`}
+            </span>
+          ) : null}
         </motion.div>
       ) : null}
     </section>
