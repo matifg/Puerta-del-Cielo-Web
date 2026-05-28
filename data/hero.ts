@@ -4,7 +4,7 @@ export const HERO_VIDEO_MP4 = "/assets/hero.mp4";
 export const HERO_VIDEO_WEBM = "/assets/hero.webm";
 export const HERO_HAS_WEBM = false;
 
-/** Poster = primer frame del MP4 (fallback: ahorro de datos / reducir movimiento). */
+/** Solo Open Graph / redes — el hero en pantalla usa solo el MP4. */
 export const HERO_POSTER = "/assets/hero-poster.jpg";
 
 /** @deprecated Usar HERO_POSTER — compat OG / enlaces viejos */

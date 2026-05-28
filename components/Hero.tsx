@@ -16,7 +16,6 @@ import {
 } from "../data/hero";
 import { horariosReunionGeneral } from "../data/horariosWeb";
 import { HeroBackgroundVideo } from "./HeroBackgroundVideo";
-import { usePrefersSaveData } from "../hooks/usePrefersSaveData";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -41,9 +40,7 @@ export const Hero: React.FC = () => {
   const [modalMounted, setModalMounted] = useState(false);
   const reduceMotion = useReducedMotion() ?? false;
   const [finePointer, setFinePointer] = useState(false);
-  const saveData = usePrefersSaveData();
   const overlay = heroOverlayPresets[HERO_OVERLAY_PRESET];
-  const forcePoster = reduceMotion || saveData;
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -111,7 +108,7 @@ export const Hero: React.FC = () => {
       aria-label="Inicio"
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-        <HeroBackgroundVideo forcePoster={forcePoster} />
+        <HeroBackgroundVideo />
 
         <div className="absolute inset-0 z-[1]">
         <div className={`absolute inset-0 ${overlay.edgeClass}`} />
