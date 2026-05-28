@@ -6,10 +6,9 @@ body {
   @apply font-sans bg-[#030508] text-[#ece8e2] antialiased;
 }
 
-/* Navbar: evita que herede texto oscuro si falta una utilidad de Tailwind */
+/* Navbar: color de texto; fondo lo controla el componente (glass / sólido) */
 nav[aria-label="Principal"] {
   color: #faf8f4;
-  background-color: #030508;
 }
 
 .scrollbar-hide::-webkit-scrollbar {

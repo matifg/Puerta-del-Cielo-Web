@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Hero } from './components/Hero.tsx';
 import { Rema } from './components/Rema.tsx';
 import { Anuncios } from './components/Anuncios.tsx';
@@ -29,17 +29,28 @@ import { whatsappBaseUrl } from "./data/contacto";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { PageSeo } from "./components/PageSeo";
 
-const App: React.FC = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [maintenanceMode] = useState(false);
+const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { pathname } = useLocation();
+  const isHome = pathname === "/";
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  return (
+    <>
+      <Navbar />
+      <div
+        className={
+          isHome
+            ? "min-h-screen bg-[#030508]"
+            : "min-h-screen bg-[#030508] pt-16"
+        }
+      >
+        {children}
+      </div>
+    </>
+  );
+};
+
+const App: React.FC = () => {
+  const [maintenanceMode] = useState(false);
 
   if (maintenanceMode) {
     return (
@@ -157,8 +168,7 @@ const App: React.FC = () => {
     <BrowserRouter>
       <PageSeo />
       <ScrollToTop />
-      <Navbar />
-      <div className="min-h-screen bg-black pt-[4.25rem] md:pt-[4.5rem]">
+      <AppShell>
         <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/quienes-somos" element={<QuienesSomos />}>
@@ -180,7 +190,7 @@ const App: React.FC = () => {
         <Route path="/servicio-comunidad" element={<ServicioComunidadPage />} />
         <Route path="/area-servicio/comunidad" element={<ServicioComunidadPage />} />
       </Routes>
-      </div>
+      </AppShell>
 
       {/* BOTÓN WHATSAPP PRO */}
       <a
