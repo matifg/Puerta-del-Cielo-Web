@@ -1,15 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
+  AnimatePresence,
   motion,
   useMotionValue,
   useReducedMotion,
   useSpring,
   useTransform,
 } from "framer-motion";
+import { Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   HERO_OVERLAY_PRESET,
   HERO_POSTER,
-  HERO_VIDEO_MIN_WIDTH,
   HERO_VIDEO_MP4,
   HERO_VIDEO_OBJECT_POSITION,
   HERO_VIDEO_WEBM,
@@ -38,14 +41,17 @@ const contentItem = {
 
 export const Hero: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
+  const [modalMounted, setModalMounted] = useState(false);
   const reduceMotion = useReducedMotion() ?? false;
   const [finePointer, setFinePointer] = useState(false);
-  const [desktopViewport, setDesktopViewport] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
   const saveData = usePrefersSaveData();
   const videoRef = useRef<HTMLVideoElement>(null);
   const overlay = heroOverlayPresets[HERO_OVERLAY_PRESET];
-  const playVideo = desktopViewport && !reduceMotion && !saveData;
-  const showHeroImage = !playVideo;
+  const wantsVideo = !reduceMotion && !saveData;
+  const showVideo = wantsVideo && !videoFailed;
+  const showStaticPoster = !showVideo;
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -57,6 +63,10 @@ export const Hero: React.FC = () => {
   const g2y = useTransform(sy, (v) => -v * 7);
 
   useEffect(() => {
+    setModalMounted(true);
+  }, []);
+
+  useEffect(() => {
     const mq = window.matchMedia("(pointer: fine)");
     const sync = () => setFinePointer(mq.matches);
     sync();
@@ -65,22 +75,30 @@ export const Hero: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const mq = window.matchMedia(HERO_VIDEO_MIN_WIDTH);
-    const sync = () => setDesktopViewport(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (!playVideo) {
-      video.pause();
+    if (!showVideo) {
+      setVideoReady(false);
       return;
     }
-    void video.play().catch(() => {});
-  }, [playVideo]);
+    const id = requestAnimationFrame(() => {
+      const video = videoRef.current;
+      if (!video) return;
+      setVideoReady(false);
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        setVideoReady(true);
+      }
+      void video.play().catch(() => setVideoFailed(true));
+    });
+    return () => cancelAnimationFrame(id);
+  }, [showVideo]);
+
+  const onVideoReady = useCallback(() => {
+    setVideoReady(true);
+  }, []);
+
+  const onVideoError = useCallback(() => {
+    setVideoFailed(true);
+    setVideoReady(false);
+  }, []);
 
   useEffect(() => {
     if (!showModal) return;
@@ -121,43 +139,46 @@ export const Hero: React.FC = () => {
   return (
     <section
       id="home-hero"
-      className="relative flex min-h-[100svh] min-h-screen flex-col overflow-hidden bg-[#030508] bg-cover bg-center"
-      style={saveData ? { backgroundImage: `url(${HERO_POSTER})` } : undefined}
+      className="relative flex min-h-[100svh] min-h-screen flex-col overflow-x-hidden bg-[#030508]"
       onMouseMove={onHeroMove}
       onMouseLeave={onHeroLeave}
       aria-label="Inicio"
     >
-      {showHeroImage ? (
-        <img
-          src={HERO_POSTER}
-          alt=""
-          decoding="async"
-          fetchPriority="high"
-          aria-hidden
-          className="absolute inset-0 z-0 block h-full min-h-full w-full scale-[1.02] object-cover"
-          style={{ objectPosition: HERO_VIDEO_OBJECT_POSITION }}
-        />
-      ) : null}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        {showStaticPoster ? (
+          <img
+            src={HERO_POSTER}
+            alt=""
+            decoding="async"
+            fetchPriority="high"
+            className="block h-full min-h-full w-full scale-[1.02] object-cover"
+            style={{ objectPosition: HERO_VIDEO_OBJECT_POSITION }}
+          />
+        ) : null}
 
-      {playVideo ? (
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster={HERO_POSTER}
-          aria-hidden
-          className="absolute inset-0 z-0 block h-full min-h-full w-full scale-[1.02] object-cover"
-          style={{ objectPosition: HERO_VIDEO_OBJECT_POSITION }}
-        >
-          <source src={HERO_VIDEO_WEBM} type="video/webm" />
-          <source src={HERO_VIDEO_MP4} type="video/mp4" />
-        </video>
-      ) : null}
+        {showVideo ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden
+            onLoadedData={onVideoReady}
+            onCanPlay={onVideoReady}
+            onError={onVideoError}
+            className={`block h-full min-h-full w-full scale-[1.02] object-cover transition-opacity duration-700 motion-reduce:transition-none ${
+              videoReady ? "opacity-100" : "opacity-0"
+            }`}
+            style={{ objectPosition: HERO_VIDEO_OBJECT_POSITION }}
+          >
+            <source src={HERO_VIDEO_WEBM} type="video/webm" />
+            <source src={HERO_VIDEO_MP4} type="video/mp4" />
+          </video>
+        ) : null}
 
-      <div className="pointer-events-none absolute inset-0 z-[1]" aria-hidden>
+        <div className="absolute inset-0 z-[1]">
         <div className={`absolute inset-0 ${overlay.edgeClass}`} />
         <div
           className="absolute inset-0"
@@ -187,9 +208,10 @@ export const Hero: React.FC = () => {
             />
           </>
         )}
+        </div>
       </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-start px-4 pb-14 pt-[calc(4.75rem+env(safe-area-inset-top,0px))] sm:px-6 sm:pb-16 sm:pt-[calc(5rem+env(safe-area-inset-top,0px))] md:max-w-3xl md:justify-center md:pb-20 md:pt-[calc(5.25rem+env(safe-area-inset-top,0px))]">
+      <div className="relative z-10 mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 pb-[max(3.5rem,env(safe-area-inset-bottom,0px))] pt-[calc(4.75rem+env(safe-area-inset-top,0px))] sm:px-6 sm:pb-16 sm:pt-[calc(5rem+env(safe-area-inset-top,0px))] md:max-w-3xl md:pb-20 md:pt-[calc(5.25rem+env(safe-area-inset-top,0px))]">
         {overlay.contentBackdrop ? (
           <div
             className="pointer-events-none absolute inset-x-4 top-[calc(3.5rem+env(safe-area-inset-top,0px))] bottom-24 max-w-2xl rounded-[2rem] bg-[#030508]/25 blur-md md:inset-x-auto md:left-1/2 md:w-[min(100%,42rem)] md:-translate-x-1/2"
@@ -198,7 +220,7 @@ export const Hero: React.FC = () => {
         ) : null}
         <motion.div
           className="relative w-full max-w-lg px-2 py-4 sm:max-w-xl sm:px-4 sm:py-5 md:max-w-2xl"
-          initial={reduceMotion ? false : "hidden"}
+          initial={reduceMotion ? "show" : "hidden"}
           animate="show"
           variants={contentStagger}
         >
@@ -304,102 +326,123 @@ export const Hero: React.FC = () => {
                 <span className="relative z-[1]">Ver horarios</span>
               </motion.button>
             </motion.div>
+
+            <motion.div variants={contentItem} className="pt-3">
+              <Link
+                to="/quienes-somos/vision"
+                className="group inline-flex items-center gap-2 font-sans text-sm font-medium tracking-wide text-white/80 transition hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-secondary"
+              >
+                <span className="h-px w-6 bg-gradient-to-r from-transparent to-secondary/60 transition group-hover:w-8 group-hover:to-secondary" aria-hidden />
+                <span>Visión y propósito</span>
+                <span
+                  className="text-secondary transition group-hover:translate-x-0.5 motion-reduce:transition-none"
+                  aria-hidden
+                >
+                  →
+                </span>
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
       </div>
 
-      {showModal && (
-        <div
-          className="fixed inset-0 z-[10050] flex animate-fade items-center justify-center bg-slate-950/72 p-4 backdrop-blur-md"
-          onClick={handleOverlayClick}
-          role="presentation"
-        >
-          <div
-            className="animate-scale relative w-full max-w-md overflow-hidden rounded-3xl border border-primary/22 bg-gradient-to-b from-[#0a1524]/96 to-[#030508]/95 p-7 shadow-[0_28px_72px_rgba(37,99,173,0.28)] backdrop-blur-xl sm:p-8"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="hero-horarios-title"
-          >
-            <div
-              className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-secondary/12 blur-3xl"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute -bottom-24 -left-12 h-40 w-40 rounded-full bg-primary/12 blur-3xl"
-              aria-hidden
-            />
-
-            <button
-              type="button"
-              className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/[0.07] text-lg leading-none text-white/75 transition hover:border-white/22 hover:bg-white/12 hover:text-white"
-              onClick={() => setShowModal(false)}
-              aria-label="Cerrar"
-            >
-              &times;
-            </button>
-
-            <div className="relative mb-6 flex flex-col items-center gap-3 pt-1 text-center">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-secondary/28 bg-secondary/12 text-secondary">
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.75}
-                  viewBox="0 0 24 24"
-                  aria-hidden
+      {modalMounted
+        ? createPortal(
+            <AnimatePresence>
+              {showModal ? (
+                <motion.div
+                  className="fixed inset-0 z-[10050] flex items-center justify-center bg-[#030508]/80 p-4 backdrop-blur-md"
+                  role="presentation"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: reduceMotion ? 0.1 : 0.22 }}
+                  onClick={handleOverlayClick}
                 >
-                  <circle cx="12" cy="12" r="9" />
-                  <path strokeLinecap="round" d="M12 7v5l3 2" />
-                </svg>
-              </div>
-              <h2
-                id="hero-horarios-title"
-                className="font-serif text-xl font-medium tracking-[0.04em] text-[#faf8f4] md:text-2xl"
-              >
-                Horarios de reuniones
-              </h2>
-              <p className="max-w-xs font-sans text-[0.8125rem] leading-snug text-white/55">
-                Reunión general — mismo horario que en el pie de página. Consultá por WhatsApp si necesitás más detalle.
-              </p>
-            </div>
+                  <motion.div
+                    className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/[0.12] bg-gradient-to-b from-[#0c1829] via-[#0a1524] to-[#030508] p-7 shadow-[0_32px_90px_-20px_rgba(37,99,173,0.45)] ring-1 ring-secondary/20 sm:p-8"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="hero-horarios-title"
+                    initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 14 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={reduceMotion ? undefined : { opacity: 0, scale: 0.98, y: 8 }}
+                    transition={{ duration: 0.32, ease }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div
+                      className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-secondary/18 blur-3xl"
+                      aria-hidden
+                    />
+                    <div
+                      className="pointer-events-none absolute -bottom-24 -left-12 h-40 w-40 rounded-full bg-primary/16 blur-3xl"
+                      aria-hidden
+                    />
+                    <div
+                      className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent"
+                      aria-hidden
+                    />
 
-            <ul className="relative space-y-2.5 font-sans">
-              {horariosReunionGeneral.map((h) => (
-                <li
-                  key={`${h.dia}-${h.hora}`}
-                  className="rounded-2xl border border-white/[0.08] bg-white/[0.05] px-4 py-3.5 text-center transition hover:border-secondary/28 hover:bg-white/[0.08]"
-                >
-                  <span className="block text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-secondary/95">
-                    {h.dia}
-                  </span>
-                  <span className="mt-1 block text-base font-medium tabular-nums text-[#f2ede6]">{h.hora}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
+                    <button
+                      type="button"
+                      className="absolute right-3 top-3 z-[1] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-lg leading-none text-white/80 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+                      onClick={() => setShowModal(false)}
+                      aria-label="Cerrar"
+                    >
+                      &times;
+                    </button>
 
-      <style>{`
-        @keyframes fade {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        .animate-fade {
-          animation: fade 0.22s ease-out both;
-        }
-        @keyframes scale {
-          from { transform: scale(0.97) translateY(8px); opacity: 0; }
-          to { transform: scale(1) translateY(0); opacity: 1; }
-        }
-        .animate-scale {
-          animation: scale 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-fade, .animate-scale { animation: none; opacity: 1; transform: none; }
-        }
-      `}</style>
+                    <div className="relative mb-7 flex flex-col items-center gap-3 pt-1 text-center">
+                      <motion.div
+                        className="flex h-12 w-12 items-center justify-center rounded-2xl border border-secondary/35 bg-secondary/15 text-secondary shadow-[0_0_28px_-6px_rgba(64,194,222,0.45)]"
+                        animate={reduceMotion ? undefined : { scale: [1, 1.05, 1] }}
+                        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <Clock className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+                      </motion.div>
+                      <p className="font-sans text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-secondary">
+                        Reunión general
+                      </p>
+                      <h2
+                        id="hero-horarios-title"
+                        className="font-serif text-2xl font-medium tracking-[0.03em] text-[#faf8f4] md:text-[1.65rem]"
+                      >
+                        Horarios de reuniones
+                      </h2>
+                      <div
+                        className="h-px w-16 bg-gradient-to-r from-transparent via-secondary/50 to-transparent"
+                        aria-hidden
+                      />
+                      <p className="max-w-xs font-sans text-[0.8125rem] leading-relaxed text-white/75 md:text-sm">
+                        Mismo horario que en el pie de página. Consultá por WhatsApp si necesitás más detalle.
+                      </p>
+                    </div>
+
+                    <ul className="relative space-y-2.5 font-sans">
+                      {horariosReunionGeneral.map((h, i) => (
+                        <motion.li
+                          key={`${h.dia}-${h.hora}`}
+                          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.06 + i * 0.05, duration: 0.35, ease }}
+                          className="rounded-2xl border border-white/[0.1] bg-white/[0.06] px-4 py-3.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-secondary/30 hover:bg-white/[0.09]"
+                        >
+                          <span className="block text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-secondary">
+                            {h.dia}
+                          </span>
+                          <span className="mt-1 block text-lg font-medium tabular-nums tracking-wide text-[#f5f2ec]">
+                            {h.hora}
+                          </span>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>,
+            document.body
+          )
+        : null}
     </section>
   );
 };

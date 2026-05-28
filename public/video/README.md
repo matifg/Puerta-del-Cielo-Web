@@ -6,11 +6,13 @@
 
 El poster debe coincidir con el primer frame: `public/images/hero-mobile.jpg`.
 
-## Móvil vs escritorio
+## Móvil y escritorio
 
-En pantallas **≤768px** el hero muestra solo la imagen `public/images/hero-mobile.jpg` (mismo encuadre que el video). En **≥769px** reproduce el MP4 (y WebM opcional si existe).
+En iPhone y desktop se reproduce el MP4 (y WebM si existe) con `playsInline`, `muted` y `loop`, salvo **modo ahorro de datos** o **reducir movimiento** del sistema: ahí solo se muestra `hero-mobile.jpg`.
 
-Reemplazá `hero-mobile.jpg` por un frame exportado del video cuando puedas (debe coincidir con el primer fotograma del clip).
+Mientras carga el video, el fondo queda oscuro y el clip hace fade-in (sin poster de Santa Cena encima).
+
+Reemplazá `hero-mobile.jpg` por un **frame exportado del primer fotograma del MP4** (ffmpeg: `ffmpeg -i PuertaDelCieloHero.mp4 -frames:v 1 -q:v 2 ../images/hero-mobile.jpg`).
 
 ## Opcional (mejor rendimiento en escritorio)
 

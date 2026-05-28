@@ -1,10 +1,8 @@
 /** Rutas del hero (archivos en public/; no se generan desde el repo). */
 export const HERO_VIDEO_MP4 = "/video/PuertaDelCieloHero.mp4";
 export const HERO_VIDEO_WEBM = "/video/PuertaDelCieloHero.webm";
+/** Poster estático: idealmente primer frame del MP4 (ver public/video/README.md). */
 export const HERO_POSTER = "/images/hero-mobile.jpg";
-
-/** Video solo desde este ancho; en móvil se usa `HERO_POSTER` como imagen fija. */
-export const HERO_VIDEO_MIN_WIDTH = "(min-width: 769px)";
 
 /** Encuadre del clip (ajustar si el plano queda alto/bajo). */
 export const HERO_VIDEO_OBJECT_POSITION = "center 42%";
