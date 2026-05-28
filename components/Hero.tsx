@@ -15,7 +15,6 @@ import {
   HERO_POSTER,
   HERO_VIDEO_MP4,
   HERO_VIDEO_OBJECT_POSITION,
-  HERO_VIDEO_WEBM,
   heroOverlayPresets,
 } from "../data/hero";
 import { horariosReunionGeneral } from "../data/horariosWeb";
@@ -45,13 +44,12 @@ export const Hero: React.FC = () => {
   const reduceMotion = useReducedMotion() ?? false;
   const [finePointer, setFinePointer] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
-  const [videoFailed, setVideoFailed] = useState(false);
   const saveData = usePrefersSaveData();
   const videoRef = useRef<HTMLVideoElement>(null);
   const overlay = heroOverlayPresets[HERO_OVERLAY_PRESET];
-  const wantsVideo = !reduceMotion && !saveData;
-  const showVideo = wantsVideo && !videoFailed;
-  const showStaticPoster = !showVideo;
+  /** Solo poster estático si el usuario pide menos datos/movimiento — no por fallo del video. */
+  const showStaticPoster = reduceMotion || saveData;
+  const showVideo = !showStaticPoster;
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -74,6 +72,14 @@ export const Hero: React.FC = () => {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
+  const tryPlayVideo = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || !showVideo) return;
+    void video.play().catch(() => {
+      /* iOS a veces rechaza el primer intento; reintentar tras carga */
+    });
+  }, [showVideo]);
+
   useEffect(() => {
     if (!showVideo) {
       setVideoReady(false);
@@ -86,19 +92,15 @@ export const Hero: React.FC = () => {
       if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
         setVideoReady(true);
       }
-      void video.play().catch(() => setVideoFailed(true));
+      tryPlayVideo();
     });
     return () => cancelAnimationFrame(id);
-  }, [showVideo]);
+  }, [showVideo, tryPlayVideo]);
 
   const onVideoReady = useCallback(() => {
     setVideoReady(true);
-  }, []);
-
-  const onVideoError = useCallback(() => {
-    setVideoFailed(true);
-    setVideoReady(false);
-  }, []);
+    tryPlayVideo();
+  }, [tryPlayVideo]);
 
   useEffect(() => {
     if (!showModal) return;
@@ -159,6 +161,7 @@ export const Hero: React.FC = () => {
         {showVideo ? (
           <video
             ref={videoRef}
+            src={HERO_VIDEO_MP4}
             autoPlay
             muted
             loop
@@ -167,15 +170,11 @@ export const Hero: React.FC = () => {
             aria-hidden
             onLoadedData={onVideoReady}
             onCanPlay={onVideoReady}
-            onError={onVideoError}
-            className={`block h-full min-h-full w-full scale-[1.02] object-cover transition-opacity duration-700 motion-reduce:transition-none ${
+            className={`block h-full min-h-full w-full scale-[1.02] object-cover transition-opacity duration-500 motion-reduce:transition-none ${
               videoReady ? "opacity-100" : "opacity-0"
             }`}
             style={{ objectPosition: HERO_VIDEO_OBJECT_POSITION }}
-          >
-            <source src={HERO_VIDEO_WEBM} type="video/webm" />
-            <source src={HERO_VIDEO_MP4} type="video/mp4" />
-          </video>
+          />
         ) : null}
 
         <div className="absolute inset-0 z-[1]">
