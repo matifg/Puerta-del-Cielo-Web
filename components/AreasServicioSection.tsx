@@ -49,8 +49,8 @@ const areas: Area[] = [
     image: {
       src: "/images/areasServicio/areaservicio2.jpeg",
       alt: "Alabanza y adoración: músicos y equipo ministrando en la reunión",
-      objectPosition: "center 48%",
-      aspectClass: "aspect-[5/4] md:aspect-[16/10]",
+      /** Recorte superior: prioriza pies y primer plano del ministerio. */
+      objectPosition: "50% 88%",
     },
   },
   {
@@ -60,10 +60,10 @@ const areas: Area[] = [
       "Hombres y mujeres que, mediante la intercesión y la guerra espiritual, aceptan el llamado de colocarse en la brecha delante de Dios, a favor de las familias, la iglesia, la ciudad y la nación.",
     icon: HandHeart,
     image: {
-      src: "/images/areasServicio/areaservicio1.jpeg",
-      alt: "Intercesión: equipo orando en la iglesia",
-      objectPosition: "center 52%",
-      aspectClass: "aspect-[5/4] md:aspect-[16/10]",
+      src: "/images/intercesion/intersecion.jpeg",
+      alt: "Intercesión: grupos orando en círculos durante el servicio",
+      /** Encuadre inferior: círculos de oración y pies visibles. */
+      objectPosition: "50% 78%",
     },
   },
   {
@@ -75,8 +75,7 @@ const areas: Area[] = [
     image: {
       src: "/images/areasServicio/artesDinamicas.jpeg",
       alt: "Artes dinámicas: ministerio expresando adoración en movimiento",
-      objectPosition: "center 50%",
-      aspectClass: "aspect-[5/4] md:aspect-[16/10]",
+      objectPosition: "50% 55%",
     },
   },
   {
@@ -88,8 +87,7 @@ const areas: Area[] = [
     image: {
       src: "/images/areasServicio/areaservicio3.png",
       alt: "Medios audiovisuales: equipo de producción y pantallas en el servicio",
-      objectPosition: "center center",
-      aspectClass: "aspect-[5/4] md:aspect-[16/10]",
+      objectPosition: "50% 48%",
     },
   },
   {
@@ -108,8 +106,7 @@ const areas: Area[] = [
     image: {
       src: "/images/areasServicio/anfitriones.jpg",
       alt: "Anfitriones: equipo recibiendo y acompañando en la entrada",
-      objectPosition: "center 45%",
-      aspectClass: "aspect-[5/4] md:aspect-[16/10]",
+      objectPosition: "50% 42%",
     },
   },
   {
@@ -128,8 +125,7 @@ const areas: Area[] = [
     image: {
       src: "/images/areasServicio/areaSocial.jpeg",
       alt: "Área social: servicio y ayuda a la comunidad",
-      objectPosition: "center 50%",
-      aspectClass: "aspect-[5/4] md:aspect-[16/10]",
+      objectPosition: "50% 52%",
     },
   },
   {
@@ -141,8 +137,7 @@ const areas: Area[] = [
     image: {
       src: "/images/areasServicio/areaEducativa.jpeg",
       alt: "Área educativa: formación y enseñanza bíblica",
-      objectPosition: "center 48%",
-      aspectClass: "aspect-[5/4] md:aspect-[16/10]",
+      objectPosition: "50% 50%",
     },
   },
   {
@@ -178,7 +173,11 @@ const areas: Area[] = [
 const easeOut: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const easeSoft: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-const DEFAULT_IMAGE_ASPECT = "aspect-[5/4] md:aspect-[16/10]";
+/** Proporción de imagen (recorte vía objectPosition por área). */
+const DEFAULT_IMAGE_ASPECT = "aspect-[4/3] sm:aspect-[3/2] md:aspect-[16/10]";
+const IMAGE_WRAP_CLASS = "mx-auto w-full max-w-md sm:max-w-lg md:max-w-xl";
+const IMAGE_FRAME_CLASS =
+  "w-full overflow-hidden rounded-2xl border border-white/10 bg-[#080c14] shadow-[0_20px_60px_-28px_rgba(0,0,0,0.75)]";
 
 function areaSlug(title: string) {
   return title
@@ -303,7 +302,7 @@ const AreasServicioSection: React.FC = () => {
   return (
     <PdcPageShell aria-labelledby="areas-servicio-heading">
       <div className={pdcPageInnerWithHeroComfort}>
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-3xl lg:max-w-4xl">
           <motion.header
             className={`${pdcPageIntroHeaderClass} text-center`}
             initial="hidden"
@@ -331,7 +330,7 @@ const AreasServicioSection: React.FC = () => {
           <LayoutGroup id={`${baseId}-areas-accordion`}>
             <motion.ul
               id="areas-servicio-lista"
-              className={`${pdcHeaderScrollMarginTop} space-y-3 md:space-y-3.5`}
+              className={`${pdcHeaderScrollMarginTop} space-y-2.5 md:space-y-3`}
               role="list"
               initial="hidden"
               animate="show"
@@ -390,7 +389,7 @@ const AreasServicioSection: React.FC = () => {
                         layout="position"
                         transition={layoutSpring}
                         onClick={() => toggle(idx)}
-                        className="flex w-full items-start gap-4 px-4 py-5 text-left md:gap-5 md:px-5 md:py-6"
+                        className="flex w-full items-start gap-3 px-3.5 py-4 text-left md:gap-4 md:px-4 md:py-4"
                       >
                         <motion.span
                           layout
@@ -408,13 +407,13 @@ const AreasServicioSection: React.FC = () => {
 
                         <span className="min-w-0 flex-1 pt-0.5">
                           <span
-                            className={`block font-serif text-lg md:text-xl ${
+                            className={`block font-serif text-base md:text-lg ${
                               isOpen ? "text-[#faf8f4]" : "text-white/95"
                             }`}
                           >
                             {area.title}
                           </span>
-                          <span className="mt-1 block font-serif text-sm italic leading-snug text-white/72">
+                          <span className="mt-0.5 block font-serif text-[0.8125rem] italic leading-snug text-white/72 md:text-sm">
                             {area.description}
                           </span>
                         </span>
@@ -452,70 +451,61 @@ const AreasServicioSection: React.FC = () => {
                                 animate={{ opacity: 1 }}
                                 exit={reduceMotion ? { opacity: 0 } : { opacity: 0 }}
                                 transition={{ duration: reduceMotion ? 0.12 : 0.35, ease: easeSoft }}
-                                className="border-t border-white/[0.08] px-4 pb-5 pt-2 text-center md:px-5 md:pb-6"
+                                className="border-t border-white/[0.08]"
                               >
                                 <motion.div
                                   initial="hidden"
                                   animate="show"
                                   variants={panelStagger}
-                                  className="mx-auto max-w-[36rem]"
+                                  className={`mx-auto w-full px-3.5 pb-4 pt-2 md:px-4 md:pb-4 md:pt-2 ${
+                                    area.image ? "" : "max-w-2xl text-center"
+                                  }`}
                                 >
                                   {area.image ? (
-                                    <motion.div
-                                      variants={panelItem}
-                                      className="mx-auto mt-4 max-h-[min(52vw,20rem)] w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-[0_20px_60px_-28px_rgba(0,0,0,0.75)] md:mt-5"
-                                    >
-                                      <div
-                                        className={`relative w-full ${area.image.aspectClass ?? DEFAULT_IMAGE_ASPECT}`}
+                                    <div className="flex flex-col gap-3">
+                                      <motion.div
+                                        variants={panelItem}
+                                        className={`${IMAGE_WRAP_CLASS} ${IMAGE_FRAME_CLASS}`}
                                       >
-                                        <motion.img
-                                          src={area.image.src}
-                                          alt={area.image.alt}
-                                          loading="lazy"
-                                          decoding="async"
-                                          initial={reduceMotion ? false : { opacity: 0, scale: 1.03 }}
-                                          animate={{ opacity: 1, scale: 1 }}
-                                          transition={{ duration: 0.65, ease: easeOut }}
-                                          className="absolute inset-0 h-full w-full object-cover"
-                                          style={{
-                                            objectPosition: area.image.objectPosition ?? "center center",
-                                          }}
-                                        />
                                         <div
-                                          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/50 via-transparent to-[#030508]/8"
-                                          aria-hidden
-                                        />
-                                      </div>
-                                    </motion.div>
-                                  ) : null}
+                                          className={`relative w-full ${area.image.aspectClass ?? DEFAULT_IMAGE_ASPECT}`}
+                                        >
+                                          <motion.img
+                                            src={area.image.src}
+                                            alt={area.image.alt}
+                                            loading="lazy"
+                                            decoding="async"
+                                            initial={reduceMotion ? false : { opacity: 0, scale: 1.02 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ duration: 0.65, ease: easeOut }}
+                                            className="absolute inset-0 h-full w-full object-cover"
+                                            style={{
+                                              objectPosition:
+                                                area.image.objectPosition ?? "50% 50%",
+                                            }}
+                                          />
+                                          <div
+                                            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/40 via-transparent to-[#030508]/10"
+                                            aria-hidden
+                                          />
+                                        </div>
+                                      </motion.div>
 
-                                  <motion.p
-                                    variants={panelItem}
-                                    className={`font-serif text-[1.02rem] leading-[1.75] text-[#f0ebe3]/95 md:text-lg md:leading-[1.8] ${
-                                      area.image ? "mt-6" : "mt-5"
-                                    }`}
-                                  >
-                                    {area.full}
-                                  </motion.p>
-
-                                  <motion.div
-                                    variants={panelItem}
-                                    className="mt-6 flex flex-col items-center gap-3 border-t border-white/[0.06] pt-5 sm:flex-row sm:justify-between"
-                                  >
-                                    <span className="font-sans text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/40">
-                                      {idx + 1} / {areas.length}
-                                    </span>
-                                    <button
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setOpenIndex(null);
-                                      }}
-                                      className="inline-flex items-center rounded-full border border-white/12 bg-transparent px-4 py-2.5 font-sans text-xs font-medium text-white/55 transition duration-300 hover:border-white/22 hover:text-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+                                      <motion.p
+                                        variants={panelItem}
+                                        className="mx-auto max-w-[32rem] px-0.5 text-center font-serif text-[0.94rem] leading-[1.64] text-[#f0ebe3]/92 sm:text-[0.96rem] sm:leading-[1.68]"
+                                      >
+                                        {area.full}
+                                      </motion.p>
+                                    </div>
+                                  ) : (
+                                    <motion.p
+                                      variants={panelItem}
+                                      className="font-serif text-[0.98rem] leading-[1.68] text-[#f0ebe3]/95 sm:text-[1rem]"
                                     >
-                                      Cerrar
-                                    </button>
-                                  </motion.div>
+                                      {area.full}
+                                    </motion.p>
+                                  )}
                                 </motion.div>
                               </motion.div>
                             ) : null}
