@@ -242,7 +242,7 @@ nav[aria-label="Principal"] {
   }
 
   .pdc-dock-btn {
-    @apply flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-3.5 py-3 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.11em] transition duration-300 sm:px-4 sm:text-[0.74rem] sm:tracking-[0.12em];
+    @apply flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-full px-2.5 py-2.5 font-sans text-[0.62rem] font-semibold uppercase tracking-[0.08em] transition duration-300 min-[400px]:gap-2 min-[400px]:px-3.5 min-[400px]:py-3 min-[400px]:text-[0.7rem] min-[400px]:tracking-[0.11em] sm:px-4 sm:text-[0.74rem] sm:tracking-[0.12em];
     color: rgba(255, 255, 255, 0.9);
   }
 

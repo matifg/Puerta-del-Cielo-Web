@@ -10,7 +10,6 @@ export const DANZA_CAROUSEL_SLIDES: PdcCarouselSlide[] = [
   {
     id: "danza-ministerio",
     alt: "Ministerio de danza en movimiento durante el culto",
-    caption: "Ministerio en acción",
     video: {
       mp4: danzaFile("danza-ministerio.mp4"),
       poster: danzaFile("danza-ministerio-poster.jpg"),
@@ -22,7 +21,6 @@ export const DANZA_CAROUSEL_SLIDES: PdcCarouselSlide[] = [
     src: danzaFile("danza-reunion.png"),
     alt: "Ministerio de danza y reunión en el culto",
     objectPosition: "center 26%",
-    caption: "Adoración en movimiento",
   },
   {
     id: "danza-00",

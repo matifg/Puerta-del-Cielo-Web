@@ -13,6 +13,11 @@ const IEC_SCROLL_SECTIONS: FloatingScrollNavSection[] = [
     subtitle: "Conexión en comunidad",
   },
   {
+    id: "iec-comunidad",
+    title: "Nuestros encuentros",
+    subtitle: "Te esperamos",
+  },
+  {
     id: "iec-propuesta",
     title: "La propuesta",
     subtitle: "Familia de fe",

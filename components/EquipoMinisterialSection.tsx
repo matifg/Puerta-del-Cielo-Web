@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Users } from "lucide-react";
 import type { MinisterSlug } from "../data/ministros";
 import PdcSegmentBar from "./PdcSegmentBar";
@@ -20,6 +21,8 @@ type Member = {
 const bodyText = "text-white/90 font-sans font-medium leading-relaxed";
 const mutedRole =
   "text-secondary/90 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em]";
+
+const zoomEase: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 function formatDisplayName(upperName: string): string {
   return upperName
@@ -172,6 +175,11 @@ const EquipoMinisterialSection: React.FC = () => {
   const secondRow = team.slice(4);
   const { setRevealRef, revealed } = useRevealOnScroll(0.15);
   const [hovered, setHovered] = useState<string | null>(null);
+  const reduceMotion = useReducedMotion() ?? false;
+  const pastorsPortraitRef = useRef<HTMLDivElement | null>(null);
+  // Mantener useInView por consistencia con el resto del componente;
+  // si el elemento ya está visible al montar, la animación igual debe notarse.
+  const pastorsPortraitInView = useInView(pastorsPortraitRef, { once: true });
 
   return (
     <PdcPageShell aria-labelledby="equipo-heading">
@@ -208,7 +216,31 @@ const EquipoMinisterialSection: React.FC = () => {
           </div>
 
           <div className="flex justify-center">
-            <div className="group relative flex flex-col items-center">
+            <motion.div
+              ref={pastorsPortraitRef}
+              className="group relative flex flex-col items-center"
+              style={{ transformOrigin: "center", willChange: "transform" }}
+              whileHover={
+                reduceMotion
+                  ? undefined
+                  : {
+                      scale: 1.045,
+                      y: -6,
+                    }
+              }
+              whileTap={reduceMotion ? undefined : { scale: 1.0 }}
+              initial={reduceMotion ? false : { scale: 0.86, y: 10, opacity: 0.96 }}
+              animate={
+                reduceMotion
+                  ? undefined
+                  : {
+                      scale: pastorsPortraitInView ? 1 : 0.86,
+                      y: pastorsPortraitInView ? 0 : 10,
+                      opacity: pastorsPortraitInView ? 1 : 0.96,
+                    }
+              }
+              transition={{ duration: 0.85, ease: zoomEase }}
+            >
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
                 <div className="h-[min(24rem,calc(100vw-2rem))] w-[min(24rem,calc(100vw-2rem))] rounded-full bg-secondary/25 blur-2xl opacity-70 transition duration-500 group-hover:opacity-100 motion-reduce:opacity-80" />
               </div>
@@ -220,7 +252,7 @@ const EquipoMinisterialSection: React.FC = () => {
                 loading="eager"
                 fetchPriority="high"
               />
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

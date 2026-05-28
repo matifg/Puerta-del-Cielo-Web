@@ -9,7 +9,7 @@ import {
 import {
   HERO_OVERLAY_PRESET,
   HERO_POSTER,
-  HERO_VIDEO_MOBILE_MP4,
+  HERO_VIDEO_MIN_WIDTH,
   HERO_VIDEO_MP4,
   HERO_VIDEO_OBJECT_POSITION,
   HERO_VIDEO_WEBM,
@@ -40,10 +40,12 @@ export const Hero: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const reduceMotion = useReducedMotion() ?? false;
   const [finePointer, setFinePointer] = useState(false);
+  const [desktopViewport, setDesktopViewport] = useState(false);
   const saveData = usePrefersSaveData();
   const videoRef = useRef<HTMLVideoElement>(null);
   const overlay = heroOverlayPresets[HERO_OVERLAY_PRESET];
-  const playVideo = !reduceMotion && !saveData;
+  const playVideo = desktopViewport && !reduceMotion && !saveData;
+  const showHeroImage = !playVideo;
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -57,6 +59,14 @@ export const Hero: React.FC = () => {
   useEffect(() => {
     const mq = window.matchMedia("(pointer: fine)");
     const sync = () => setFinePointer(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia(HERO_VIDEO_MIN_WIDTH);
+    const sync = () => setDesktopViewport(mq.matches);
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
@@ -117,24 +127,35 @@ export const Hero: React.FC = () => {
       onMouseLeave={onHeroLeave}
       aria-label="Inicio"
     >
-      <video
-        ref={videoRef}
-        autoPlay={playVideo}
-        muted
-        loop
-        playsInline
-        preload={playVideo ? "metadata" : "none"}
-        poster={HERO_POSTER}
-        aria-hidden
-        className={`absolute inset-0 z-0 block h-full min-h-full w-full scale-[1.02] object-cover ${
-          saveData ? "hidden" : ""
-        }`}
-        style={{ objectPosition: HERO_VIDEO_OBJECT_POSITION }}
-      >
-        <source src={HERO_VIDEO_MOBILE_MP4} type="video/mp4" media="(max-width: 768px)" />
-        <source src={HERO_VIDEO_WEBM} type="video/webm" />
-        <source src={HERO_VIDEO_MP4} type="video/mp4" />
-      </video>
+      {showHeroImage ? (
+        <img
+          src={HERO_POSTER}
+          alt=""
+          decoding="async"
+          fetchPriority="high"
+          aria-hidden
+          className="absolute inset-0 z-0 block h-full min-h-full w-full scale-[1.02] object-cover"
+          style={{ objectPosition: HERO_VIDEO_OBJECT_POSITION }}
+        />
+      ) : null}
+
+      {playVideo ? (
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={HERO_POSTER}
+          aria-hidden
+          className="absolute inset-0 z-0 block h-full min-h-full w-full scale-[1.02] object-cover"
+          style={{ objectPosition: HERO_VIDEO_OBJECT_POSITION }}
+        >
+          <source src={HERO_VIDEO_WEBM} type="video/webm" />
+          <source src={HERO_VIDEO_MP4} type="video/mp4" />
+        </video>
+      ) : null}
 
       <div className="pointer-events-none absolute inset-0 z-[1]" aria-hidden>
         <div className={`absolute inset-0 ${overlay.edgeClass}`} />

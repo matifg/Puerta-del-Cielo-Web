@@ -2,7 +2,20 @@ import { useCallback, useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { readPdcSectionIndex, scrollToPdcSectionId } from "../lib/pdcScrollNav";
 
-function useSectionIndex(sectionIds: readonly string[], footerRootId: string): number {
+function useScrolledPast(threshold = 280): boolean {
+  const [past, setPast] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setPast(window.scrollY > threshold);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [threshold]);
+
+  return past;
+}
+
+function useSectionIndex(sectionIds: readonly string[], footerRootId?: string): number {
   const [activeIdx, setActiveIdx] = useState(0);
   const measure = useCallback(
     () => setActiveIdx(readPdcSectionIndex(sectionIds, footerRootId)),
@@ -67,6 +80,7 @@ export function usePdcSectionFab(
   const reduceMotion = useReducedMotion() ?? false;
   const activeIdx = useSectionIndex(sectionIds, footerRootId);
   const nearFooter = useNearFooter(footerRootId);
+  const scrolledPastHero = useScrolledPast(280);
 
   const scrollToId = useCallback(
     (id: string) => {
@@ -81,6 +95,8 @@ export function usePdcSectionFab(
     scrollToId(sectionIds[0]);
   }, [scrollToId, sectionIds]);
 
+  const fabIsLast = activeIdx >= sectionIds.length - 1 || nearFooter;
+
   const onFabClick = useCallback(() => {
     const current = readPdcSectionIndex(sectionIds, footerRootId);
     const atEnd = current >= sectionIds.length - 1 || nearFooter;
@@ -90,9 +106,8 @@ export function usePdcSectionFab(
     }
     const nextId = sectionIds[current + 1];
     if (nextId) scrollToId(nextId);
-  }, [sectionIds, footerRootId, nearFooter, scrollToStart, scrollToId]);
+  }, [nearFooter, sectionIds, footerRootId, scrollToStart, scrollToId]);
 
-  const fabIsLast = activeIdx >= sectionIds.length - 1 || nearFooter;
   const nextId = sectionIds[activeIdx + 1];
   const fabEyebrow = fabIsLast ? "Inicio" : "Explorar";
   const fabPrimaryLine = fabIsLast ? "Subir" : nextId ? (nextLabels[nextId] ?? "Siguiente") : "Siguiente";
@@ -108,6 +123,7 @@ export function usePdcSectionFab(
     fabPrimaryLine,
     fabSrLabel,
     onFabClick,
-    hideAtStart: activeIdx === 0,
+    hideAtStart: !scrolledPastHero,
+    fabInsetClass: nearFooter ? PDC_FAB_INSET_NEAR_FOOTER : PDC_FAB_INSET,
   };
 }

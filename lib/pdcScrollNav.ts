@@ -35,7 +35,7 @@ export function readPdcSectionIndex(
   return active;
 }
 
-export type PdcScrollAlign = "start" | "center";
+export type PdcScrollAlign = "start" | "center" | "focus-start";
 
 /** FAB con scroll centrado en viewport (inicio, Bethel, etc.) */
 export function isPdcFabCenteredSectionId(id: string): boolean {
@@ -73,8 +73,20 @@ export function scrollToPdcSectionId(
   if (!el) return;
   const behavior = options?.behavior ?? "smooth";
   const offset = options?.offset ?? PDC_SCROLL_NAV_OFFSET;
+  const align =
+    options?.align ??
+    (id === "disc-galeria" || id === "danza-galeria" ? "focus-start" : undefined);
 
-  if (options?.align === "center") {
+  if (align === "focus-start") {
+    const focus = getPdcScrollFocusEl(el);
+    const navOffset = getPdcNavHeight() + 20;
+    const rect = focus.getBoundingClientRect();
+    const top = clampScrollTop(rect.top + window.scrollY - navOffset);
+    window.scrollTo({ top, behavior });
+    return;
+  }
+
+  if (align === "center") {
     const focus = getPdcScrollFocusEl(el);
     const navH = getPdcNavHeight();
     const pad = 20;

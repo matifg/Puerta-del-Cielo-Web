@@ -33,6 +33,10 @@ type PdcPhotoCarouselProps = {
   compact?: boolean;
   /** Más alto (inicio — Nuestra Esencia) */
   large?: boolean;
+  /** Pie de diapositiva bajo la imagen */
+  showSlideCaption?: boolean;
+  /** Texto «Cambia cada N s» / «Pausado» bajo los puntos */
+  showPlaybackHint?: boolean;
 };
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -46,6 +50,8 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
   autoPlayMs = DEFAULT_AUTO_PLAY_MS,
   compact = false,
   large = false,
+  showSlideCaption = true,
+  showPlaybackHint = true,
 }) => {
   const reduceMotion = useReducedMotion() ?? false;
   const saveData = usePrefersSaveData();
@@ -266,7 +272,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
           ) : null}
         </motion.div>
 
-        {slideCaption ? (
+        {showSlideCaption && slideCaption ? (
           <p className="border-t border-white/[0.08] px-4 py-3 text-center font-sans text-sm font-medium leading-relaxed text-zinc-300 md:px-6 md:py-4">
             {slideCaption}
           </p>
@@ -297,15 +303,11 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
               />
             );
           })}
-          <span className="w-full text-center font-sans text-[0.65rem] text-zinc-500 sm:w-auto sm:pl-2">
-            {isVideoSlide
-              ? playClip
-                ? "Clip en bucle"
-                : "Imagen estática (ahorro de datos)"
-              : paused
-                ? "Pausado"
-                : `Cambia cada ${seconds} s`}
-          </span>
+          {showPlaybackHint && !isVideoSlide ? (
+            <span className="w-full text-center font-sans text-[0.65rem] text-zinc-500 sm:w-auto sm:pl-2">
+              {paused ? "Pausado" : `Cambia cada ${seconds} s`}
+            </span>
+          ) : null}
         </motion.div>
       ) : null}
     </section>
