@@ -18,6 +18,7 @@ import {
   FileText,
   Gift,
   Heart,
+  Images,
   MapPin,
   MessageCircle,
   Mic2,
@@ -43,10 +44,18 @@ const PDF_HREF = "/docs/escuela-discipulado.pdf";
 const WA_HREF = whatsappUrl("Hola! Quiero info sobre Discipulado");
 const MAPS_HREF = "https://www.google.com/maps?q=Manuel+Belgrano+2053+Baradero";
 
-const sectionIds = ["disc-hero", "disc-resumen", "disc-pilares", "disc-programa", "disc-cta"] as const;
+const sectionIds = [
+  "disc-hero",
+  "disc-resumen",
+  "disc-galeria",
+  "disc-pilares",
+  "disc-programa",
+  "disc-cta",
+] as const;
 
 const DISC_FAB_LABELS: Record<string, string> = {
   "disc-resumen": "Resumen",
+  "disc-galeria": "Galería",
   "disc-pilares": "Pilares",
   "disc-programa": "Programa",
   "disc-cta": "Inscribite",
@@ -146,7 +155,7 @@ function DiscipuladoChromePortals({
   return createPortal(
     <>
       <motion.div
-        className={`pointer-events-none fixed left-3 max-w-[min(calc(100vw-12.5rem),20rem)] sm:left-5 ${DISC_CHROME_Z}`}
+        className={`pointer-events-none fixed left-3 right-[calc(5.85rem+env(safe-area-inset-right,0px))] sm:left-5 sm:right-auto sm:max-w-none ${DISC_CHROME_Z}`}
         style={{
           bottom: "max(1.35rem, calc(1.35rem + env(safe-area-inset-bottom, 0px)))",
         }}
@@ -155,7 +164,7 @@ function DiscipuladoChromePortals({
         transition={{ duration: 0.5, delay: 0.4, ease: easeOut }}
         aria-label="Acciones: programa y consulta"
       >
-        <motion.div className="pdc-dock">
+        <div className="pdc-dock pointer-events-auto">
           <a href={PDF_HREF} target="_blank" rel="noopener noreferrer" className="pdc-dock-btn" aria-label="Abrir programa en PDF">
             <FileText className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
             <span className="hidden min-[360px]:inline">Abrir</span>
@@ -163,7 +172,7 @@ function DiscipuladoChromePortals({
           <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
           <a href={PDF_HREF} download className="pdc-dock-btn" aria-label="Descargar programa PDF">
             <Download className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
-            <span className="hidden min-[360px]:inline">Bajar</span>
+            <span className="hidden min-[360px]:inline">Descargar</span>
           </a>
           <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
           <a
@@ -176,7 +185,7 @@ function DiscipuladoChromePortals({
             <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
             <span className="hidden min-[360px]:inline">Consultar</span>
           </a>
-        </motion.div>
+        </div>
       </motion.div>
 
       {!hideFab ? (
@@ -219,7 +228,9 @@ const DiscipuladoSection = () => {
 
   const scrollToSection = useCallback(
     (id: string) => {
-      scrollToPdcSectionId(id, { behavior: reduceMotion ? "auto" : "smooth" });
+      scrollToPdcSectionId(id, {
+        behavior: reduceMotion ? "auto" : "smooth",
+      });
     },
     [reduceMotion]
   );
@@ -321,7 +332,7 @@ const DiscipuladoSection = () => {
               Palabra, oración y comunidad — claridad en cada etapa del camino.
             </p>
 
-            <div className="mx-auto mt-8 flex justify-center">
+            <div className="mx-auto mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
               <motion.button
                 type="button"
                 onClick={() => scrollToSection("disc-resumen")}
@@ -337,6 +348,16 @@ const DiscipuladoSection = () => {
                   <ChevronDown className="h-5 w-5" strokeWidth={2.25} aria-hidden />
                 </motion.span>
                 <span className="relative z-[1]">Ver programa</span>
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={() => scrollToSection("disc-galeria")}
+                className="pdc-btn-on-dark-ghost"
+                whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+              >
+                <Images className="relative z-[1] h-5 w-5 shrink-0 text-secondary" aria-hidden />
+                <span className="relative z-[1]">Galería</span>
               </motion.button>
             </div>
           </motion.div>
@@ -381,7 +402,7 @@ const DiscipuladoSection = () => {
             ))}
           </div>
 
-          <DiscipuladoMomentsBento className="mt-14 md:mt-16" />
+          <DiscipuladoMomentsBento id="disc-galeria" className={`mt-14 md:mt-16 ${pdcHeaderScrollMargin}`} />
         </motion.div>
       </motion.section>
 

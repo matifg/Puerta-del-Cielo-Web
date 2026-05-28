@@ -1,17 +1,9 @@
 import React, { useState } from "react";
-import {
-  BookOpen,
-  CalendarDays,
-  ChevronDown,
-  Flame,
-  Heart,
-  Sparkles,
-  Users,
-} from "lucide-react";
+import { BookOpen, CalendarDays, ChevronDown, Flame, Images, Sparkles, Users } from "lucide-react";
 import { BethelEncounterScenes } from "./bethel/BethelEncounterScenes";
 import { BethelTabImage } from "./bethel/BethelTabImage";
 import { Reveal } from "./bethel/Reveal";
-import type { BethelTabId } from "../data/bethelScenes";
+import { BETHEL_ENCOUNTER_SCROLL_ID, type BethelTabId } from "../data/bethelScenes";
 import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { PdcPageShell } from "./PdcPageShell";
 import {
@@ -99,8 +91,12 @@ const ACCORDION = [
 const glassCard =
   "rounded-2xl border border-white/[0.1] bg-white/[0.04] shadow-[0_20px_60px_-20px_rgba(0,0,0,0.65)] backdrop-blur-xl transition duration-500 hover:border-secondary/25 hover:bg-white/[0.07] hover:shadow-[0_28px_70px_-18px_rgba(37,99,173,0.22)]";
 
-function scrollToBethelContent() {
+function scrollToBethelHistoria() {
   scrollToPdcSectionId("bethel-historia", { behavior: "smooth", align: "center" });
+}
+
+function scrollToBethelGaleria() {
+  scrollToPdcSectionId(BETHEL_ENCOUNTER_SCROLL_ID, { behavior: "smooth", align: "center" });
 }
 
 const BethelSection = () => {
@@ -144,12 +140,20 @@ const BethelSection = () => {
               </PdcSectionQuote>
             }
           >
-            <button type="button" onClick={scrollToBethelContent} className="pdc-btn-on-dark-accent max-w-none">
-              <span className="relative z-[1] flex items-center gap-2">
-                Conocer más
-                <ChevronDown className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
-              </span>
-            </button>
+            <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+              <button type="button" onClick={scrollToBethelHistoria} className="pdc-btn-on-dark-accent max-w-none">
+                <span className="relative z-[1] flex items-center gap-2">
+                  Conocer más
+                  <ChevronDown className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+                </span>
+              </button>
+              <button type="button" onClick={scrollToBethelGaleria} className="pdc-btn-on-dark max-w-none">
+                <span className="relative z-[1] flex items-center gap-2">
+                  Ver galería
+                  <Images className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+                </span>
+              </button>
+            </div>
           </PdcSectionHeader>
         </Reveal>
 
@@ -216,46 +220,6 @@ const BethelSection = () => {
                   </cite>
                 </div>
               </div>
-            </div>
-          </Reveal>
-        </div>
-
-        {/* Pilares + adoración */}
-        <div id="bethel-pilares" className="relative mb-16 grid scroll-mt-28 items-center gap-10 lg:mb-24 lg:grid-cols-2 lg:gap-14">
-          <span
-            data-pdc-scroll-focus
-            className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-px w-px -translate-x-1/2 -translate-y-1/2"
-            aria-hidden
-          />
-          <Reveal>
-            <h3 className="mb-4 font-serif text-2xl font-medium text-[#f4f1ec] md:text-3xl">
-              Donde el cielo toca la tierra
-            </h3>
-            <p className="mb-6 text-sm text-zinc-500 md:text-base">Tres pilares que marcan cada encuentro.</p>
-            <ul className="space-y-4">
-              {["Adoración que sostiene la atmósfera", "Intercesión que alinea corazones", "Intimidad profunda con Él"].map(
-                (line) => (
-                  <li
-                    key={line}
-                    className="flex items-start gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-3.5 text-[0.95rem] text-zinc-300 transition hover:border-secondary/20 hover:bg-white/[0.05]"
-                  >
-                    <Heart className="mt-0.5 h-5 w-5 shrink-0 text-secondary/80" aria-hidden />
-                    <span>{line}</span>
-                  </li>
-                )
-              )}
-            </ul>
-          </Reveal>
-          <Reveal delayMs={100}>
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)]">
-              <img
-                src="/images/bethel/IMG_9495.jpg"
-                alt="Detalle del cuadro del León de Judá en el altar de Bethel"
-                className="aspect-[4/3] w-full object-cover md:aspect-[5/4]"
-                style={{ objectPosition: "center 45%" }}
-                loading="lazy"
-                decoding="async"
-              />
             </div>
           </Reveal>
         </div>

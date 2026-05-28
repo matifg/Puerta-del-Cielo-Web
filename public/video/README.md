@@ -6,16 +6,19 @@
 
 El poster debe coincidir con el primer frame: `public/images/hero-mobile.jpg`.
 
-## Opcional (mejor rendimiento)
+## Móvil vs escritorio
 
-Si agregás estos archivos, el componente `Hero` los usará automáticamente (sin cambiar código):
+En pantallas **≤768px** el hero muestra solo la imagen `public/images/hero-mobile.jpg` (mismo encuadre que el video). En **≥769px** reproduce el MP4 (y WebM opcional si existe).
+
+Reemplazá `hero-mobile.jpg` por un frame exportado del video cuando puedas (debe coincidir con el primer fotograma del clip).
+
+## Opcional (mejor rendimiento en escritorio)
 
 | Archivo | Uso |
 |--------|-----|
 | `PuertaDelCieloHero.webm` | Menor peso en Chrome/Firefox (segunda `<source>`). |
-| `PuertaDelCieloHero-mobile.mp4` | Versión más liviana en pantallas ≤768px (`media` en `<source>`). |
 
-Si no existen, el navegador cae al MP4 principal.
+Si no existe, el navegador usa el MP4.
 
 ## Velo y legibilidad del texto
 

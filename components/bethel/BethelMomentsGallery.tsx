@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
-import { CELULA_PHOTOS, type CelulaPhoto } from "../data/celulaPhotos";
+import { BETHEL_GALLERY_PHOTOS, type BethelPhoto } from "../../data/bethelPhotos";
 
 const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 type PhotoTileProps = {
-  photo: CelulaPhoto;
+  photo: BethelPhoto;
   globalIndex: number;
   eager?: boolean;
   onOpen: (index: number) => void;
@@ -37,12 +37,10 @@ const PhotoTile: React.FC<PhotoTileProps> = ({
         decoding="async"
         className="block h-auto w-full transition duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
       />
-
       <span
         className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/70 via-[#030508]/10 to-transparent"
         aria-hidden
       />
-
       <span
         className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 px-3 py-2.5 opacity-100 transition duration-300 md:opacity-0 md:group-hover:opacity-100 md:group-focus-visible:opacity-100"
         aria-hidden
@@ -58,11 +56,7 @@ const PhotoTile: React.FC<PhotoTileProps> = ({
   </motion.button>
 );
 
-type IecComunidadGalleryProps = {
-  formHref: string;
-};
-
-export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHref }) => {
+export function BethelMomentsGallery() {
   const reduceMotion = useReducedMotion() ?? false;
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -71,7 +65,7 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHr
   const goLightbox = useCallback((delta: number) => {
     setLightboxIndex((i) => {
       if (i === null) return null;
-      return (i + delta + CELULA_PHOTOS.length) % CELULA_PHOTOS.length;
+      return (i + delta + BETHEL_GALLERY_PHOTOS.length) % BETHEL_GALLERY_PHOTOS.length;
     });
   }, []);
 
@@ -90,20 +84,10 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHr
     };
   }, [lightboxIndex, closeLightbox, goLightbox]);
 
-  const active = lightboxIndex !== null ? CELULA_PHOTOS[lightboxIndex] : null;
+  const active = lightboxIndex !== null ? BETHEL_GALLERY_PHOTOS[lightboxIndex] : null;
 
   return (
     <>
-      <motion.div
-        initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-8% 0px" }}
-        transition={{ duration: 0.5, ease: easeOut }}
-        className="mb-10 md:mb-12"
-      >
-        <PdcSectionHeaderBlock />
-      </motion.div>
-
       <motion.p
         initial={reduceMotion ? false : { opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -120,14 +104,14 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHr
         transition={{ duration: 0.5, ease: easeOut }}
         className="mx-auto max-w-5xl columns-2 gap-4 sm:gap-5 sm:columns-3 lg:columns-3"
         role="list"
-        aria-label="Momentos de Iglesia en casa"
+        aria-label="Fotos del encuentro Bethel"
       >
-        {CELULA_PHOTOS.map((photo, i) => (
+        {BETHEL_GALLERY_PHOTOS.map((photo, i) => (
           <div key={photo.id} className="mb-4 break-inside-avoid" role="listitem">
             <PhotoTile
               photo={photo}
               globalIndex={i}
-              eager={i < 4}
+              eager={i < 3}
               onOpen={setLightboxIndex}
               reduceMotion={reduceMotion}
             />
@@ -135,21 +119,10 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHr
         ))}
       </motion.div>
 
-      <motion.div
-        initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mt-10 flex justify-center md:mt-12"
-      >
-        <a href={formHref} target="_blank" rel="noopener noreferrer" className="pdc-btn-on-dark-accent max-w-none">
-          <span className="relative z-[1]">Quiero conocer un grupo cerca mío</span>
-        </a>
-      </motion.div>
-
       <AnimatePresence>
         {active && lightboxIndex !== null ? (
           <motion.div
-            key="iec-lightbox"
+            key="bethel-lightbox"
             className="fixed inset-0 z-[10025] flex items-center justify-center bg-[#030508]/88 p-4 backdrop-blur-md sm:p-6"
             role="dialog"
             aria-modal="true"
@@ -175,7 +148,7 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHr
                 e.stopPropagation();
                 goLightbox(-1);
               }}
-              className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:left-4 md:left-6"
+              className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-secondary sm:left-4 md:left-6"
               aria-label="Foto anterior"
             >
               <ChevronLeft className="h-6 w-6" aria-hidden />
@@ -208,19 +181,5 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHr
         ) : null}
       </AnimatePresence>
     </>
-  );
-};
-
-function PdcSectionHeaderBlock() {
-  return (
-    <div className="text-center">
-      <p className="mb-2 font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-secondary/80">
-        En un hogar
-      </p>
-      <h2 className="font-serif text-2xl text-white md:text-3xl">Así nos reunimos</h2>
-      <p className="mx-auto mt-3 max-w-xl font-sans text-sm leading-relaxed text-white/65 md:text-base">
-        Personas reales, encuentros cercanos. Te invitamos a ser parte de un grupo en tu barrio.
-      </p>
-    </div>
   );
 }

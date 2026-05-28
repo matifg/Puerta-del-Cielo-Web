@@ -15,12 +15,11 @@ function useScrolledPast(threshold = 280): boolean {
   return past;
 }
 
-function useSectionIndex(sectionIds: readonly string[]): number {
+function useSectionIndex(sectionIds: readonly string[], footerRootId?: string): number {
   const [activeIdx, setActiveIdx] = useState(0);
-  /** Sin footer en el spy: el pie de página no debe adelantar la sección activa (p. ej. Programa). */
   const measure = useCallback(
-    () => setActiveIdx(readPdcSectionIndex(sectionIds)),
-    [sectionIds]
+    () => setActiveIdx(readPdcSectionIndex(sectionIds, footerRootId)),
+    [sectionIds, footerRootId]
   );
 
   useEffect(() => {
@@ -79,7 +78,7 @@ export function usePdcSectionFab(
   nextLabels: Record<string, string>
 ) {
   const reduceMotion = useReducedMotion() ?? false;
-  const activeIdx = useSectionIndex(sectionIds);
+  const activeIdx = useSectionIndex(sectionIds, footerRootId);
   const nearFooter = useNearFooter(footerRootId);
   const scrolledPastHero = useScrolledPast(280);
 
@@ -96,16 +95,19 @@ export function usePdcSectionFab(
     scrollToId(sectionIds[0]);
   }, [scrollToId, sectionIds]);
 
-  const fabIsLast = activeIdx >= sectionIds.length - 1;
+  const fabIsLast = activeIdx >= sectionIds.length - 1 || nearFooter;
 
   const onFabClick = useCallback(() => {
-    if (fabIsLast) {
+    const current = readPdcSectionIndex(sectionIds, footerRootId);
+    const atEnd = current >= sectionIds.length - 1 || nearFooter;
+    if (atEnd) {
       scrollToStart();
       return;
     }
-    const nextId = sectionIds[activeIdx + 1];
+    const nextId = sectionIds[current + 1];
     if (nextId) scrollToId(nextId);
-  }, [activeIdx, fabIsLast, sectionIds, scrollToStart, scrollToId]);
+  }, [nearFooter, sectionIds, footerRootId, scrollToStart, scrollToId]);
+
   const nextId = sectionIds[activeIdx + 1];
   const fabEyebrow = fabIsLast ? "Inicio" : "Explorar";
   const fabPrimaryLine = fabIsLast ? "Subir" : nextId ? (nextLabels[nextId] ?? "Siguiente") : "Siguiente";

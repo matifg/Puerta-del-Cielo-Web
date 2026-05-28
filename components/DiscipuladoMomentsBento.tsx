@@ -56,9 +56,10 @@ const MomentCell: React.FC<MomentCellProps> = ({ photo, index, onOpen, reduceMot
 
 type DiscipuladoMomentsBentoProps = {
   className?: string;
+  id?: string;
 };
 
-export const DiscipuladoMomentsBento: React.FC<DiscipuladoMomentsBentoProps> = ({ className = "" }) => {
+export const DiscipuladoMomentsBento: React.FC<DiscipuladoMomentsBentoProps> = ({ className = "", id }) => {
   const reduceMotion = useReducedMotion() ?? false;
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -80,14 +81,18 @@ export const DiscipuladoMomentsBento: React.FC<DiscipuladoMomentsBentoProps> = (
   const active = lightboxIndex !== null ? DISCIPULADO_MOMENTS[lightboxIndex] : null;
 
   return (
-    <div className={className}>
+    <div id={id} className={className}>
       <motion.p
         variants={staggerItem}
         className="mb-2 text-center font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-secondary/80"
       >
         En el salón
       </motion.p>
-      <motion.h3 variants={staggerItem} className="mb-2 text-center font-serif text-xl text-white md:text-2xl">
+      <motion.h3
+        data-pdc-scroll-focus
+        variants={staggerItem}
+        className="mb-2 text-center font-serif text-xl text-white md:text-2xl"
+      >
         Así se vive el programa
       </motion.h3>
       <motion.p variants={staggerItem} className="mx-auto max-w-lg text-center font-sans text-sm text-white/65">
