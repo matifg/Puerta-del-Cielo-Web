@@ -25,7 +25,7 @@ export function EducativaPageShell({
       <div
         id={scrollEndId}
         aria-hidden
-        className="pointer-events-none h-20 w-full shrink-0 sm:h-24"
+        className="pointer-events-none h-24 w-full shrink-0 sm:h-28"
       />
       <FloatingScrollButton
         sections={sections}

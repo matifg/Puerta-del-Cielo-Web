@@ -1,15 +1,5 @@
 import React, { useCallback } from "react";
-import {
-  Calendar,
-  ChevronDown,
-  Clock,
-  Download,
-  FileText,
-  Images,
-  MessageCircle,
-  Palette,
-  Sparkles,
-} from "lucide-react";
+import { Calendar, ChevronDown, Clock, Images, Palette, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { whatsappUrl } from "../data/contacto";
@@ -17,6 +7,8 @@ import { DANZA_CAROUSEL_SLIDES } from "../data/danzaPhotos";
 import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { Reveal } from "./bethel/Reveal";
 import { PdcPhotoCarousel } from "./PdcPhotoCarousel";
+import { PdcEducativaDockHint } from "./PdcEducativaDockHint";
+import { PdcPlanDock } from "./PdcPlanDock";
 import { PdcPageShell } from "./PdcPageShell";
 import { PdcSectionHeader, pdcHeaderScrollMargin, pdcPageInnerWithHeroComfort, pdcPageIntroHeaderClass } from "./PdcSectionHeader";
 
@@ -67,59 +59,8 @@ const cardVariants = {
   }),
 };
 
-const btnPrimary =
-  "pdc-btn-on-dark-accent !min-h-[3.5rem] !max-w-none !px-8 !text-base !shadow-[0_0_32px_rgba(64,194,222,0.4)] ring-2 ring-secondary/30";
-const btnSecondary =
-  "pdc-btn-on-dark !min-h-[3.5rem] !max-w-none !px-8 !text-base !border-white/50 !bg-white/20";
-const btnGhost =
-  "pdc-btn-on-dark-ghost !min-h-[3.5rem] !max-w-none !px-8 !text-base !border-white/40 !text-white";
-
 const DANZA_PDF_HREF = "/docs/escuela-dya.pdf";
 const DANZA_WA_HREF = whatsappUrl("Hola! Quiero info sobre Danza y Artes");
-
-function FloatingDanzaDock() {
-  return (
-    <motion.div
-      className="pointer-events-none fixed left-3 right-[calc(5.85rem+env(safe-area-inset-right,0px))] z-[10010] sm:left-5 sm:right-auto sm:max-w-none"
-      style={{
-        bottom: "max(1.35rem, calc(1.35rem + env(safe-area-inset-bottom, 0px)))",
-      }}
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.4, ease }}
-      aria-label="Acciones: plan académico y consulta"
-    >
-      <div className="pdc-dock pointer-events-auto">
-        <a
-          href={DANZA_PDF_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pdc-dock-btn"
-          aria-label="Abrir plan académico en PDF"
-        >
-          <FileText className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
-          <span className="hidden min-[360px]:inline">Abrir</span>
-        </a>
-        <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
-        <a href={DANZA_PDF_HREF} download className="pdc-dock-btn" aria-label="Descargar plan académico PDF">
-          <Download className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
-          <span className="hidden min-[360px]:inline">Descargar</span>
-        </a>
-        <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
-        <a
-          href={DANZA_WA_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pdc-dock-btn text-secondary hover:bg-secondary/15"
-          aria-label="Consultar por WhatsApp sobre Danza y Artes"
-        >
-          <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
-          <span className="hidden min-[360px]:inline">Consultar</span>
-        </a>
-      </div>
-    </motion.div>
-  );
-}
 
 const DanzaArtesSection = () => {
   const reduceMotion = useReducedMotion() ?? false;
@@ -135,7 +76,7 @@ const DanzaArtesSection = () => {
 
   return (
     <PdcPageShell id="danza-inicio" aria-labelledby="danza-artes-heading">
-      <div className={pdcPageInnerWithHeroComfort}>
+      <div className={`${pdcPageInnerWithHeroComfort} pb-20 sm:pb-24`}>
         <Reveal>
           <header className={pdcPageIntroHeaderClass}>
             <PdcSectionHeader
@@ -271,27 +212,16 @@ const DanzaArtesSection = () => {
               </ul>
             </div>
 
-            <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
-              <a
-                href={whatsappUrl("Hola! Quiero info sobre Danza y Artes")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`${btnPrimary} text-center`}
-              >
-                <span className="relative z-[1]">Info por WhatsApp</span>
-              </a>
-              <a href={DANZA_PDF_HREF} target="_blank" rel="noopener noreferrer" className={`${btnSecondary} text-center`}>
-                <span className="relative z-[1]">Ver plan</span>
-              </a>
-              <a href={DANZA_PDF_HREF} download className={`${btnGhost} text-center`}>
-                <span className="relative z-[1]">Descargar plan</span>
-              </a>
-            </div>
+            <PdcEducativaDockHint />
           </div>
         </Reveal>
       </div>
 
-      <FloatingDanzaDock />
+      <PdcPlanDock
+        pdfHref={DANZA_PDF_HREF}
+        waHref={DANZA_WA_HREF}
+        waLabel="Consultar por WhatsApp sobre Danza y Artes"
+      />
     </PdcPageShell>
   );
 };

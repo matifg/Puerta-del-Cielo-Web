@@ -14,12 +14,10 @@ import {
   Calendar,
   ChevronDown,
   Clock,
-  Download,
   FileText,
   Gift,
   Heart,
   Images,
-  MapPin,
   MessageCircle,
   Mic2,
   Sparkles,
@@ -30,6 +28,8 @@ import { whatsappUrl } from "../data/contacto";
 import { usePdcSectionFab } from "../hooks/usePdcSectionFab";
 import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { DiscipuladoMomentsBento } from "./DiscipuladoMomentsBento";
+import { PdcEducativaDockHint } from "./PdcEducativaDockHint";
+import { PdcPlanDock } from "./PdcPlanDock";
 import { PdcScrollFabButton } from "./PdcScrollFabButton";
 import {
   PdcSectionEyebrow,
@@ -42,8 +42,6 @@ import {
 
 const PDF_HREF = "/docs/escuela-discipulado.pdf";
 const WA_HREF = whatsappUrl("Hola! Quiero info sobre Discipulado");
-const MAPS_HREF = "https://www.google.com/maps?q=Manuel+Belgrano+2053+Baradero";
-
 const sectionIds = [
   "disc-hero",
   "disc-resumen",
@@ -103,7 +101,7 @@ const INFO_CARDS: readonly {
   {
     eyebrow: "Material",
     title: "Programa PDF",
-    body: "Contenido ordenado por etapas. Descargalo o consultanos por WhatsApp.",
+    body: "Contenido ordenado por etapas. Disponible en PDF desde los accesos fijos de la página.",
     icon: FileText,
   },
 ];
@@ -154,39 +152,15 @@ function DiscipuladoChromePortals({
 
   return createPortal(
     <>
-      <motion.div
-        className={`pointer-events-none fixed left-3 right-[calc(5.85rem+env(safe-area-inset-right,0px))] sm:left-5 sm:right-auto sm:max-w-none ${DISC_CHROME_Z}`}
-        style={{
-          bottom: "max(1.35rem, calc(1.35rem + env(safe-area-inset-bottom, 0px)))",
-        }}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4, ease: easeOut }}
-        aria-label="Acciones: programa y consulta"
-      >
-        <div className="pdc-dock pointer-events-auto">
-          <a href={PDF_HREF} target="_blank" rel="noopener noreferrer" className="pdc-dock-btn" aria-label="Abrir programa en PDF">
-            <FileText className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
-            <span className="hidden min-[360px]:inline">Abrir</span>
-          </a>
-          <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
-          <a href={PDF_HREF} download className="pdc-dock-btn" aria-label="Descargar programa PDF">
-            <Download className="h-4 w-4 shrink-0 text-secondary" aria-hidden />
-            <span className="hidden min-[360px]:inline">Descargar</span>
-          </a>
-          <span className="w-px shrink-0 self-stretch bg-white/15" aria-hidden />
-          <a
-            href={WA_HREF}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="pdc-dock-btn text-secondary hover:bg-secondary/15"
-            aria-label="Consultar por WhatsApp sobre Discipulado"
-          >
-            <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
-            <span className="hidden min-[360px]:inline">Consultar</span>
-          </a>
-        </div>
-      </motion.div>
+      <PdcPlanDock
+        pdfHref={PDF_HREF}
+        waHref={WA_HREF}
+        ariaLabel="Acciones: programa y consulta"
+        pdfOpenLabel="Abrir programa en PDF"
+        pdfDownloadLabel="Descargar programa PDF"
+        waLabel="Consultar por WhatsApp sobre Discipulado"
+        className={DISC_CHROME_Z}
+      />
 
       {!hideFab ? (
         <div
@@ -467,32 +441,10 @@ const DiscipuladoSection = () => {
                 Programa completo en PDF
               </h2>
               <p className="mt-3 font-sans text-sm leading-relaxed text-white/70 md:text-base">
-                Descargá o abrí el programa de la Escuela de Discipulado: etapas, temas y orientación para cada encuentro.
-                También podés consultarnos por WhatsApp si tenés dudas sobre horarios o inscripción.
+                Etapas, temas y orientación para cada encuentro. Abrí o descargá el PDF con los accesos fijos{" "}
+                <span className="text-white/85">abajo a la izquierda</span>, o consultanos por WhatsApp desde el mismo
+                menú.
               </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
-                <motion.a
-                  href={PDF_HREF}
-                  download
-                  className="pdc-btn-on-dark-accent"
-                  whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                >
-                  <Download className="relative z-[1] h-5 w-5 text-secondary" aria-hidden />
-                  <span className="relative z-[1]">Descargar PDF</span>
-                </motion.a>
-                <motion.a
-                  href={PDF_HREF}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pdc-btn-on-dark-ghost"
-                  whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                >
-                  <FileText className="relative z-[1] h-5 w-5 text-secondary" aria-hidden />
-                  <span className="relative z-[1]">Abrir en el navegador</span>
-                </motion.a>
-              </div>
             </motion.div>
           </div>
         </motion.div>
@@ -507,35 +459,8 @@ const DiscipuladoSection = () => {
         viewport={{ once: true }}
         variants={variants}
       >
-        <motion.div className="mx-auto max-w-2xl text-center" variants={staggerItem} initial="hidden" whileInView="show" viewport={{ once: true }}>
-          <h2 className="font-serif text-2xl text-white md:text-3xl">¿Listo para dar el paso?</h2>
-          <p className="mt-4 font-sans text-sm leading-relaxed text-white/70 md:text-base">
-            Escribinos por WhatsApp o visitanos en Baradero. Te acompañamos en el proceso.
-          </p>
-          <motion.div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
-            <motion.a
-              href={WA_HREF}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pdc-btn-on-dark-accent"
-              whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-            >
-              <MessageCircle className="relative z-[1] h-5 w-5 text-secondary" aria-hidden />
-              <span className="relative z-[1]">Consultar por WhatsApp</span>
-            </motion.a>
-            <motion.a
-              href={MAPS_HREF}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pdc-btn-on-dark-ghost"
-              whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-            >
-              <MapPin className="relative z-[1] h-5 w-5 text-secondary" aria-hidden />
-              <span className="relative z-[1]">Cómo llegar</span>
-            </motion.a>
-          </motion.div>
+        <motion.div variants={staggerItem} initial="hidden" whileInView="show" viewport={{ once: true }}>
+          <PdcEducativaDockHint />
         </motion.div>
       </motion.section>
 
