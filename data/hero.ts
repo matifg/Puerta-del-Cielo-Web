@@ -1,17 +1,18 @@
-/** Rutas del hero (archivos en public/; no se generan desde el repo). */
-export const HERO_VIDEO_MP4 = "/video/PuertaDelCieloHero.mp4";
-export const HERO_VIDEO_WEBM = "/video/PuertaDelCieloHero.webm";
-/** Poster estático: idealmente primer frame del MP4 (ver public/video/README.md). */
-export const HERO_POSTER = "/images/hero-mobile.jpg";
+/** Rutas del hero — archivos en public/assets/ (ver public/assets/README.md). */
+export const HERO_VIDEO_MP4 = "/assets/hero.mp4";
+/** Segunda source para Chrome; solo si existe public/assets/hero.webm */
+export const HERO_VIDEO_WEBM = "/assets/hero.webm";
+export const HERO_HAS_WEBM = false;
+
+/** Poster = primer frame del MP4 (fallback: ahorro de datos / reducir movimiento). */
+export const HERO_POSTER = "/assets/hero-poster.jpg";
+
+/** @deprecated Usar HERO_POSTER — compat OG / enlaces viejos */
+export const HERO_POSTER_LEGACY = "/images/hero-mobile.jpg";
 
 /** Encuadre del clip (ajustar si el plano queda alto/bajo). */
 export const HERO_VIDEO_OBJECT_POSITION = "center 42%";
 
-/**
- * Velo sobre el video:
- * - `vivid`: más video visible (actual por defecto).
- * - `readable`: más contraste para el título en clips muy claros.
- */
 export type HeroOverlayPreset = "vivid" | "readable";
 
 export const HERO_OVERLAY_PRESET: HeroOverlayPreset = "vivid";

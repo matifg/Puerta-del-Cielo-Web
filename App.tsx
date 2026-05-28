@@ -187,7 +187,7 @@ const App: React.FC = () => {
         href={whatsappBaseUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-5 right-5 z-[9999] w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-2xl"
+        className="fixed bottom-[max(5.5rem,calc(5rem+env(safe-area-inset-bottom,0px)))] right-[max(1rem,env(safe-area-inset-right,0px))] z-[9999] flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:bg-green-600 hover:shadow-2xl sm:bottom-5 sm:right-5"
         aria-label="Escribinos por WhatsApp"
       >
         <svg

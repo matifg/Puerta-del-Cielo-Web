@@ -7,7 +7,7 @@ export const SITE_URL = "https://puertadelcielobaradero.com.ar";
 export const SITE_NAME = "Puerta del Cielo";
 
 /** Ruta bajo /public — OG por defecto (home y fallback). */
-export const DEFAULT_OG_IMAGE_PATH = "/images/hero-mobile.jpg";
+export const DEFAULT_OG_IMAGE_PATH = "/assets/hero-poster.jpg";
 
 export function ogImageUrl(imagePath: string): string {
   const path = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;

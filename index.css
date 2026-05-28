@@ -344,3 +344,21 @@ nav[aria-label="Principal"] {
       0 0 40px -4px rgba(125, 211, 234, 0.38);
   }
 }
+
+/* Hero: Safari no debe mostrar controles nativos ni el botón ▶ */
+#home-hero .hero-bg-video {
+  pointer-events: none;
+  object-fit: cover;
+}
+
+#home-hero .hero-bg-video::-webkit-media-controls,
+#home-hero .hero-bg-video::-webkit-media-controls-enclosure,
+#home-hero .hero-bg-video::-webkit-media-controls-panel,
+#home-hero .hero-bg-video::-webkit-media-controls-start-playback-button,
+#home-hero .hero-bg-video::-webkit-media-controls-overlay-play-button,
+#home-hero .hero-bg-video::-webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

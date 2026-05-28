@@ -28,6 +28,7 @@ const Home = () => (
       sections={HOME_SCROLL_SECTIONS}
       endMarkerId={HOME_SCROLL_END_ID}
       footerProximityRootId="home-footer-observe-root"
+      hideOnFirstSectionBelowSm
     />
     <div id="home-footer-observe-root">
       <Footer />

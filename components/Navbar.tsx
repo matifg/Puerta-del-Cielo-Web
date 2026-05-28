@@ -74,7 +74,7 @@ export const Navbar = () => {
 
   return (
     <nav
-      className="fixed top-0 left-0 isolate z-50 w-full border-b border-black/80 bg-[#030508] text-[#faf8f4] shadow-[0_10px_36px_rgba(0,0,0,0.75)] ring-1 ring-black/40"
+      className="fixed top-0 left-0 isolate z-50 w-full border-b border-black/80 bg-[#030508] pt-[env(safe-area-inset-top,0px)] text-[#faf8f4] shadow-[0_10px_36px_rgba(0,0,0,0.75)] ring-1 ring-black/40"
       aria-label="Principal"
     >
       <div className="relative mx-auto flex min-h-16 h-[4.25rem] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 md:h-[4.5rem] lg:px-8">

@@ -24,6 +24,8 @@ export type FloatingScrollButtonProps = {
   footerProximityRootId?: string;
   /** Offset visual respecto al borde (p. ej. para no tapar WhatsApp) */
   offsetClassName?: string;
+  /** Ocultar el FAB en la primera sección en viewports &lt; sm (no tapar CTAs del hero). */
+  hideOnFirstSectionBelowSm?: boolean;
 };
 
 const IO_THRESHOLDS = [0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.65, 0.8, 1];
@@ -98,7 +100,8 @@ export const FloatingScrollButton: React.FC<FloatingScrollButtonProps> = ({
   sections,
   endMarkerId,
   footerProximityRootId,
-  offsetClassName = "bottom-24 right-4 sm:bottom-28 sm:right-6 lg:right-[max(1.5rem,env(safe-area-inset-right,0px))]",
+  offsetClassName = "bottom-[max(5.75rem,calc(5.25rem+env(safe-area-inset-bottom,0px)))] right-[max(1rem,env(safe-area-inset-right,0px))] sm:bottom-28 sm:right-6 lg:right-[max(1.5rem,env(safe-area-inset-right,0px))]",
+  hideOnFirstSectionBelowSm = false,
 }) => {
   const [footerHideBlend, setFooterHideBlend] = useState(0);
   const reduceMotion = useReducedMotion() ?? false;
@@ -202,6 +205,9 @@ export const FloatingScrollButton: React.FC<FloatingScrollButtonProps> = ({
           return `Ir a ${t?.title ?? "la siguiente sección"}${hint}`;
         })();
 
+  const suppressOnHeroMobile =
+    hideOnFirstSectionBelowSm && currentIdx === 0 && !fabPinToTop;
+
   const fabHidden = fabPinToTop ? false : footerHideBlend >= 0.995;
   const fabOpacity = fabPinToTop ? 1 : 1 - footerHideBlend * 0.98;
   const fabTranslateY = fabPinToTop ? 0 : footerHideBlend * 14;
@@ -211,7 +217,11 @@ export const FloatingScrollButton: React.FC<FloatingScrollButtonProps> = ({
 
   return (
     <motion.div
-      className={`pointer-events-none fixed z-[9980] flex flex-col items-end transition-[opacity,transform,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${offsetClassName}`}
+      className={`pointer-events-none fixed z-[9980] flex flex-col items-end transition-[opacity,transform,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        suppressOnHeroMobile
+          ? "max-sm:invisible max-sm:pointer-events-none max-sm:!opacity-0"
+          : ""
+      } ${offsetClassName}`}
       style={{
         opacity: fabOpacity,
         transform: `translateY(${fabTranslateY}px)`,
