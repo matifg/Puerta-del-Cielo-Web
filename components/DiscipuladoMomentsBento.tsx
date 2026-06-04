@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import { Maximize2, X } from "lucide-react";
-import { DISCIPULADO_MOMENTS, type DiscipuladoMoment } from "../data/discipuladoPhotos";
+import {
+  DISCIPULADO_MOMENTS,
+  discipuladoMomentGridClass,
+  type DiscipuladoMoment,
+} from "../data/discipuladoPhotos";
 
 const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -13,26 +17,42 @@ const staggerItem: Variants = {
 type MomentCellProps = {
   photo: DiscipuladoMoment;
   index: number;
+  gridClass: string;
   onOpen: () => void;
   reduceMotion: boolean;
 };
 
-const MomentCell: React.FC<MomentCellProps> = ({ photo, index, onOpen, reduceMotion }) => (
+const MomentCell: React.FC<MomentCellProps> = ({
+  photo,
+  index,
+  gridClass,
+  onOpen,
+  reduceMotion,
+}) => {
+  const featured = photo.bento === "featured";
+
+  return (
   <motion.button
     type="button"
     variants={staggerItem}
     onClick={onOpen}
     whileHover={reduceMotion ? undefined : { y: -3 }}
     whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-    className="group flex w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+    className={`group flex w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary ${featured ? "md:h-full" : ""} ${gridClass}`}
     aria-label={`${photo.caption}: ver foto ampliada. ${photo.alt}`}
   >
-    <span className="relative block aspect-[4/3] w-full overflow-hidden">
+    <span
+      className={
+        featured
+          ? "relative block aspect-[3/4] w-full overflow-hidden sm:aspect-[5/6] md:min-h-0 md:flex-1 md:aspect-auto"
+          : "relative block aspect-[4/3] w-full overflow-hidden"
+      }
+    >
       <img
         src={photo.src}
         alt=""
         aria-hidden
-        loading={index < 2 ? "eager" : "lazy"}
+        loading={featured || index < 2 ? "eager" : "lazy"}
         decoding="async"
         className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
         style={photo.objectPosition ? { objectPosition: photo.objectPosition } : undefined}
@@ -48,11 +68,12 @@ const MomentCell: React.FC<MomentCellProps> = ({ photo, index, onOpen, reduceMot
         <Maximize2 className="h-4 w-4" strokeWidth={2.25} />
       </span>
     </span>
-    <span className="border-t border-white/[0.08] bg-[#0a1018]/95 px-3 py-2.5 font-sans text-sm font-medium text-white/85 transition group-hover:text-white md:px-4 md:py-3">
+    <span className="shrink-0 border-t border-white/[0.08] bg-[#0a1018]/95 px-3 py-2.5 font-sans text-sm font-medium text-white/85 transition group-hover:text-white md:px-4 md:py-3">
       {photo.caption}
     </span>
   </motion.button>
-);
+  );
+};
 
 type DiscipuladoMomentsBentoProps = {
   className?: string;
@@ -105,12 +126,13 @@ export const DiscipuladoMomentsBento: React.FC<DiscipuladoMomentsBentoProps> = (
         Tocá una foto para verla en grande.
       </motion.p>
 
-      <div className="mx-auto grid max-w-3xl grid-cols-2 gap-3 sm:gap-4">
+      <div className="mx-auto grid max-w-4xl grid-cols-2 auto-rows-auto gap-3 sm:gap-4 md:grid-cols-3 md:grid-rows-2">
         {DISCIPULADO_MOMENTS.map((photo, i) => (
           <MomentCell
             key={photo.id}
             photo={photo}
             index={i}
+            gridClass={discipuladoMomentGridClass(photo.id)}
             reduceMotion={reduceMotion}
             onOpen={() => setLightboxIndex(i)}
           />

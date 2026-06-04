@@ -5,26 +5,22 @@ import { Reveal } from "./Reveal";
 
 export function BethelEncounterScenes() {
   return (
-    <section className="mb-16 md:mb-20" aria-labelledby="bethel-encuentro-heading">
+    <section className="mb-12 md:mb-16" aria-labelledby="bethel-encuentro-heading">
       <Reveal>
         <div
           id={BETHEL_ENCOUNTER_SCROLL_ID}
-          className="relative mb-10 scroll-mt-28 text-center sm:scroll-mt-32 md:mb-12"
+          className="relative mb-5 scroll-mt-28 text-center sm:scroll-mt-32 md:mb-6"
         >
-          <span
+          <h3
+            id="bethel-encuentro-heading"
             data-pdc-scroll-focus
-            className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-px w-px -translate-x-1/2 -translate-y-1/2"
-            aria-hidden
-          />
-          <p className="mb-3 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-zinc-500">
-            En el encuentro
-          </p>
-          <h3 id="bethel-encuentro-heading" className="font-serif text-2xl font-medium text-[#f4f1ec] md:text-3xl">
+            className="font-serif text-xl font-medium text-[#f4f1ec] md:text-2xl"
+          >
+            <span className="mb-2 block font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+              En el encuentro
+            </span>
             Así se vive Bethel
           </h3>
-          <p className="mx-auto mt-4 max-w-xl text-sm text-zinc-500 md:text-base">
-            Intimidad, adoración, la Palabra y un pueblo entero en doce horas de encuentro.
-          </p>
         </div>
       </Reveal>
 

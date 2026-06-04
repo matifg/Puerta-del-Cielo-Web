@@ -45,17 +45,17 @@ const WA_HREF = whatsappUrl("Hola! Quiero info sobre Discipulado");
 const sectionIds = [
   "disc-hero",
   "disc-resumen",
-  "disc-galeria",
   "disc-pilares",
   "disc-programa",
+  "disc-galeria",
   "disc-cta",
 ] as const;
 
 const DISC_FAB_LABELS: Record<string, string> = {
   "disc-resumen": "Resumen",
-  "disc-galeria": "Galería",
   "disc-pilares": "Pilares",
   "disc-programa": "Programa",
+  "disc-galeria": "Galería",
   "disc-cta": "Inscribite",
 };
 
@@ -375,8 +375,6 @@ const DiscipuladoSection = () => {
               </motion.article>
             ))}
           </div>
-
-          <DiscipuladoMomentsBento id="disc-galeria" className={`mt-14 md:mt-16 ${pdcHeaderScrollMargin}`} />
         </motion.div>
       </motion.section>
 
@@ -448,6 +446,18 @@ const DiscipuladoSection = () => {
             </motion.div>
           </div>
         </motion.div>
+      </motion.section>
+
+      {/* Galería */}
+      <motion.section
+        id="disc-galeria"
+        className={`relative border-t border-white/[0.06] px-4 py-14 sm:px-6 md:py-16 lg:px-10 ${pdcHeaderScrollMargin}`}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-8% 0px" }}
+        variants={variants}
+      >
+        <DiscipuladoMomentsBento className="mx-auto max-w-6xl" />
       </motion.section>
 
       {/* CTA final */}

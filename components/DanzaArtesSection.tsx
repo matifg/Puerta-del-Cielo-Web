@@ -121,28 +121,6 @@ const DanzaArtesSection = () => {
         </Reveal>
 
         <Reveal delayMs={60}>
-          <div id="danza-galeria" className={`mx-auto max-w-5xl ${pdcHeaderScrollMargin}`}>
-            <h2
-              data-pdc-scroll-focus
-              className="mb-2 text-center font-serif text-xl text-white md:text-2xl"
-            >
-              Galería
-            </h2>
-            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:text-base">
-              Formación, ensayo y ministración — la creatividad al servicio de la adoración.
-            </p>
-            <PdcPhotoCarousel
-              slides={DANZA_CAROUSEL_SLIDES}
-              className="mb-6 md:mb-8"
-              ariaLabel="Galería Danza y Artes"
-              autoPlayMs={5500}
-              showSlideCaption={false}
-              showPlaybackHint={false}
-            />
-          </div>
-        </Reveal>
-
-        <Reveal delayMs={80}>
           <div id="danza-contenido" className={`${glassCard} scroll-mt-28 p-6 md:p-10`}>
             <p
               data-pdc-scroll-focus
@@ -213,6 +191,28 @@ const DanzaArtesSection = () => {
             </div>
 
             <PdcEducativaDockHint />
+          </div>
+        </Reveal>
+
+        <Reveal delayMs={80}>
+          <div id="danza-galeria" className={`mx-auto max-w-5xl ${pdcHeaderScrollMargin}`}>
+            <h2
+              data-pdc-scroll-focus
+              className="mb-2 text-center font-serif text-xl text-white md:text-2xl"
+            >
+              Galería
+            </h2>
+            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:text-base">
+              Formación, ensayo y ministración — la creatividad al servicio de la adoración.
+            </p>
+            <PdcPhotoCarousel
+              slides={DANZA_CAROUSEL_SLIDES}
+              className="mb-6 md:mb-8"
+              ariaLabel="Galería Danza y Artes"
+              autoPlayMs={5500}
+              showSlideCaption={false}
+              showPlaybackHint={false}
+            />
           </div>
         </Reveal>
       </div>

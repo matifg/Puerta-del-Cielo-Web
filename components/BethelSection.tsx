@@ -8,8 +8,7 @@ import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { PdcPageShell } from "./PdcPageShell";
 import {
   PdcSectionHeader,
-  PdcSectionQuote,
-  pdcPageInnerWithHeroComfort,
+  pdcPageInnerClass,
   pdcPageIntroHeaderClass,
 } from "./PdcSectionHeader";
 
@@ -96,7 +95,7 @@ function scrollToBethelHistoria() {
 }
 
 function scrollToBethelGaleria() {
-  scrollToPdcSectionId(BETHEL_ENCOUNTER_SCROLL_ID, { behavior: "smooth", align: "center" });
+  scrollToPdcSectionId(BETHEL_ENCOUNTER_SCROLL_ID, { behavior: "smooth", align: "focus-start" });
 }
 
 const BethelSection = () => {
@@ -120,7 +119,7 @@ const BethelSection = () => {
         aria-hidden
       />
 
-      <div className={pdcPageInnerWithHeroComfort}>
+      <div className={`${pdcPageInnerClass} pt-8 md:pt-10 lg:pt-12`}>
         {/* Encabezado */}
         <Reveal id="bethel-heading" className={`${pdcPageIntroHeaderClass} scroll-mt-28`}>
           <PdcSectionHeader
@@ -131,14 +130,9 @@ const BethelSection = () => {
             eyebrowIcon={Sparkles}
             title="Bethel"
             titleAccent="morada de su presencia"
-            quote={
-              <PdcSectionQuote>
-                <span className="text-secondary/90">“</span>
-                Construyendo como comunidad una morada donde Dios pueda reposar, de manera que la manifestación tangible
-                de su gloria transforme ambientes, lugares y personas
-                <span className="text-secondary/90">”</span>
-              </PdcSectionQuote>
-            }
+            subtitle="Una morada donde Dios reposa y su gloria transforma corazones y lugares."
+            subtitleSecondary="Encuentros de doce horas de adoración continua en comunidad."
+            className="max-w-2xl"
           >
             <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
               <button type="button" onClick={scrollToBethelHistoria} className="pdc-btn-on-dark-accent max-w-none">
@@ -170,9 +164,15 @@ const BethelSection = () => {
                 className="absolute left-[0.65rem] top-2 bottom-2 w-px bg-gradient-to-b from-secondary/50 via-white/15 to-primary/30 sm:left-[0.85rem]"
                 aria-hidden
               />
-              <h3 className="mb-6 font-serif text-xl font-medium text-[#f4f1ec] md:text-2xl">
+              <h3 className="mb-4 font-serif text-xl font-medium text-[#f4f1ec] md:text-2xl">
                 Una historia en movimiento
               </h3>
+              <p className="mb-6 font-serif text-base leading-relaxed text-zinc-400 md:text-[1.05rem]">
+                <span className="text-secondary/80">“</span>
+                Construyendo como comunidad una morada donde Dios pueda reposar, de manera que la manifestación tangible
+                de su gloria transforme ambientes, lugares y personas
+                <span className="text-secondary/80">”</span>
+              </p>
               <ul className="space-y-5 md:space-y-6">
                 {TIMELINE.map((step) => {
                   const Icon = step.icon;

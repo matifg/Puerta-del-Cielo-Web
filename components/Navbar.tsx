@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useScrollPast } from "../hooks/useScrollPast";
 
-type NavSubLink = { to: string; label: string };
+type NavSubLink = { to: string; label: string; navHidden?: boolean };
 
 type NavItem =
   | { to: string; label: string }
@@ -26,7 +26,7 @@ const navLinks: NavItem[] = [
       { to: "/area-educativa/discipulado", label: "Discipulado" },
       { to: "/area-educativa/danza-artes", label: "Danza y artes" },
       { to: "/area-educativa/intercesion", label: "Intercesión" },
-      { to: "/area-educativa/liderazgo", label: "Liderazgo" },
+      { to: "/area-educativa/liderazgo", label: "Liderazgo", navHidden: true },
     ],
   },
   {
@@ -147,7 +147,9 @@ export const Navbar = () => {
                   }`}
                 >
                   <div className="min-w-[12.5rem] rounded-xl border border-white/12 bg-[#0a0f18]/95 py-1 shadow-[0_20px_50px_-18px_rgba(0,0,0,0.7)] backdrop-blur-md">
-                    {link.subLinks.map((sub) => (
+                    {link.subLinks
+                      .filter((sub) => !sub.navHidden)
+                      .map((sub) => (
                       <NavLink
                         key={sub.to}
                         to={sub.to}
@@ -243,7 +245,9 @@ export const Navbar = () => {
                   </button>
                   {mobileExpanded === link.label ? (
                     <div className="mt-1 space-y-0.5 pb-2 pl-2">
-                      {link.subLinks.map((sub) => (
+                      {link.subLinks
+                        .filter((sub) => !sub.navHidden)
+                        .map((sub) => (
                         <NavLink
                           key={sub.to}
                           to={sub.to}

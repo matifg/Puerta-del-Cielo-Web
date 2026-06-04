@@ -14,7 +14,8 @@
     "optimize:editorial": "node scripts/optimize-editorial-images.mjs",
     "crop:vision-instagram": "node scripts/crop-vision-instagram.mjs",
     "crop:bethel-instagram": "node scripts/crop-bethel-instagram.mjs",
-    "optimize:danza-video": "node scripts/optimize-danza-video.mjs"
+    "optimize:danza-video": "node scripts/optimize-danza-video.mjs",
+    "optimize:bethel-video": "node scripts/optimize-bethel-video.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.18.2",

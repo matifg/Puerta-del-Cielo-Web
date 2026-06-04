@@ -99,6 +99,7 @@ export function PdcSectionHeader({
 }: PdcSectionHeaderProps) {
   const alignWrap = align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl text-left";
   const isBlock = variant === "block";
+  const actionsMt = quote ? "mt-8" : subtitle || subtitleSecondary ? "mt-6" : "mt-8";
 
   return (
     <header className={`${alignWrap} ${className}`}>
@@ -150,7 +151,7 @@ export function PdcSectionHeader({
       ) : null}
       {children ? (
         <div
-          className={`mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4 ${
+          className={`${actionsMt} flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4 ${
             align === "left" ? "sm:justify-start" : ""
           }`}
         >

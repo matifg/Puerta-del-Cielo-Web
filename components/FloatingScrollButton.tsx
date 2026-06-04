@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { isPdcFabCenteredSectionId } from "../lib/pdcScrollNav";
-import { readPdcSectionIndex, scrollToPdcSectionId } from "../lib/pdcScrollNav";
+import { getPdcFabScrollAlign, readPdcSectionIndex, scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { PdcScrollFabButton } from "./PdcScrollFabButton";
 
 export type FloatingScrollNavSection = {
@@ -183,7 +182,7 @@ export const FloatingScrollButton: React.FC<FloatingScrollButtonProps> = ({
     pendingIdxRef.current = nextIdx;
     scrollToPdcSectionId(target.id, {
       behavior: scrollBehavior,
-      align: isPdcFabCenteredSectionId(target.id) ? "center" : "start",
+      align: getPdcFabScrollAlign(target.id),
     });
   };
 

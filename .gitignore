@@ -23,3 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 public/images/danzas/*.MOV
+public/images/bethel/*.mov
+public/images/bethel/*.MOV

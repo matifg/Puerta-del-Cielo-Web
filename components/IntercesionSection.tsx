@@ -125,21 +125,6 @@ const IntercesionSection = () => {
         </Reveal>
 
         <Reveal delayMs={60}>
-          <div id="intercesion-galeria" className={`mx-auto max-w-5xl ${pdcHeaderScrollMargin}`}>
-            <h2
-              data-pdc-scroll-focus
-              className="mb-2 text-center font-serif text-xl text-white md:text-2xl"
-            >
-              Galería
-            </h2>
-            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:text-base">
-              Vigilias, altar y comunidad de intercesores en acción.
-            </p>
-            <IntercesionMomentsGallery />
-          </div>
-        </Reveal>
-
-        <Reveal delayMs={80}>
           <div id="intercesion-contenido" className={`${glassCard} scroll-mt-28 p-6 md:p-10`}>
             <p
               data-pdc-scroll-focus
@@ -210,6 +195,21 @@ const IntercesionSection = () => {
             </div>
 
             <PdcEducativaDockHint id="intercesion-cta" />
+          </div>
+        </Reveal>
+
+        <Reveal delayMs={80}>
+          <div id="intercesion-galeria" className={`mx-auto max-w-5xl ${pdcHeaderScrollMargin}`}>
+            <h2
+              data-pdc-scroll-focus
+              className="mb-2 text-center font-serif text-xl text-white md:text-2xl"
+            >
+              Galería
+            </h2>
+            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:text-base">
+              Vigilias, altar y comunidad de intercesores en acción.
+            </p>
+            <IntercesionMomentsGallery />
           </div>
         </Reveal>
       </div>

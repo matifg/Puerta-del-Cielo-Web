@@ -5,6 +5,8 @@ export type DiscipuladoMoment = {
   /** Pie corto visible bajo la miniatura */
   caption: string;
   objectPosition?: string;
+  /** Celda alta en el bento de galería */
+  bento?: "featured";
 };
 
 const discFile = (name: string) => `/images/discipulado/${name}`;
@@ -39,4 +41,25 @@ export const DISCIPULADO_MOMENTS: DiscipuladoMoment[] = [
     caption: "Comunidad",
     objectPosition: "center 28%",
   },
+  {
+    id: "disc-moment-5",
+    src: discFile("discipulado5.png"),
+    alt: "Grupo con Biblias y apuntes durante un encuentro quincenal de discipulado en el salón",
+    caption: "En clase",
+    objectPosition: "center 42%",
+    bento: "featured",
+  },
 ];
+
+const BENTO_GRID_CLASS: Record<string, string> = {
+  "disc-moment-5":
+    "order-first col-span-2 md:col-span-1 md:col-start-1 md:row-start-1 md:row-span-2",
+  "disc-moment-1": "md:col-start-2 md:row-start-1",
+  "disc-moment-2": "md:col-start-2 md:row-start-2",
+  "disc-moment-3": "md:col-start-3 md:row-start-1",
+  "disc-moment-4": "md:col-start-3 md:row-start-2",
+};
+
+export function discipuladoMomentGridClass(id: string): string {
+  return BENTO_GRID_CLASS[id] ?? "";
+}

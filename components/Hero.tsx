@@ -19,6 +19,14 @@ import { HeroBackgroundVideo } from "./HeroBackgroundVideo";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
+const HERO_EXPLORE_LINKS = [
+  { to: "/quienes-somos/equipo-ministerial", label: "Equipo ministerial" },
+  { to: "/bethel", label: "Bethel" },
+] as const;
+
+const heroExploreLinkClass =
+  "group inline-flex items-center gap-2 font-sans text-sm font-medium tracking-wide text-white/80 transition hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-secondary";
+
 const contentStagger = {
   hidden: {},
   show: {
@@ -259,21 +267,27 @@ export const Hero: React.FC = () => {
               </motion.button>
             </motion.div>
 
-            <motion.div variants={contentItem} className="pt-3">
-              <Link
-                to="/quienes-somos/vision"
-                className="group inline-flex items-center gap-2 font-sans text-sm font-medium tracking-wide text-white/80 transition hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-secondary"
-              >
-                <span className="h-px w-6 bg-gradient-to-r from-transparent to-secondary/60 transition group-hover:w-8 group-hover:to-secondary" aria-hidden />
-                <span>Visión y propósito</span>
-                <span
-                  className="text-secondary transition group-hover:translate-x-0.5 motion-reduce:transition-none"
-                  aria-hidden
-                >
-                  →
-                </span>
-              </Link>
-            </motion.div>
+            <motion.nav
+              variants={contentItem}
+              className="flex flex-col items-center gap-2.5 pt-3"
+              aria-label="Conocé más"
+            >
+              {HERO_EXPLORE_LINKS.map(({ to, label }) => (
+                <Link key={to} to={to} className={heroExploreLinkClass}>
+                  <span
+                    className="h-px w-6 bg-gradient-to-r from-transparent to-secondary/60 transition group-hover:w-8 group-hover:to-secondary"
+                    aria-hidden
+                  />
+                  <span>{label}</span>
+                  <span
+                    className="text-secondary transition group-hover:translate-x-0.5 motion-reduce:transition-none"
+                    aria-hidden
+                  >
+                    →
+                  </span>
+                </Link>
+              ))}
+            </motion.nav>
           </div>
         </motion.div>
       </div>
