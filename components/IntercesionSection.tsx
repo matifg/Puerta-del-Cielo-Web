@@ -88,8 +88,8 @@ const IntercesionSection = () => {
               eyebrow="Área educativa"
               eyebrowIcon={HandHeart}
               title="EIGE"
-              titleAccent="intercesión con autoridad"
-              subtitle="Formación en intercesión y guerra espiritual para levantar intercesores con discernimiento y autoridad."
+              titleAccent="Escuela de Intercesión y Guerra Espiritual"
+              subtitle="Formación presencial para levantar intercesores con discernimiento y autoridad."
               showSegmentBar
             >
               <div className="mx-auto mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">

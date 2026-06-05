@@ -4,9 +4,9 @@ import type { LucideIcon } from "lucide-react";
 import {
   BookOpen,
   CalendarHeart,
-  ChevronDown,
   Heart,
   Home,
+  Images,
   Lightbulb,
   MessageCircle,
   Sparkles,
@@ -111,12 +111,10 @@ const IglesiaEnCasaSection: React.FC = () => {
             <button
               type="button"
               onClick={() => scrollToSection("iec-comunidad")}
-              className="pdc-btn-on-dark max-w-none"
+              className="pdc-btn-on-dark-ghost max-w-none"
             >
-              <span className="relative z-[1] flex items-center gap-2">
-                Conocer más
-                <ChevronDown className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
-              </span>
+              <Images className="relative z-[1] h-5 w-5 shrink-0 text-secondary" aria-hidden />
+              <span className="relative z-[1]">Galería</span>
             </button>
           </div>
         </motion.div>

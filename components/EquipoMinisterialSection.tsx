@@ -24,14 +24,6 @@ const mutedRole =
 
 const zoomEase: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-function formatDisplayName(upperName: string): string {
-  return upperName
-    .toLowerCase()
-    .split(/\s+/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
 const pastors: Member = {
   name: "JORGE Y GABRIELA BUGUEÑO",
   slug: "jorge-gabriela",
@@ -44,48 +36,48 @@ const team: Member[] = [
   {
     name: "OSCAR TERMINI",
     slug: "oscar-termini",
-    displayName: formatDisplayName("OSCAR TERMINI"),
-    role: "Pastor asistente",
+    displayName: "Oscar Termini",
+    role: "Pastor Ordenado",
     objectPosition: "center 20%",
   },
   {
     name: "GUSTAVO BECERRO",
     slug: "gustavo-becerro",
-    displayName: formatDisplayName("GUSTAVO BECERRO"),
-    role: "Ministerio general",
+    displayName: "Gustavo Becerro",
+    role: "Ministro Ordenado",
   },
   {
     name: "SILVIA TAIETI",
     slug: "silvia-taieti",
-    displayName: formatDisplayName("SILVIA TAIETI"),
-    role: "Ministerio general",
+    displayName: "Silvia Taieti",
+    role: "Ministro Ordenado",
     objectPosition: "center 18%",
-  },
-  {
-    name: "DAMIAN MARCORA",
-    slug: "damian-marcora",
-    displayName: formatDisplayName("DAMIAN MARCORA"),
-    role: "Ministerio general",
   },
   {
     name: "PAOLA VIRRZI",
     slug: "paola-virrzi",
-    displayName: formatDisplayName("PAOLA VIRRZI"),
-    role: "Ministerio general",
+    displayName: "Paola Virrzi",
+    role: "Ministro Ordenado",
     objectPosition: "center 16%",
+  },
+  {
+    name: "DAMIAN MARCORA",
+    slug: "damian-marcora",
+    displayName: "Damián Marcora",
+    role: "Ministro Ordenado",
   },
   {
     name: "VERONICA MARTINEZ",
     slug: "veronica-martinez",
-    displayName: formatDisplayName("VERONICA MARTINEZ"),
-    role: "Ministerio general",
+    displayName: "Verónica Martínez",
+    role: "Ministro Ordenado",
     objectPosition: "center 20%",
   },
   {
     name: "DEBORA BUGUEÑO",
     slug: "debora-bugueno",
-    displayName: formatDisplayName("DEBORA BUGUEÑO"),
-    role: "Ministerio general",
+    displayName: "Débora Bugueño",
+    role: "Ministro Ordenado",
     objectPosition: "center 22%",
   },
 ];
