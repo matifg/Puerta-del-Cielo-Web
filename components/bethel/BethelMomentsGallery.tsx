@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Maximize2, Play, X } from "lucide-react";
 import {
@@ -11,6 +12,7 @@ import {
 
 const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const easeReveal: [number, number, number, number] = [0.33, 1, 0.45, 1];
+const BETHEL_LIGHTBOX_Z = "z-[10050]";
 
 const mediaClass = "absolute inset-0 h-full w-full object-cover";
 
@@ -203,11 +205,17 @@ const MediaTile: React.FC<MediaTileProps> = ({
 
 export function BethelMomentsGallery() {
   const reduceMotion = useReducedMotion() ?? false;
+  const [portalMounted, setPortalMounted] = useState(false);
   const [visible, setVisible] = useState<BethelGalleryItem[]>(buildInitialVisible);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const videoTimerRef = useRef<Map<number, ReturnType<typeof window.setTimeout>>>(new Map());
   const lightboxOpenRef = useRef(false);
+  const lightboxVideoRef = useRef<HTMLVideoElement>(null);
   const replaceSlotRef = useRef<(slot: number, afterVideo?: boolean) => void>(() => {});
+
+  useEffect(() => {
+    setPortalMounted(true);
+  }, []);
 
   const rotationPaused = lightboxIndex !== null;
 
@@ -342,6 +350,82 @@ export function BethelMomentsGallery() {
 
   const active = lightboxIndex !== null ? BETHEL_GALLERY_ITEMS[lightboxIndex] : null;
 
+  useEffect(() => {
+    if (lightboxIndex === null || active?.kind !== "video") return;
+    const video = lightboxVideoRef.current;
+    if (!video) return;
+
+    video.muted = false;
+    video.volume = 1;
+    void video.play().catch(() => {});
+  }, [lightboxIndex, active?.id, active?.kind]);
+
+  const lightbox =
+    portalMounted && active && lightboxIndex !== null ? (
+      <div
+        className={`fixed inset-0 ${BETHEL_LIGHTBOX_Z} flex items-center justify-center bg-[#030508]/92 p-4 backdrop-blur-md sm:p-6`}
+        role="dialog"
+        aria-modal="true"
+        aria-label={active.alt}
+        onClick={closeLightbox}
+      >
+        <button
+          type="button"
+          onClick={closeLightbox}
+          className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
+          aria-label="Cerrar"
+        >
+          <X className="h-5 w-5" aria-hidden />
+        </button>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            goLightbox(-1);
+          }}
+          className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:left-4 md:left-6"
+          aria-label="Anterior"
+        >
+          <ChevronLeft className="h-6 w-6" aria-hidden />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            goLightbox(1);
+          }}
+          className="absolute right-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-4 md:right-6"
+          aria-label="Siguiente"
+        >
+          <ChevronRight className="h-6 w-6" aria-hidden />
+        </button>
+
+        {active.kind === "video" ? (
+          <video
+            ref={lightboxVideoRef}
+            key={active.id}
+            src={active.src}
+            controls
+            playsInline
+            autoPlay
+            muted={false}
+            className="max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] w-auto select-none rounded-lg bg-black shadow-[0_24px_80px_-20px_rgba(0,0,0,0.75)]"
+            onClick={(e) => e.stopPropagation()}
+          />
+        ) : (
+          <img
+            key={active.id}
+            src={active.src}
+            alt={active.alt}
+            className="max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] w-auto select-none rounded-lg object-contain shadow-[0_24px_80px_-20px_rgba(0,0,0,0.75)]"
+            onClick={(e) => e.stopPropagation()}
+            draggable={false}
+          />
+        )}
+      </div>
+    ) : null;
+
   return (
     <>
       <motion.p
@@ -389,68 +473,7 @@ export function BethelMomentsGallery() {
         ))}
       </motion.div>
 
-      {active && lightboxIndex !== null ? (
-        <div
-          className="fixed inset-0 z-[10025] flex items-center justify-center bg-[#030508]/88 p-4 backdrop-blur-md sm:p-6"
-          role="dialog"
-          aria-modal="true"
-          aria-label={active.alt}
-          onClick={closeLightbox}
-        >
-          <button
-            type="button"
-            onClick={closeLightbox}
-            className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
-            aria-label="Cerrar"
-          >
-            <X className="h-5 w-5" aria-hidden />
-          </button>
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              goLightbox(-1);
-            }}
-            className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:left-4 md:left-6"
-            aria-label="Anterior"
-          >
-            <ChevronLeft className="h-6 w-6" aria-hidden />
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              goLightbox(1);
-            }}
-            className="absolute right-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-4 md:right-6"
-            aria-label="Siguiente"
-          >
-            <ChevronRight className="h-6 w-6" aria-hidden />
-          </button>
-
-          {active.kind === "video" ? (
-            <video
-              key={active.id}
-              src={active.src}
-              controls
-              playsInline
-              autoPlay
-              className="max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] w-auto select-none rounded-lg bg-black shadow-[0_24px_80px_-20px_rgba(0,0,0,0.75)]"
-              onClick={(e) => e.stopPropagation()}
-            />
-          ) : (
-            <img
-              key={active.id}
-              src={active.src}
-              alt={active.alt}
-              className="max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] w-auto select-none rounded-lg object-contain shadow-[0_24px_80px_-20px_rgba(0,0,0,0.75)]"
-              onClick={(e) => e.stopPropagation()}
-              draggable={false}
-            />
-          )}
-        </div>
-      ) : null}
+      {portalMounted ? createPortal(lightbox, document.body) : null}
     </>
   );
 }

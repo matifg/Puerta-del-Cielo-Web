@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { IecComunidadGallery } from "./IecComunidadGallery";
-import PdcSegmentBar from "./PdcSegmentBar";
 import { PdcSectionEyebrow, PdcSectionHeader, pdcHeaderScrollMargin, pdcPageHeroTopComfort, pdcPageInnerClass, pdcPageTitleAccentClass, pdcPageTitleClass, pdcPageTitleLineClass } from "./PdcSectionHeader";
 import { whatsappUrl } from "../data/contacto";
 
@@ -38,12 +37,12 @@ const ENCUENTRO_ITEMS: readonly { label: string; icon: LucideIcon }[] = [
 const IglesiaEnCasaSection: React.FC = () => {
   const reduceMotion = useReducedMotion() ?? false;
 
-  const scrollToSection = useCallback(
-    (id: string) => {
-      scrollToPdcSectionId(id, { behavior: reduceMotion ? "auto" : "smooth" });
-    },
-    [reduceMotion]
-  );
+  const scrollToGallery = useCallback(() => {
+    scrollToPdcSectionId("iec-comunidad", {
+      behavior: reduceMotion ? "auto" : "smooth",
+      align: "focus-start",
+    });
+  }, [reduceMotion]);
 
   const fadeUp = useCallback(
     (delay = 0) =>
@@ -91,13 +90,9 @@ const IglesiaEnCasaSection: React.FC = () => {
             <span className={pdcPageTitleLineClass}>Iglesia en casa</span>
             <span className={pdcPageTitleAccentClass}>fe vivida en comunidad</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-xl font-serif text-lg leading-relaxed text-white/88 md:text-xl">
-            Espacios de encuentro semanal para crecer, compartir la vida y caminar juntos.
+          <p className="mx-auto mt-5 max-w-lg font-serif text-lg leading-relaxed text-white/88 md:text-xl">
+            Grupos pequeños en hogares: encuentro semanal para crecer y caminar juntos.
           </p>
-          <p className={`${bodyText} mx-auto mt-3 max-w-lg text-sm md:text-[0.95rem]`}>
-            Grupos pequeños en hogares: más cerca, más real, más familia.
-          </p>
-          <PdcSegmentBar size="lg" className="mx-auto mt-6" />
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
             <a
@@ -110,7 +105,7 @@ const IglesiaEnCasaSection: React.FC = () => {
             </a>
             <button
               type="button"
-              onClick={() => scrollToSection("iec-comunidad")}
+              onClick={scrollToGallery}
               className="pdc-btn-on-dark-ghost max-w-none"
             >
               <Images className="relative z-[1] h-5 w-5 shrink-0 text-secondary" aria-hidden />
@@ -120,16 +115,12 @@ const IglesiaEnCasaSection: React.FC = () => {
         </motion.div>
       </header>
 
-      {/* Comunidad — invitación visual */}
+      {/* Galería */}
       <section
-        id="iec-comunidad"
-        className={`border-t border-white/[0.06] py-14 md:py-20 ${pdcHeaderScrollMargin}`}
+        className={`border-t border-white/[0.06] py-5 md:py-6 ${pdcHeaderScrollMargin}`}
         aria-labelledby="iec-comunidad-heading"
       >
         <div className={pdcPageInnerClass}>
-          <h2 id="iec-comunidad-heading" className="sr-only">
-            Así nos reunimos en Iglesia en casa
-          </h2>
           <IecComunidadGallery formHref={FORM_HREF} />
         </div>
       </section>

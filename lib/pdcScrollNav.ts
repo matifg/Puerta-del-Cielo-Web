@@ -48,6 +48,7 @@ const PDC_SCROLL_FOCUS_START_IDS = new Set([
   "disc-galeria",
   "danza-galeria",
   "bethel-encuentro-intro",
+  "iec-comunidad",
 ]);
 
 export function getPdcFabScrollAlign(id: string): PdcScrollAlign {

@@ -1,6 +1,6 @@
 /**
  * Convierte bethel-14.mov / bethel-15.mov → bethel-14.mp4 / bethel-15.mp4
- * Requiere ffmpeg-static (npm install) o ffmpeg en PATH.
+ * Conserva la pista de audio (AAC). Requiere ffmpeg-static o ffmpeg en PATH.
  */
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -45,7 +45,10 @@ async function convert(ffmpeg, input, output) {
       "-y",
       "-i",
       input,
-      "-an",
+      "-map",
+      "0:v:0",
+      "-map",
+      "0:a:0?",
       "-vf",
       "scale='min(1280,iw)':-2",
       "-c:v",
@@ -54,6 +57,10 @@ async function convert(ffmpeg, input, output) {
       "slow",
       "-crf",
       "28",
+      "-c:a",
+      "aac",
+      "-b:a",
+      "128k",
       "-movflags",
       "+faststart",
       "-pix_fmt",
