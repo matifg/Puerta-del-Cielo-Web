@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Users } from "lucide-react";
 import type { MinisterSlug } from "../data/ministros";
-import PdcSegmentBar from "./PdcSegmentBar";
 import { PdcMinisterPortrait } from "./PdcMinisterPortrait";
 import { Reveal } from "./bethel/Reveal";
 import { PdcPageShell } from "./PdcPageShell";
@@ -24,6 +23,10 @@ const mutedRole =
 
 const zoomEase: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
+/** Grid 8 cols en md: fila 1 en 1/3/5/7, fila 2 en 2/4/6 (pirámide centrada). */
+const FIRST_ROW_MD_COL = ["md:col-span-2 md:col-start-1", "md:col-span-2 md:col-start-3", "md:col-span-2 md:col-start-5", "md:col-span-2 md:col-start-7"] as const;
+const SECOND_ROW_MD_COL = ["md:col-span-2 md:col-start-2", "md:col-span-2 md:col-start-4", "md:col-span-2 md:col-start-6"] as const;
+
 const pastors: Member = {
   name: "JORGE Y GABRIELA BUGUEÑO",
   slug: "jorge-gabriela",
@@ -39,6 +42,13 @@ const team: Member[] = [
     displayName: "Oscar Termini",
     role: "Pastor Ordenado",
     objectPosition: "center 20%",
+  },
+  {
+    name: "DEBORA BUGUEÑO",
+    slug: "debora-bugueno",
+    displayName: "Débora Bugueño",
+    role: "Ministro Ordenado",
+    objectPosition: "center 22%",
   },
   {
     name: "GUSTAVO BECERRO",
@@ -72,13 +82,6 @@ const team: Member[] = [
     displayName: "Verónica Martínez",
     role: "Ministro Ordenado",
     objectPosition: "center 20%",
-  },
-  {
-    name: "DEBORA BUGUEÑO",
-    slug: "debora-bugueno",
-    displayName: "Débora Bugueño",
-    role: "Ministro Ordenado",
-    objectPosition: "center 22%",
   },
 ];
 
@@ -115,6 +118,7 @@ type TeamMemberCardProps = {
   onHover: (name: string | null) => void;
   glow: "primary" | "secondary";
   translateEnter: "translate-y-8" | "translate-y-10";
+  className?: string;
 };
 
 const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
@@ -125,6 +129,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
   onHover,
   glow,
   translateEnter,
+  className = "",
 }) => {
   const dimOthers = Boolean(hovered && hovered !== person.name);
   const glowClass = glow === "secondary" ? "bg-secondary/25" : "bg-primary/25";
@@ -138,10 +143,10 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
         ${revealed ? "opacity-100 translate-y-0" : `opacity-0 ${translateEnter}`}
         motion-reduce:opacity-100 motion-reduce:translate-y-0
         ${dimOthers ? "max-md:opacity-100 max-md:scale-100 md:opacity-40 md:scale-[0.98] motion-reduce:md:opacity-100 motion-reduce:md:scale-100" : "opacity-100 scale-100"}
-      `}
+        ${className}`.trim()}
       style={{ transitionDelay: revealed ? `${index * 60}ms` : "0ms" }}
     >
-      <div className="relative mb-4">
+      <div className="relative mb-2 lg:mb-4">
         <div
           className={`pointer-events-none absolute inset-0 rounded-full ${glowClass} blur-2xl opacity-0 transition duration-500 group-hover:opacity-100 motion-reduce:opacity-0`}
           aria-hidden
@@ -153,11 +158,10 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
           objectPosition={person.objectPosition}
         />
       </div>
-      <div className="max-w-[12rem] font-sans text-sm font-semibold leading-snug tracking-wide text-[#faf8f4]">
+      <div className="max-w-[11rem] font-sans text-xs font-semibold leading-snug tracking-wide text-[#faf8f4] md:max-w-[11rem] lg:max-w-[12rem] lg:text-sm">
         {person.displayName}
       </div>
-      <PdcSegmentBar size="sm" className="mx-auto my-2" />
-      <div className={`${mutedRole} max-w-[12rem]`}>{person.role}</div>
+      <div className={`${mutedRole} mt-1 max-w-[11rem] lg:max-w-[12rem]`}>{person.role}</div>
     </div>
   );
 };
@@ -190,8 +194,8 @@ const EquipoMinisterialSection: React.FC = () => {
       </Reveal>
 
       <Reveal delayMs={80}>
-      <div id="equipo-pastores" className="mb-12 scroll-mt-28 md:mb-16">
-        <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
+      <div id="equipo-pastores" className="mb-10 scroll-mt-28 md:mb-12 lg:mb-16">
+        <div className="grid items-center gap-8 md:grid-cols-2 md:gap-10 lg:gap-14">
           <div className="space-y-5 text-center md:space-y-6">
             <h2 className="font-serif text-3xl leading-tight text-white sm:text-4xl md:text-5xl">
               {pastors.displayName}
@@ -234,7 +238,7 @@ const EquipoMinisterialSection: React.FC = () => {
               transition={{ duration: 0.85, ease: zoomEase }}
             >
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
-                <div className="h-[min(24rem,calc(100vw-2rem))] w-[min(24rem,calc(100vw-2rem))] rounded-full bg-secondary/25 blur-2xl opacity-70 transition duration-500 group-hover:opacity-100 motion-reduce:opacity-80" />
+                <div className="h-[min(20rem,calc(100vw-2rem))] w-[min(20rem,calc(100vw-2rem))] rounded-full bg-secondary/25 blur-2xl opacity-70 transition duration-500 group-hover:opacity-100 md:h-[min(22rem,calc(100vw-2rem))] md:w-[min(22rem,calc(100vw-2rem))] lg:h-[min(24rem,calc(100vw-2rem))] lg:w-[min(24rem,calc(100vw-2rem))] motion-reduce:opacity-80" />
               </div>
               <PdcMinisterPortrait
                 slug={pastors.slug}
@@ -252,44 +256,46 @@ const EquipoMinisterialSection: React.FC = () => {
 
       <div
         id="equipo-ministros"
-        className="mb-10 scroll-mt-28 border-t border-white/10 pt-10 text-center md:mb-12 md:pt-12"
+        className="mb-6 scroll-mt-28 border-t border-white/10 pt-6 text-center md:mb-8 md:pt-8 lg:mb-12 lg:pt-12"
       >
-        <h2 className="font-serif text-2xl text-white md:text-3xl">Ministros y liderazgo</h2>
-        <p className={`${bodyText} mx-auto mt-4 max-w-xl text-sm md:text-base`}>
+        <h2 className="font-serif text-2xl text-white md:text-[1.65rem] lg:text-3xl">Ministros y liderazgo</h2>
+        <p className={`${bodyText} mx-auto mt-3 max-w-xl text-sm md:text-[0.8125rem] lg:mt-4 lg:text-base`}>
           Personas comprometidas con servir, acompañar y transformar vidas.
         </p>
       </div>
 
-      <div id="equipo-grid" ref={setRevealRef} className="scroll-mt-28 flex flex-col gap-14 md:gap-20" role="list">
-        <div className="grid grid-cols-2 justify-items-center gap-x-6 gap-y-12 md:grid-cols-4 md:gap-x-8 md:gap-y-14">
-          {firstRow.map((person, i) => (
-            <TeamMemberCard
-              key={person.name}
-              person={person}
-              index={i}
-              revealed={revealed}
-              hovered={hovered}
-              onHover={setHovered}
-              glow="secondary"
-              translateEnter="translate-y-8"
-            />
-          ))}
-        </div>
-
-        <div className="mx-auto grid max-w-3xl grid-cols-2 justify-items-center gap-x-6 gap-y-12 md:grid-cols-3 md:gap-x-10 md:gap-y-14">
-          {secondRow.map((person, i) => (
-            <TeamMemberCard
-              key={person.name}
-              person={person}
-              index={i + firstRow.length}
-              revealed={revealed}
-              hovered={hovered}
-              onHover={setHovered}
-              glow="primary"
-              translateEnter="translate-y-10"
-            />
-          ))}
-        </div>
+      <div
+        id="equipo-grid"
+        ref={setRevealRef}
+        className="scroll-mt-28 grid grid-cols-2 justify-items-center gap-x-6 gap-y-8 pb-2 md:grid-cols-8 md:gap-x-7 md:gap-y-6 lg:gap-x-8 lg:gap-y-10"
+        role="list"
+      >
+        {firstRow.map((person, i) => (
+          <TeamMemberCard
+            key={person.name}
+            person={person}
+            index={i}
+            revealed={revealed}
+            hovered={hovered}
+            onHover={setHovered}
+            glow="secondary"
+            translateEnter="translate-y-8"
+            className={FIRST_ROW_MD_COL[i]}
+          />
+        ))}
+        {secondRow.map((person, i) => (
+          <TeamMemberCard
+            key={person.name}
+            person={person}
+            index={i + firstRow.length}
+            revealed={revealed}
+            hovered={hovered}
+            onHover={setHovered}
+            glow="primary"
+            translateEnter="translate-y-10"
+            className={SECOND_ROW_MD_COL[i]}
+          />
+        ))}
       </div>
 
       </div>

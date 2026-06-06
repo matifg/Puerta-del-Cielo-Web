@@ -64,7 +64,10 @@ export function useEquipoPageFab(footerRootId: string) {
 
   const scrollToId = useCallback(
     (id: string) => {
-      scrollToPdcSectionId(id, { behavior: reduceMotion ? "auto" : "smooth" });
+      scrollToPdcSectionId(id, {
+        behavior: reduceMotion ? "auto" : "smooth",
+        align: id === "equipo-grid" ? "center" : undefined,
+      });
       measure();
       if (reduceMotion) {
         requestAnimationFrame(() => requestAnimationFrame(measure));

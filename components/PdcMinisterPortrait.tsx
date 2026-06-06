@@ -21,8 +21,8 @@ type PdcMinisterPortraitProps = {
 
 const variantClass: Record<PortraitVariant, string> = {
   team:
-    "relative h-36 w-36 rounded-full border-2 border-secondary/80 object-cover shadow-lg shadow-black/25 grayscale transition-[filter,border-color] duration-500 ease-out group-hover:border-secondary md:group-hover:grayscale-0 md:h-40 md:w-40 motion-reduce:grayscale motion-reduce:transition-none",
-  lead: "relative h-80 w-80 rounded-full border-4 border-white/20 bg-black/10 object-cover shadow-2xl transition duration-500 ease-out group-hover:brightness-105 md:h-96 md:w-96 motion-reduce:transition-none",
+    "relative h-32 w-32 rounded-full border-2 border-secondary/80 object-cover shadow-lg shadow-black/25 grayscale transition-[filter,border-color] duration-500 ease-out group-hover:border-secondary md:h-28 md:w-28 md:group-hover:grayscale-0 lg:h-40 lg:w-40 motion-reduce:grayscale motion-reduce:transition-none",
+  lead: "relative h-72 w-72 rounded-full border-4 border-white/20 bg-black/10 object-cover shadow-2xl transition duration-500 ease-out group-hover:brightness-105 md:h-80 md:w-80 lg:h-96 lg:w-96 motion-reduce:transition-none",
 };
 
 const intrinsic: Record<PortraitVariant, { width: number; height: number }> = {
@@ -39,8 +39,8 @@ function PortraitPlaceholder({
 }) {
   const size =
     variant === "lead"
-      ? "flex h-80 w-80 flex-col items-center justify-center gap-2 rounded-full border-4 border-dashed border-white/25 bg-white/[0.04] px-4 text-center md:h-96 md:w-96"
-      : "flex h-36 w-36 flex-col items-center justify-center gap-1 rounded-full border-2 border-dashed border-secondary/50 bg-white/[0.04] px-2 text-center md:h-40 md:w-40";
+      ? "flex h-72 w-72 flex-col items-center justify-center gap-2 rounded-full border-4 border-dashed border-white/25 bg-white/[0.04] px-4 text-center md:h-80 md:w-80 lg:h-96 lg:w-96"
+      : "flex h-32 w-32 flex-col items-center justify-center gap-1 rounded-full border-2 border-dashed border-secondary/50 bg-white/[0.04] px-2 text-center md:h-28 md:w-28 lg:h-40 lg:w-40";
   const icon = variant === "lead" ? "h-14 w-14 md:h-16 md:w-16" : "h-9 w-9";
   return (
     <div className={size} role="img" aria-label={displayName}>
