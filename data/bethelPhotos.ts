@@ -121,6 +121,27 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
     title: "Morada de su presencia",
     body: "Lo que anunciamos y vivimos: un espacio donde Dios es honrado y la comunidad se encuentra.",
   },
+  {
+    id: "bethel-16",
+    alt: "Participante leyendo la Biblia durante el encuentro de Bethel",
+    eyebrow: "La Palabra",
+    title: "Un corazón en las Escrituras",
+    body: "En medio del encuentro, la Palabra abre el camino: tiempo personal con Dios antes de que el salón entero se una en adoración.",
+  },
+  {
+    id: "bethel-17",
+    alt: "Hermana adorando con abanico durante el encuentro de Bethel",
+    eyebrow: "Adoración",
+    title: "Manos y corazón en alto",
+    body: "Gestos de adoración que acompañan el clamor del pueblo: un fuego visible que invita a entrar en la presencia de Dios.",
+  },
+  {
+    id: "bethel-18",
+    alt: "Rincón de oración con velas y mensaje de Bethel en el encuentro",
+    eyebrow: "Morada",
+    title: "Un altar para encontrarse con Dios",
+    body: "Velas, oración y un espacio preparado con cuidado: cada detalle habla de un Dios digno de honor y de una casa que le busca.",
+  },
 ];
 
 const BETHEL_VIDEOS: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
@@ -140,28 +161,31 @@ const BETHEL_VIDEOS: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
 ];
 
-const imageExtensions = [
-  "jpg",
-  "jpg",
-  "jpg",
-  "jpg",
-  "jpg",
-  "jpg",
-  "jpg",
-  "jpg",
-  "jpg",
-  "jpg",
-  "jpg",
-  "png",
-  "png",
+const imageFiles = [
+  "bethel-1.jpg",
+  "bethel-2.jpg",
+  "bethel-3.jpg",
+  "bethel-4.jpg",
+  "bethel-5.jpg",
+  "bethel-6.jpg",
+  "bethel-7.jpg",
+  "bethel-8.jpg",
+  "bethel-9.jpg",
+  "bethel-10.jpg",
+  "bethel-11.jpg",
+  "bethel-12.png",
+  "bethel-13.png",
+  "bethel-16.jpg",
+  "bethel-17.jpg",
+  "bethel-18.jpg",
 ] as const;
 
-/** Pool «Así se vive Bethel» — archivos en /public/images/bethel/bethel-{n}.* */
+/** Pool «Así se vive Bethel» — archivos en /public/images/bethel/ */
 export const BETHEL_GALLERY_ITEMS: BethelGalleryItem[] = [
   ...BETHEL_IMAGES.map((meta, i) => ({
     ...meta,
     kind: "image" as const,
-    src: bethelFile(`bethel-${i + 1}.${imageExtensions[i]}`),
+    src: bethelFile(imageFiles[i]),
   })),
   ...BETHEL_VIDEOS.map((meta, i) => ({
     ...meta,
