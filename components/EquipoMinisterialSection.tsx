@@ -293,7 +293,7 @@ const EquipoMinisterialSection: React.FC = () => {
             onHover={setHovered}
             glow="primary"
             translateEnter="translate-y-10"
-            className={SECOND_ROW_MD_COL[i]}
+            className={`${SECOND_ROW_MD_COL[i]}${i === secondRow.length - 1 ? " max-md:col-span-2" : ""}`}
           />
         ))}
       </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useScrollPast } from "../hooks/useScrollPast";
 
@@ -67,8 +68,18 @@ export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [dropdown, setDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const [mobileMounted, setMobileMounted] = useState(false);
 
   const elevated = !isHome || scrollPast || open;
+
+  useEffect(() => {
+    setMobileMounted(true);
+  }, []);
+
+  useEffect(() => {
+    setOpen(false);
+    setMobileExpanded(null);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -77,10 +88,95 @@ export const Navbar = () => {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMobile();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
   const closeMobile = () => {
     setOpen(false);
     setMobileExpanded(null);
   };
+
+  const mobileMenu =
+    open && mobileMounted ? (
+      <div
+        className="fixed inset-0 z-[49] flex flex-col bg-[#030508]/98 px-6 pb-10 pt-[calc(4.75rem+env(safe-area-inset-top,0px))] backdrop-blur-lg md:hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menú de navegación"
+      >
+        <nav className="flex flex-col gap-1 overflow-y-auto">
+          {navLinks.map((link) =>
+            "subLinks" in link ? (
+              <div key={link.label} className="border-b border-white/10 py-2">
+                <button
+                  type="button"
+                  className={`flex w-full items-center justify-between py-3 text-left ${navLinkBase} ${
+                    isGroupActive(link.pathPrefix, pathname) ? "text-[#40c2de]" : "text-[#faf8f4]"
+                  }`}
+                  onClick={() =>
+                    setMobileExpanded((v) => (v === link.label ? null : link.label))
+                  }
+                  aria-expanded={mobileExpanded === link.label}
+                >
+                  {link.label}
+                  <span className="text-secondary" aria-hidden>
+                    {mobileExpanded === link.label ? "−" : "+"}
+                  </span>
+                </button>
+                {mobileExpanded === link.label ? (
+                  <div className="mt-1 space-y-0.5 pb-2 pl-2">
+                    {link.subLinks
+                      .filter((sub) => !sub.navHidden)
+                      .map((sub) => (
+                        <NavLink
+                          key={sub.to}
+                          to={sub.to}
+                          onClick={closeMobile}
+                          className={({ isActive }) =>
+                            `${mobileSubLinkBase} ${
+                              isActive
+                                ? "text-[#40c2de]"
+                                : "text-[#faf8f4]/80 hover:text-[#40c2de]"
+                            }`
+                          }
+                        >
+                          {sub.label}
+                        </NavLink>
+                      ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                onClick={closeMobile}
+                className={({ isActive }) =>
+                  `border-b border-white/10 py-3.5 ${navLinkBase} ${
+                    isActive ? "text-[#40c2de]" : "text-[#faf8f4] hover:text-[#40c2de]"
+                  }`
+                }
+              >
+                {link.label}
+              </NavLink>
+            )
+          )}
+          <NavLink
+            to="/contacto"
+            onClick={closeMobile}
+            className={`mx-auto mt-6 max-w-xs border-2 border-white/25 px-5 py-3 text-center ${navLinkBase} transition hover:border-[#40c2de]/50 hover:text-[#40c2de]`}
+          >
+            Contacto
+          </NavLink>
+        </nav>
+      </div>
+    ) : null;
 
   return (
     <nav
@@ -207,7 +303,7 @@ export const Navbar = () => {
 
         <button
           type="button"
-          className={`relative z-20 flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg border text-[#faf8f4] transition-colors duration-300 md:hidden ${
+          className={`relative z-20 flex h-10 w-10 items-center justify-center rounded-lg border text-[#faf8f4] transition-colors duration-300 md:hidden ${
             elevated
               ? "border-white/10 bg-white/[0.04]"
               : "border-white/20 bg-white/[0.06] backdrop-blur-sm"
@@ -216,81 +312,27 @@ export const Navbar = () => {
           aria-expanded={open}
           aria-label={open ? "Cerrar menú" : "Abrir menú"}
         >
-          <span className={`h-0.5 w-5 bg-white transition ${open ? "translate-y-[5px] rotate-45" : ""}`} />
-          <span className={`h-0.5 w-5 bg-white transition ${open ? "opacity-0" : ""}`} />
-          <span className={`h-0.5 w-5 bg-white transition ${open ? "-translate-y-[5px] -rotate-45" : ""}`} />
+          <span className="relative block h-5 w-5" aria-hidden>
+            <span
+              className={`absolute left-1/2 top-1/2 block h-0.5 w-5 origin-center -translate-x-1/2 bg-white transition-transform duration-300 ${
+                open ? "-translate-y-1/2 rotate-45" : "-translate-y-[calc(50%+4px)]"
+              }`}
+            />
+            <span
+              className={`absolute left-1/2 top-1/2 block h-0.5 w-5 origin-center -translate-x-1/2 -translate-y-1/2 bg-white transition-all duration-300 ${
+                open ? "scale-x-0 opacity-0" : "scale-x-100 opacity-100"
+              }`}
+            />
+            <span
+              className={`absolute left-1/2 top-1/2 block h-0.5 w-5 origin-center -translate-x-1/2 bg-white transition-transform duration-300 ${
+                open ? "-translate-y-1/2 -rotate-45" : "-translate-y-[calc(50%-4px)]"
+              }`}
+            />
+          </span>
         </button>
       </div>
 
-      {open ? (
-        <div className="fixed inset-0 z-40 flex flex-col bg-[#030508]/98 px-6 pb-10 pt-20 backdrop-blur-lg md:hidden">
-          <nav className="flex flex-col gap-1 overflow-y-auto">
-            {navLinks.map((link) =>
-              "subLinks" in link ? (
-                <div key={link.label} className="border-b border-white/10 py-2">
-                  <button
-                    type="button"
-                    className={`flex w-full items-center justify-between py-3 text-left ${navLinkBase} ${
-                      isGroupActive(link.pathPrefix, pathname) ? "text-[#40c2de]" : "text-[#faf8f4]"
-                    }`}
-                    onClick={() =>
-                      setMobileExpanded((v) => (v === link.label ? null : link.label))
-                    }
-                    aria-expanded={mobileExpanded === link.label}
-                  >
-                    {link.label}
-                    <span className="text-secondary" aria-hidden>
-                      {mobileExpanded === link.label ? "−" : "+"}
-                    </span>
-                  </button>
-                  {mobileExpanded === link.label ? (
-                    <div className="mt-1 space-y-0.5 pb-2 pl-2">
-                      {link.subLinks
-                        .filter((sub) => !sub.navHidden)
-                        .map((sub) => (
-                        <NavLink
-                          key={sub.to}
-                          to={sub.to}
-                          onClick={closeMobile}
-                          className={({ isActive }) =>
-                            `${mobileSubLinkBase} ${
-                              isActive
-                                ? "text-[#40c2de]"
-                                : "text-[#faf8f4]/80 hover:text-[#40c2de]"
-                            }`
-                          }
-                        >
-                          {sub.label}
-                        </NavLink>
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
-              ) : (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  onClick={closeMobile}
-                  className={({ isActive }) =>
-                    `border-b border-white/10 py-3.5 ${navLinkBase} ${
-                      isActive ? "text-[#40c2de]" : "text-[#faf8f4] hover:text-[#40c2de]"
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              )
-            )}
-            <NavLink
-              to="/contacto"
-              onClick={closeMobile}
-              className={`mx-auto mt-6 max-w-xs border-2 border-white/25 px-5 py-3 text-center ${navLinkBase} transition hover:border-[#40c2de]/50 hover:text-[#40c2de]`}
-            >
-              Contacto
-            </NavLink>
-          </nav>
-        </div>
-      ) : null}
+      {mobileMounted && mobileMenu ? createPortal(mobileMenu, document.body) : null}
     </nav>
   );
 };
