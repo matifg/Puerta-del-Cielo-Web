@@ -216,15 +216,15 @@ const DanzaArtesSection = () => {
         <Reveal delayMs={80}>
           <div
             id="danza-galeria"
-            className={`mx-auto max-w-5xl lg:max-2xl:max-w-[min(94vw,60rem)] lg:max-2xl:px-1 2xl:max-w-[min(88vw,80rem)] 2xl:px-2 ${pdcHeaderScrollMargin}`}
+            className={`mx-auto max-w-5xl notebook:max-w-[min(94vw,60rem)] notebook:px-1 desktop:max-w-[min(88vw,80rem)] desktop:px-2 ${pdcHeaderScrollMargin}`}
           >
             <h2
               data-pdc-scroll-focus
-              className="mb-2 text-center font-serif text-xl text-white md:text-2xl 2xl:mb-3"
+              className="mb-2 text-center font-serif text-xl text-white md:text-2xl desktop:mb-3"
             >
               Galería
             </h2>
-            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:text-base lg:max-2xl:mb-7 2xl:mb-10">
+            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:text-base notebook:mb-7 desktop:mb-10">
               Formación, ensayo y ministración — la creatividad al servicio de la adoración.
             </p>
             <PdcPhotoCarousel

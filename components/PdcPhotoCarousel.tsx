@@ -141,7 +141,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
     : large
       ? "relative aspect-[4/3] w-full sm:aspect-[16/9] md:aspect-[2.25/1] md:min-h-[min(48vh,440px)]"
       : airy
-        ? "relative aspect-[4/3] w-full sm:aspect-[16/10] md:aspect-[2.1/1] lg:max-2xl:aspect-[18/10] lg:max-2xl:max-h-[min(54vh,540px)] 2xl:aspect-[16/10] 2xl:max-h-[min(58vh,620px)]"
+        ? "relative aspect-[4/3] w-full sm:aspect-[16/10] md:aspect-[2.1/1] notebook:aspect-[18/10] notebook:max-h-[min(52vh,520px)] desktop:aspect-[16/10] desktop:max-h-[min(58vh,620px)]"
         : "relative aspect-[4/3] w-full sm:aspect-[16/10] md:aspect-[2.1/1]";
 
   const mediaMotion = {
@@ -158,7 +158,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
 
   return (
     <section
-      className={`relative ${airy ? "lg:max-2xl:px-3 2xl:px-8" : ""} ${className}`.trim()}
+      className={`relative ${airy ? "notebook:px-3 desktop:px-8" : ""} ${className}`.trim()}
       aria-roledescription="carousel"
       aria-label={ariaLabel}
       onMouseEnter={() => setPaused(true)}

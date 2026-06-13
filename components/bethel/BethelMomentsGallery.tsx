@@ -428,29 +428,27 @@ export function BethelMomentsGallery() {
 
   return (
     <>
-      <div className="lg:max-2xl:flex lg:max-2xl:min-h-0 lg:max-2xl:flex-1 lg:max-2xl:flex-col 2xl:block 2xl:flex-none">
+      <div className="notebook:flex notebook:min-h-0 notebook:flex-1 notebook:flex-col desktop:block desktop:flex-none">
         <motion.p
           initial={reduceMotion ? false : { opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mx-auto mb-4 max-w-md shrink-0 text-center font-sans text-xs text-white/45 lg:max-2xl:sr-only 2xl:mb-5"
+          className="mx-auto mb-4 max-w-md shrink-0 text-center font-sans text-xs text-white/45 notebook:sr-only desktop:mb-5"
         >
           Tocá una foto o video para ampliar.
         </motion.p>
 
         <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-6% 0px" }}
-          transition={{ duration: 0.5, ease: easeOut }}
-          className="mx-auto grid w-full max-w-4xl grid-cols-3 gap-1.5 sm:gap-2 md:gap-2.5 lg:max-2xl:min-h-0 lg:max-2xl:max-w-none lg:max-2xl:flex-1 lg:max-2xl:grid-rows-2 lg:max-2xl:gap-3.5 lg:max-2xl:px-1 2xl:max-w-[min(88vw,84rem)] 2xl:flex-none 2xl:grid-rows-none 2xl:gap-6"
+          initial={false}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-auto grid w-full max-w-4xl grid-cols-3 gap-1.5 sm:gap-2 md:gap-2.5 notebook:min-h-0 notebook:max-w-[min(93vw,78rem)] notebook:flex-1 notebook:grid-rows-2 notebook:gap-[1.125rem] notebook:px-1 desktop:max-w-[min(85vw,80rem)] desktop:flex-none desktop:grid-rows-none desktop:gap-7"
           role="list"
           aria-label="Fotos y videos del encuentro Bethel. Tocá una foto o video para ampliar."
           aria-live="polite"
         >
-        {visible.map((item, i) => (
-          <div key={`bethel-slot-${i}`} className="relative min-h-0 lg:max-2xl:h-full" role="listitem">
-            <div className="relative w-full overflow-hidden rounded-lg bg-[#0a1018]/80 max-lg:h-[4.5rem] max-lg:sm:h-[5.25rem] max-lg:md:h-[6rem] lg:max-2xl:h-full lg:max-2xl:rounded-xl 2xl:aspect-[4/3] 2xl:rounded-2xl">
+          {visible.map((item, i) => (
+            <div key={`bethel-slot-${i}`} className="relative min-h-0 notebook:h-full" role="listitem">
+              <div className="relative h-[4.5rem] w-full overflow-hidden rounded-lg bg-[#0a1018]/80 sm:h-[5.25rem] md:h-[6rem] notebook:h-full notebook:rounded-xl desktop:h-auto desktop:aspect-[4/3] desktop:rounded-2xl">
               <AnimatePresence initial={false}>
                 <motion.div
                   key={item.id}
