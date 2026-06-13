@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Calendar, ChevronDown, Clock, Images, Palette, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -59,10 +59,17 @@ const cardVariants = {
   }),
 };
 
+const DANZA_INTRO_TEASER =
+  "La Escuela de Danza y Artes Dinámicas es un espacio de formación donde el movimiento y la expresión creativa se convierten en instrumentos de Dios para traer sanidad, libertad y restauración.";
+
+const DANZA_INTRO_REST =
+  "A través de un proceso integral, los alumnos desarrollan identidad, sensibilidad espiritual y excelencia en la ministración, entendiendo la danza como una herramienta para manifestar la presencia de Dios y edificar a otros.";
+
 const DANZA_PDF_HREF = "/docs/escuela-dya.pdf";
-const DANZA_WA_HREF = whatsappUrl("Hola! Quiero info sobre Danza y Artes");
+const DANZA_WA_HREF = whatsappUrl("Hola! Quiero info sobre Danza y Artes Dinámicas");
 
 const DanzaArtesSection = () => {
+  const [introExpanded, setIntroExpanded] = useState(false);
   const reduceMotion = useReducedMotion() ?? false;
 
   const scrollToSection = useCallback(
@@ -83,9 +90,9 @@ const DanzaArtesSection = () => {
               headingId="danza-artes-heading"
               eyebrow="Área educativa"
               eyebrowIcon={Palette}
-              title="Danza y Artes"
+              title="Danza y Artes Dinámicas"
               titleAccent="creatividad que adora"
-              subtitle="Un espacio donde la creatividad, el movimiento y la adoración se convierten en instrumentos para transformar vidas."
+              subtitle="Un espacio de formación donde el movimiento y la expresión creativa se convierten en instrumentos de Dios para traer sanidad, libertad y restauración."
               showSegmentBar
             >
               <div className="mx-auto mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
@@ -122,13 +129,25 @@ const DanzaArtesSection = () => {
 
         <Reveal delayMs={60}>
           <div id="danza-contenido" className={`${glassCard} scroll-mt-28 p-6 md:p-10`}>
-            <p
-              data-pdc-scroll-focus
-              className="mx-auto mb-10 max-w-2xl text-center font-sans text-sm font-medium leading-relaxed text-white/92 md:text-base"
-            >
-              Danza y Artes es un espacio para crecer en identidad y adoración. Entrenás, creás y ministrás con
-              propósito.
-            </p>
+            <div data-pdc-scroll-focus className="mx-auto mb-10 max-w-2xl text-center">
+              <p className="font-sans text-sm font-medium leading-relaxed text-white/92 md:text-base">
+                {DANZA_INTRO_TEASER}
+                {introExpanded ? (
+                  <>
+                    {" "}
+                    <span className="text-zinc-400">{DANZA_INTRO_REST}</span>
+                  </>
+                ) : null}
+              </p>
+              <button
+                type="button"
+                aria-expanded={introExpanded}
+                onClick={() => setIntroExpanded((v) => !v)}
+                className="mt-3 font-sans text-sm font-medium text-secondary transition hover:text-secondary/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+              >
+                {introExpanded ? "Ver menos" : "Ver más"}
+              </button>
+            </div>
 
             <div className="mx-auto mb-10 grid max-w-3xl gap-4 sm:grid-cols-2">
               {INFO_CARDS.map((card, i) => {
@@ -195,20 +214,24 @@ const DanzaArtesSection = () => {
         </Reveal>
 
         <Reveal delayMs={80}>
-          <div id="danza-galeria" className={`mx-auto max-w-5xl ${pdcHeaderScrollMargin}`}>
+          <div
+            id="danza-galeria"
+            className={`mx-auto max-w-5xl lg:max-2xl:max-w-[min(94vw,60rem)] lg:max-2xl:px-1 2xl:max-w-[min(88vw,80rem)] 2xl:px-2 ${pdcHeaderScrollMargin}`}
+          >
             <h2
               data-pdc-scroll-focus
-              className="mb-2 text-center font-serif text-xl text-white md:text-2xl"
+              className="mb-2 text-center font-serif text-xl text-white md:text-2xl 2xl:mb-3"
             >
               Galería
             </h2>
-            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:text-base">
+            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:text-base lg:max-2xl:mb-7 2xl:mb-10">
               Formación, ensayo y ministración — la creatividad al servicio de la adoración.
             </p>
             <PdcPhotoCarousel
               slides={DANZA_CAROUSEL_SLIDES}
+              airy
               className="mb-6 md:mb-8"
-              ariaLabel="Galería Danza y Artes"
+              ariaLabel="Galería Danza y Artes Dinámicas"
               autoPlayMs={5500}
               showSlideCaption={false}
               showPlaybackHint={false}
@@ -220,7 +243,7 @@ const DanzaArtesSection = () => {
       <PdcPlanDock
         pdfHref={DANZA_PDF_HREF}
         waHref={DANZA_WA_HREF}
-        waLabel="Consultar por WhatsApp sobre Danza y Artes"
+        waLabel="Consultar por WhatsApp sobre Danza y Artes Dinámicas"
       />
     </PdcPageShell>
   );

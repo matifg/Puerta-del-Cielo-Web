@@ -3,7 +3,7 @@ import { EducativaPageShell } from "../components/educativa/EducativaPageShell";
 import type { FloatingScrollNavSection } from "../components/FloatingScrollButton";
 
 const DANZA_SCROLL_SECTIONS: FloatingScrollNavSection[] = [
-  { id: "danza-artes-heading", title: "Danza y Artes" },
+  { id: "danza-artes-heading", title: "Danza y Artes Dinámicas" },
   { id: "danza-galeria", title: "Galería" },
   { id: "danza-contenido", title: "Programa" },
 ];

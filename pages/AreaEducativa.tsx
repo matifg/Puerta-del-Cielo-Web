@@ -17,7 +17,7 @@ const ESCUELAS = [
   },
   {
     to: "/area-educativa/danza-artes",
-    title: "Danza y Artes",
+    title: "Danza y Artes Dinámicas",
     desc: "Creatividad que adora: movimiento y expresión espiritual.",
     icon: Palette,
   },

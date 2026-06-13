@@ -96,7 +96,7 @@ const ROUTE_SEO: Record<string, PageSeo> = {
       "Programa de discipulado y formación espiritual en Baradero. Crecé en la fe con acompañamiento y enseñanza bíblica.",
   },
   "/area-educativa/danza-artes": {
-    title: "Danza y Artes | Puerta del Cielo – Baradero",
+    title: "Danza y Artes Dinámicas | Puerta del Cielo – Baradero",
     description:
       "Escuela de Danza y Artes Dinámicas en Baradero. Creatividad, movimiento y adoración al servicio del Reino de Dios.",
   },
@@ -146,7 +146,7 @@ const BREADCRUMB_LABELS: Record<string, string> = {
   "/quienes-somos/areas-servicio": "Áreas de servicio",
   "/area-educativa": "Área educativa",
   "/area-educativa/discipulado": "Discipulado",
-  "/area-educativa/danza-artes": "Danza y Artes",
+  "/area-educativa/danza-artes": "Danza y Artes Dinámicas",
   "/area-educativa/intercesion": "Intercesión EIGE",
   "/area-educativa/liderazgo": "Escuela de liderazgo",
   "/area-servicio": "Área de servicio",

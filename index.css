@@ -6,6 +6,13 @@ body {
   @apply font-sans bg-[#030508] text-[#ece8e2] antialiased;
 }
 
+/* Bethel: la galería encastra a pantalla completa en notebook al scrollear */
+@media (min-width: 1024px) and (max-width: 1535.98px) {
+  html.bethel-scroll-snap {
+    scroll-snap-type: y proximity;
+  }
+}
+
 /* Navbar: color de texto; fondo lo controla el componente (glass / sólido) */
 nav[aria-label="Principal"] {
   color: #faf8f4;

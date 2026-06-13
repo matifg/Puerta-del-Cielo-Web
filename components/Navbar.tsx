@@ -25,7 +25,7 @@ const navLinks: NavItem[] = [
     pathPrefix: "/area-educativa",
     subLinks: [
       { to: "/area-educativa/discipulado", label: "Discipulado" },
-      { to: "/area-educativa/danza-artes", label: "Danza y artes" },
+      { to: "/area-educativa/danza-artes", label: "Danza y artes dinámicas" },
       { to: "/area-educativa/intercesion", label: "Intercesión" },
       { to: "/area-educativa/liderazgo", label: "Liderazgo", navHidden: true },
     ],

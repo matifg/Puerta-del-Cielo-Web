@@ -37,6 +37,8 @@ type PdcPhotoCarouselProps = {
   showSlideCaption?: boolean;
   /** Texto «Cambia cada N s» / «Pausado» bajo los puntos */
   showPlaybackHint?: boolean;
+  /** Notebook/monitor: padding lateral y altura contenida para que el carrusel respire */
+  airy?: boolean;
 };
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -52,6 +54,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
   large = false,
   showSlideCaption = true,
   showPlaybackHint = true,
+  airy = false,
 }) => {
   const reduceMotion = useReducedMotion() ?? false;
   const saveData = usePrefersSaveData();
@@ -137,7 +140,9 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
     ? "relative aspect-[3/2] w-full sm:aspect-[16/10] md:aspect-[2/1]"
     : large
       ? "relative aspect-[4/3] w-full sm:aspect-[16/9] md:aspect-[2.25/1] md:min-h-[min(48vh,440px)]"
-      : "relative aspect-[4/3] w-full sm:aspect-[16/10] md:aspect-[2.1/1]";
+      : airy
+        ? "relative aspect-[4/3] w-full sm:aspect-[16/10] md:aspect-[2.1/1] lg:max-2xl:aspect-[18/10] lg:max-2xl:max-h-[min(54vh,540px)] 2xl:aspect-[16/10] 2xl:max-h-[min(58vh,620px)]"
+        : "relative aspect-[4/3] w-full sm:aspect-[16/10] md:aspect-[2.1/1]";
 
   const mediaMotion = {
     initial: reduceMotion ? false : { opacity: 0, scale: 1.03 },
@@ -153,7 +158,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
 
   return (
     <section
-      className={`relative ${className}`}
+      className={`relative ${airy ? "lg:max-2xl:px-3 2xl:px-8" : ""} ${className}`.trim()}
       aria-roledescription="carousel"
       aria-label={ariaLabel}
       onMouseEnter={() => setPaused(true)}

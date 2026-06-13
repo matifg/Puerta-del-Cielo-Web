@@ -66,13 +66,15 @@ const TABS = [
   },
 ] as const;
 
+const BETHEL_QUE_ES = {
+  title: "¿Qué es Bethel?",
+  paragraphs: [
+    "Nuestra misión es construir una casa para Dios, para que Él habite y se manifieste en nuestra adoración e intercesión.",
+    "Bethel es el nombre que elegimos para este espacio de adoración prolongada y búsqueda de su presencia, en continuidad con todo lo que ya venimos viviendo como iglesia.",
+  ],
+} as const;
+
 const ACCORDION = [
-  {
-    id: "que-es",
-    title: "¿Qué es Bethel?",
-    summary:
-      "Es el nombre que elegimos para este espacio de adoración prolongada y búsqueda de la presencia de Dios, en continuidad con todo lo que ya venimos viviendo como iglesia.",
-  },
   {
     id: "profecia",
     title: "Profecía y confirmación",
@@ -95,7 +97,7 @@ function scrollToBethelHistoria() {
 }
 
 function scrollToBethelGaleria() {
-  scrollToPdcSectionId(BETHEL_ENCOUNTER_SCROLL_ID, { behavior: "smooth", align: "focus-start" });
+  scrollToPdcSectionId(BETHEL_ENCOUNTER_SCROLL_ID, { behavior: "smooth", align: "start" });
 }
 
 const BethelSection = () => {
@@ -165,13 +167,22 @@ const BethelSection = () => {
                 aria-hidden
               />
               <h3 className="mb-4 font-serif text-xl font-medium text-[#f4f1ec] md:text-2xl">
-                Una historia en movimiento
+                {BETHEL_QUE_ES.title}
               </h3>
-              <p className="mb-6 font-serif text-base leading-relaxed text-zinc-400 md:text-[1.05rem]">
-                <span className="text-secondary/80">“</span>
-                Construyendo como comunidad una morada donde Dios pueda reposar, de manera que la manifestación tangible
-                de su gloria transforme ambientes, lugares y personas
-                <span className="text-secondary/80">”</span>
+              <div className="mb-8 space-y-3">
+                {BETHEL_QUE_ES.paragraphs.map((paragraph, pIdx) => (
+                  <p
+                    key={`bethel-que-es-${pIdx}`}
+                    className={`font-serif text-base leading-relaxed md:text-[1.05rem] ${
+                      pIdx === 0 ? "text-white/88" : "text-zinc-400"
+                    }`}
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              <p className="mb-4 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-secondary/80">
+                Una historia en movimiento
               </p>
               <ul className="space-y-5 md:space-y-6">
                 {TIMELINE.map((step) => {
@@ -320,9 +331,18 @@ const BethelSection = () => {
                     className={`grid transition-[grid-template-rows] duration-300 ease-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
                   >
                     <div className="min-h-0 overflow-hidden">
-                      <p className="px-5 pb-5 text-sm leading-relaxed text-zinc-400 sm:px-6 sm:pb-6 sm:text-[0.95rem]">
-                        {item.summary}
-                      </p>
+                      <div className="space-y-3 px-5 pb-5 sm:px-6 sm:pb-6">
+                        {item.summary.split("\n\n").map((paragraph, pIdx) => (
+                          <p
+                            key={`${item.id}-p-${pIdx}`}
+                            className={`text-sm leading-relaxed sm:text-[0.95rem] ${
+                              pIdx === 0 ? "text-white/88" : "text-zinc-400"
+                            }`}
+                          >
+                            {paragraph}
+                          </p>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>

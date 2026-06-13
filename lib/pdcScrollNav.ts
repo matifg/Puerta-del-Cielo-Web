@@ -47,7 +47,6 @@ export function isPdcFabCenteredSectionId(id: string): boolean {
 const PDC_SCROLL_FOCUS_START_IDS = new Set([
   "disc-galeria",
   "danza-galeria",
-  "bethel-encuentro-intro",
   "iec-comunidad",
 ]);
 

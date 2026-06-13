@@ -10,6 +10,12 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        /** Laptop / notebook (1024px–1535px; sin depender de la altura del viewport) */
+        notebook: { raw: "(min-width: 1024px) and (max-width: 1535.98px)" },
+        /** Monitor grande: galería con proporción amplia */
+        desktop: { raw: "(min-width: 1536px)" },
+      },
       fontFamily: {
         serif: ['"Playfair Display"', 'Georgia', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
