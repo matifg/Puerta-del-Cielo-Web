@@ -143,10 +143,11 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
         ${revealed ? "opacity-100 translate-y-0" : `opacity-0 ${translateEnter}`}
         motion-reduce:opacity-100 motion-reduce:translate-y-0
         ${dimOthers ? "max-md:opacity-100 max-md:scale-100 md:opacity-40 md:scale-[0.98] motion-reduce:md:opacity-100 motion-reduce:md:scale-100" : "opacity-100 scale-100"}
+        ${hovered === person.name ? "relative z-10" : ""}
         ${className}`.trim()}
       style={{ transitionDelay: revealed ? `${index * 60}ms` : "0ms" }}
     >
-      <div className="relative mb-2 lg:mb-4">
+      <div className="relative mb-2 overflow-visible lg:mb-4">
         <div
           className={`pointer-events-none absolute inset-0 rounded-full ${glowClass} blur-2xl opacity-0 transition duration-500 group-hover:opacity-100 motion-reduce:opacity-0`}
           aria-hidden
@@ -215,16 +216,6 @@ const EquipoMinisterialSection: React.FC = () => {
             <motion.div
               ref={pastorsPortraitRef}
               className="group relative flex flex-col items-center"
-              style={{ transformOrigin: "center", willChange: "transform" }}
-              whileHover={
-                reduceMotion
-                  ? undefined
-                  : {
-                      scale: 1.045,
-                      y: -6,
-                    }
-              }
-              whileTap={reduceMotion ? undefined : { scale: 1.0 }}
               initial={reduceMotion ? false : { scale: 0.86, y: 10, opacity: 0.96 }}
               animate={
                 reduceMotion
@@ -237,17 +228,19 @@ const EquipoMinisterialSection: React.FC = () => {
               }
               transition={{ duration: 0.85, ease: zoomEase }}
             >
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
-                <div className="h-[min(20rem,calc(100vw-2rem))] w-[min(20rem,calc(100vw-2rem))] rounded-full bg-secondary/25 blur-2xl opacity-70 transition duration-500 group-hover:opacity-100 md:h-[min(22rem,calc(100vw-2rem))] md:w-[min(22rem,calc(100vw-2rem))] lg:h-[min(24rem,calc(100vw-2rem))] lg:w-[min(24rem,calc(100vw-2rem))] motion-reduce:opacity-80" />
+              <div className="relative transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform group-hover:scale-[1.045] group-hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-hover:translate-y-0">
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
+                  <div className="h-[min(20rem,calc(100vw-2rem))] w-[min(20rem,calc(100vw-2rem))] rounded-full bg-secondary/25 blur-2xl opacity-70 transition duration-500 group-hover:opacity-100 md:h-[min(22rem,calc(100vw-2rem))] md:w-[min(22rem,calc(100vw-2rem))] lg:h-[min(24rem,calc(100vw-2rem))] lg:w-[min(24rem,calc(100vw-2rem))] motion-reduce:opacity-80" />
+                </div>
+                <PdcMinisterPortrait
+                  slug={pastors.slug}
+                  displayName={pastors.displayName}
+                  variant="lead"
+                  objectPosition={pastors.objectPosition}
+                  loading="eager"
+                  fetchPriority="high"
+                />
               </div>
-              <PdcMinisterPortrait
-                slug={pastors.slug}
-                displayName={pastors.displayName}
-                variant="lead"
-                objectPosition={pastors.objectPosition}
-                loading="eager"
-                fetchPriority="high"
-              />
             </motion.div>
           </div>
         </div>

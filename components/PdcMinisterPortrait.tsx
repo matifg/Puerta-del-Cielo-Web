@@ -21,8 +21,8 @@ type PdcMinisterPortraitProps = {
 
 const variantClass: Record<PortraitVariant, string> = {
   team:
-    "relative h-32 w-32 rounded-full border-2 border-secondary/80 object-cover shadow-lg shadow-black/25 grayscale transition-[filter,border-color] duration-500 ease-out group-hover:border-secondary md:h-28 md:w-28 md:group-hover:grayscale-0 lg:h-40 lg:w-40 motion-reduce:grayscale motion-reduce:transition-none",
-  lead: "relative h-72 w-72 rounded-full border-4 border-white/20 bg-black/10 object-cover shadow-2xl transition duration-500 ease-out group-hover:brightness-105 md:h-80 md:w-80 lg:h-96 lg:w-96 motion-reduce:transition-none",
+    "relative h-32 w-32 rounded-full border-2 border-secondary/80 object-cover shadow-lg shadow-black/25 grayscale transition-[transform,filter,border-color,box-shadow] duration-500 ease-out group-hover:scale-105 group-hover:border-secondary group-hover:shadow-2xl group-hover:shadow-black/40 md:h-28 md:w-28 md:group-hover:grayscale-0 lg:h-40 lg:w-40 motion-reduce:grayscale motion-reduce:transition-none motion-reduce:group-hover:scale-100",
+  lead: "relative h-72 w-72 rounded-full border-4 border-white/20 bg-black/10 object-cover shadow-2xl transition-[filter] duration-500 ease-out group-hover:brightness-105 md:h-80 md:w-80 lg:h-96 lg:w-96 motion-reduce:transition-none",
 };
 
 const intrinsic: Record<PortraitVariant, { width: number; height: number }> = {
