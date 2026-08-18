@@ -11,9 +11,12 @@ import { PdcPlanDock } from "./PdcPlanDock";
 import { PdcPageShell } from "./PdcPageShell";
 import {
   PdcSectionHeader,
+  pdcCardStatClass,
+  pdcGlassCardPadding,
   pdcHeaderScrollMargin,
   pdcPageInnerWithHeroComfort,
   pdcPageIntroHeaderClass,
+  pdcSectionH3Class,
 } from "./PdcSectionHeader";
 
 const glassCard =
@@ -125,22 +128,22 @@ const IntercesionSection = () => {
         </Reveal>
 
         <Reveal delayMs={60}>
-          <div id="intercesion-contenido" className={`${glassCard} scroll-mt-28 p-6 md:p-10`}>
+          <div id="intercesion-contenido" className={`${glassCard} ${pdcGlassCardPadding} scroll-mt-28`}>
             <p
               data-pdc-scroll-focus
-              className="mx-auto mb-10 max-w-2xl text-center font-sans text-sm font-medium leading-relaxed text-white/92 md:text-base"
+              className="mx-auto mb-8 max-w-2xl text-center font-sans text-sm font-medium leading-relaxed text-white/92"
             >
               La EIGE no es solo teoría: formás el carácter del intercesor, practicás en comunidad y salís a ministrar
               con seguridad.
             </p>
 
-            <div className="mx-auto mb-10 grid max-w-3xl gap-4 sm:grid-cols-2">
+            <div className="mx-auto mb-8 grid max-w-3xl gap-3 sm:grid-cols-2">
               {INFO_CARDS.map((card, i) => {
                 const Icon = card.icon;
                 return (
                   <motion.div
                     key={card.eyebrow}
-                    className={`relative overflow-hidden rounded-2xl border p-6 transition duration-500 md:p-7 ${
+                    className={`relative overflow-hidden rounded-2xl border p-5 transition duration-500 md:p-6 ${
                       card.accent
                         ? "border-secondary/35 bg-gradient-to-br from-secondary/15 via-[#0c1424]/80 to-[#080c16] shadow-[0_16px_48px_-24px_rgba(64,194,222,0.35)]"
                         : "border-white/12 bg-white/[0.05] hover:border-white/22 hover:bg-white/[0.08]"
@@ -163,15 +166,15 @@ const IntercesionSection = () => {
                     <p className="font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-zinc-500">
                       {card.eyebrow}
                     </p>
-                    <p className="mt-1 font-serif text-2xl text-[#faf8f4]">{card.title}</p>
+                    <p className={`mt-1 ${pdcCardStatClass}`}>{card.title}</p>
                     <p className="mt-2 font-sans text-sm leading-relaxed text-zinc-400">{card.body}</p>
                   </motion.div>
                 );
               })}
             </div>
 
-            <div className="mb-10">
-              <h3 className="mb-3 flex items-center justify-center gap-2 font-serif text-xl font-medium text-[#faf8f4] md:text-2xl">
+            <div className="mb-8">
+              <h3 className={`mb-2 flex items-center justify-center gap-2 ${pdcSectionH3Class}`}>
                 <Sparkles className="h-5 w-5 text-secondary" aria-hidden />
                 Lo que vas a vivir
               </h3>
@@ -199,14 +202,17 @@ const IntercesionSection = () => {
         </Reveal>
 
         <Reveal delayMs={80}>
-          <div id="intercesion-galeria" className={`mx-auto max-w-5xl ${pdcHeaderScrollMargin}`}>
+          <div
+            id="intercesion-galeria"
+            className={`mx-auto w-full py-4 notebook:-mx-2.5 notebook:mt-4 notebook:max-w-[min(99vw,76rem)] notebook:px-0 md:py-5 lg:notebook:-mx-4 desktop:mt-8 ${pdcHeaderScrollMargin}`}
+          >
             <h2
               data-pdc-scroll-focus
-              className="mb-2 text-center font-serif text-xl text-white md:text-2xl"
+              className={`mb-2 shrink-0 text-center notebook:mb-1.5 ${pdcSectionH3Class}`}
             >
               Galería
             </h2>
-            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:text-base">
+            <p className="mx-auto mb-4 max-w-lg shrink-0 text-center font-serif text-sm italic leading-relaxed text-white/70 notebook:mb-2 notebook:text-xs md:mb-5 md:text-base">
               Vigilias, altar y comunidad de intercesores en acción.
             </p>
             <IntercesionMomentsGallery />

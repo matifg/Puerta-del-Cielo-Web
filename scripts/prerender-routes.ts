@@ -48,7 +48,15 @@ function upsertJsonLdScript(html: string, graph: Record<string, unknown>): strin
 }
 
 function patchIndexHtml(html: string, pathname: string): string {
-  const { title, description, canonicalPath, ogImage } = getPageSeo(pathname);
+  const {
+    title,
+    description,
+    canonicalPath,
+    ogImage,
+    ogImageAlt,
+    ogImageWidth,
+    ogImageHeight,
+  } = getPageSeo(pathname);
   const canonicalUrl = absoluteUrl(canonicalPath);
   const graph = buildPageJsonLdGraph(canonicalPath, title, description);
 
@@ -62,9 +70,13 @@ function patchIndexHtml(html: string, pathname: string): string {
   out = upsertMetaTag(out, "property", "og:description", description);
   out = upsertMetaTag(out, "property", "og:url", canonicalUrl);
   out = upsertMetaTag(out, "property", "og:image", ogImage);
+  out = upsertMetaTag(out, "property", "og:image:width", String(ogImageWidth));
+  out = upsertMetaTag(out, "property", "og:image:height", String(ogImageHeight));
+  out = upsertMetaTag(out, "property", "og:image:alt", ogImageAlt);
   out = upsertMetaTag(out, "name", "twitter:title", title);
   out = upsertMetaTag(out, "name", "twitter:description", description);
   out = upsertMetaTag(out, "name", "twitter:image", ogImage);
+  out = upsertMetaTag(out, "name", "twitter:image:alt", ogImageAlt);
 
   out = upsertJsonLdScript(out, graph);
   return out;

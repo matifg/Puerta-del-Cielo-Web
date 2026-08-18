@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, ChevronRight, Crown, HandHeart, Palette } from "lucide-react";
+import { BookOpen, ChevronRight, Crown, GraduationCap, HandHeart, Palette } from "lucide-react";
 import { Reveal } from "../components/bethel/Reveal";
 import { PdcPageShell } from "../components/PdcPageShell";
 import {
@@ -26,6 +26,12 @@ const ESCUELAS = [
     title: "Intercesión · EIGE",
     desc: "Entrenamiento en intercesión y guerra espiritual.",
     icon: HandHeart,
+  },
+  {
+    to: "/area-educativa/formacion-lideres",
+    title: "Formación de líderes",
+    desc: "Efesios 4:12 — equipar santos para la obra del ministerio.",
+    icon: GraduationCap,
   },
   {
     to: "/area-educativa/liderazgo",

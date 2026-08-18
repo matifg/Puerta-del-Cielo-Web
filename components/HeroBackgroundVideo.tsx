@@ -121,7 +121,7 @@ export const HeroBackgroundVideo: React.FC<HeroBackgroundVideoProps> = ({
       muted
       loop
       playsInline
-      preload="auto"
+      preload="metadata"
       tabIndex={-1}
       aria-hidden
       controls={false}

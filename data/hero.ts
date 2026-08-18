@@ -1,17 +1,18 @@
 /** Rutas del hero — archivos en public/assets/ (ver public/assets/README.md). */
 export const HERO_VIDEO_MP4 = "/assets/hero.mp4";
-/** Segunda source para Chrome; solo si existe public/assets/hero.webm */
+/** Segunda source para Chrome; generar con npm run optimize:hero */
 export const HERO_VIDEO_WEBM = "/assets/hero.webm";
-export const HERO_HAS_WEBM = false;
+export const HERO_HAS_WEBM = true;
 
-/** Solo Open Graph / redes — el hero en pantalla usa solo el MP4. */
+/** Open Graph / poster — JPG fallback + WebP responsivo (npm run optimize:hero). */
 export const HERO_POSTER = "/assets/hero-poster.jpg";
+export const HERO_POSTER_WEBP = "/assets/hero-poster.webp";
 
 /** @deprecated Usar HERO_POSTER — compat OG / enlaces viejos */
 export const HERO_POSTER_LEGACY = "/images/hero-mobile.jpg";
 
 /** Encuadre del clip (ajustar si el plano queda alto/bajo). */
-export const HERO_VIDEO_OBJECT_POSITION = "center 42%";
+export const HERO_VIDEO_OBJECT_POSITION = "center 52%";
 
 export type HeroOverlayPreset = "vivid" | "readable";
 

@@ -43,7 +43,7 @@ const ContactoSection: React.FC = () => (
       <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 md:p-8">
         <h2 className="mb-4 font-serif text-xl text-white">WhatsApp y teléfono</h2>
         <p className={`${bodyText} mb-5 text-sm`}>
-          El mismo número que usamos en la iglesia para consultas y coordinación.
+          WhatsApp institucional: el mismo número de la iglesia para consultas y coordinación.
         </p>
         <p className="mb-5 font-sans text-lg font-semibold tabular-nums tracking-wide text-[#faf8f4]">
           <a href={telHref} className="transition hover:text-secondary">

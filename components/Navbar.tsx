@@ -27,6 +27,7 @@ const navLinks: NavItem[] = [
       { to: "/area-educativa/discipulado", label: "Discipulado" },
       { to: "/area-educativa/danza-artes", label: "Danza y artes dinámicas" },
       { to: "/area-educativa/intercesion", label: "Intercesión" },
+      { to: "/area-educativa/formacion-lideres", label: "Formación de líderes" },
       { to: "/area-educativa/liderazgo", label: "Liderazgo", navHidden: true },
     ],
   },

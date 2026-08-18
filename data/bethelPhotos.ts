@@ -1,9 +1,29 @@
 const bethelFile = (name: string) => `/images/bethel/${encodeURIComponent(name)}`;
 
+const BETHEL_WIDTHS = [480, 720, 1080] as const;
+
+/** WebP responsivo (generar con npm run optimize:bethel) */
+export function bethelImageSrc(slug: string, width: number): string {
+  return `/images/bethel/${slug}-${width}.webp`;
+}
+
+export function bethelImageSrcSet(slug: string): string {
+  return BETHEL_WIDTHS.map((w) => `${bethelImageSrc(slug, w)} ${w}w`).join(", ");
+}
+
+export function bethelImageSizes(): string {
+  return "(max-width: 640px) 33vw, (max-width: 1024px) 28vw, 320px";
+}
+
+export function bethelLightboxSizes(): string {
+  return "(max-width: 768px) 96vw, 1080px";
+}
+
 export type BethelMediaKind = "image" | "video";
 
 export type BethelGalleryItem = {
   id: string;
+  /** Fallback JPG/PNG original */
   src: string;
   kind: BethelMediaKind;
   alt: string;
@@ -12,11 +32,16 @@ export type BethelGalleryItem = {
   body: string;
   /** Miniatura mientras carga o si el clip no reproduce (.mov) */
   poster?: string;
+  /** Recorte en grilla (object-cover); por defecto prioriza rostros */
+  objectPosition?: string;
 };
+
+/** Fallback en la grilla cuando la foto no define objectPosition */
+export const BETHEL_GALLERY_DEFAULT_OBJECT_POSITION = "center 28%";
 
 /** Huecos visibles en el muro; el resto del pool rota de a uno cada intervalo */
 export const BETHEL_GALLERY_VISIBLE_COUNT = 6;
-export const BETHEL_GALLERY_ROTATE_MS = 3000;
+export const BETHEL_GALLERY_ROTATE_MS = 5000;
 /** Duración de cada clip en la grilla antes de rotar (sin clic) */
 export const BETHEL_GALLERY_VIDEO_PREVIEW_MS = 28_000;
 /** Tope de seguridad si `ended` no dispara (p. ej. .MOV en Chrome) */
@@ -24,9 +49,13 @@ export const BETHEL_GALLERY_VIDEO_MAX_MS = 60_000;
 
 export const BETHEL_DEFAULT_VIDEO_ID = "bethel-video-1";
 
+const focusFace = "center 28%";
+const focusCenter = "center 50%";
+
 const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   {
     id: "bethel-1",
+    objectPosition: "center 32%",
     alt: "Hermana en oración en el sofá durante el encuentro de Bethel",
     eyebrow: "Intimidad",
     title: "Donde el encuentro empieza en el corazón",
@@ -35,6 +64,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-2",
+    objectPosition: focusFace,
     alt: "Joven ministrando con cántico durante el encuentro de Bethel",
     eyebrow: "Adoración",
     title: "Un corazón que canta",
@@ -43,6 +73,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-3",
+    objectPosition: focusCenter,
     alt: "Cuadros del león, la cruz y banderas de las naciones en el altar de Bethel",
     eyebrow: "El León de Judá",
     title: "Símbolos de la morada",
@@ -51,6 +82,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-4",
+    objectPosition: "center 30%",
     alt: "Músico adorando al teclado durante el encuentro de Bethel",
     eyebrow: "La Palabra",
     title: "Un fuego que adora",
@@ -59,6 +91,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-5",
+    objectPosition: focusFace,
     alt: "Familia adorando durante el encuentro de Bethel",
     eyebrow: "Todas las generaciones",
     title: "Una casa para todas las edades",
@@ -67,6 +100,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-6",
+    objectPosition: focusFace,
     alt: "Participantes en adoración durante el encuentro de Bethel",
     eyebrow: "En el salón",
     title: "Un pueblo en un solo clamor",
@@ -74,6 +108,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-7",
+    objectPosition: focusFace,
     alt: "Momento de adoración y encuentro en el salón de Bethel",
     eyebrow: "En el encuentro",
     title: "Presencia en el salón",
@@ -81,6 +116,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-8",
+    objectPosition: focusFace,
     alt: "Comunidad en adoración durante el encuentro de Bethel",
     eyebrow: "Comunidad",
     title: "Un mismo clamor",
@@ -88,6 +124,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-9",
+    objectPosition: focusFace,
     alt: "Adoración y ministerio durante el encuentro de Bethel",
     eyebrow: "Adoración",
     title: "Unidos en el salón",
@@ -95,6 +132,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-10",
+    objectPosition: "center 30%",
     alt: "Participantes sirviendo y adorando en Bethel",
     eyebrow: "Servicio",
     title: "Manos que sirven",
@@ -102,6 +140,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-11",
+    objectPosition: focusFace,
     alt: "Pueblo adorando en el encuentro de Bethel",
     eyebrow: "Comunidad",
     title: "La casa reunida",
@@ -109,6 +148,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-12",
+    objectPosition: focusCenter,
     alt: "Material y cronograma del encuentro de Bethel",
     eyebrow: "Vigilia",
     title: "Doce horas con propósito",
@@ -116,6 +156,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-13",
+    objectPosition: focusCenter,
     alt: "Gráfica del encuentro de Bethel",
     eyebrow: "Bethel",
     title: "Morada de su presencia",
@@ -123,6 +164,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-16",
+    objectPosition: "center 30%",
     alt: "Participante leyendo la Biblia durante el encuentro de Bethel",
     eyebrow: "La Palabra",
     title: "Un corazón en las Escrituras",
@@ -130,6 +172,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-17",
+    objectPosition: focusFace,
     alt: "Hermana adorando con abanico durante el encuentro de Bethel",
     eyebrow: "Adoración",
     title: "Manos y corazón en alto",
@@ -137,6 +180,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-18",
+    objectPosition: "center 42%",
     alt: "Rincón de oración con velas y mensaje de Bethel en el encuentro",
     eyebrow: "Morada",
     title: "Un altar para encontrarse con Dios",
@@ -147,6 +191,7 @@ const BETHEL_IMAGES: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
 const BETHEL_VIDEOS: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   {
     id: "bethel-video-1",
+    objectPosition: focusFace,
     alt: "Video del encuentro de Bethel: adoración en el salón",
     eyebrow: "En vivo",
     title: "El encuentro en movimiento",
@@ -154,6 +199,7 @@ const BETHEL_VIDEOS: readonly Omit<BethelGalleryItem, "kind" | "src">[] = [
   },
   {
     id: "bethel-video-2",
+    objectPosition: focusFace,
     alt: "Video del encuentro de Bethel: momento de adoración",
     eyebrow: "En vivo",
     title: "Fuego en el salón",
@@ -191,7 +237,7 @@ export const BETHEL_GALLERY_ITEMS: BethelGalleryItem[] = [
     ...meta,
     kind: "video" as const,
     src: bethelFile(`bethel-${i + 14}.mp4`),
-    poster: bethelFile(i === 0 ? "bethel-6.jpg" : "bethel-7.jpg"),
+    poster: bethelImageSrc(i === 0 ? "bethel-6" : "bethel-7", 720),
   })),
 ];
 

@@ -16,6 +16,7 @@ import {
 import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { IecComunidadGallery } from "./IecComunidadGallery";
 import { PdcSectionEyebrow, PdcSectionHeader, pdcHeaderScrollMargin, pdcPageHeroTopComfort, pdcPageInnerClass, pdcPageTitleAccentClass, pdcPageTitleClass, pdcPageTitleLineClass } from "./PdcSectionHeader";
+import { CELULA_OG_WEBP } from "../data/celulaPhotos";
 import { whatsappUrl } from "../data/contacto";
 
 const FORM_HREF = "https://forms.gle/2JVBZFS5Nw5BUXHGA";
@@ -67,7 +68,9 @@ const IglesiaEnCasaSection: React.FC = () => {
       >
         <motion.div
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.34] saturate-[1.05]"
-          style={{ backgroundImage: "url('/images/celula/celula1.jpeg')" }}
+          style={{
+            backgroundImage: `image-set(url('${CELULA_OG_WEBP}') type('image/webp'), url('/images/celula/celula1.jpeg') type('image/jpeg'))`,
+          }}
           aria-hidden
         />
         <div
@@ -90,7 +93,7 @@ const IglesiaEnCasaSection: React.FC = () => {
             <span className={pdcPageTitleLineClass}>Iglesia en casa</span>
             <span className={pdcPageTitleAccentClass}>fe vivida en comunidad</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-lg font-serif text-lg leading-relaxed text-white/88 md:text-xl">
+          <p className="mx-auto mt-4 max-w-lg font-serif text-base leading-relaxed text-white/88 md:text-lg">
             Grupos pequeños en hogares: encuentro semanal para crecer y caminar juntos.
           </p>
 
@@ -117,10 +120,10 @@ const IglesiaEnCasaSection: React.FC = () => {
 
       {/* Galería */}
       <section
-        className={`border-t border-white/[0.06] py-5 md:py-6 ${pdcHeaderScrollMargin}`}
+        className={`border-t border-white/[0.06] py-4 md:py-5 notebook:mt-4 desktop:mt-8 ${pdcHeaderScrollMargin}`}
         aria-labelledby="iec-comunidad-heading"
       >
-        <div className={pdcPageInnerClass}>
+        <div className={`${pdcPageInnerClass} notebook:max-w-[min(99vw,76rem)] notebook:px-2.5 lg:px-4`}>
           <IecComunidadGallery formHref={FORM_HREF} />
         </div>
       </section>

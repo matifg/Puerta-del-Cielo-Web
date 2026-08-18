@@ -3,11 +3,19 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
 import {
+  CELULA_GALLERY_FOLDER,
   CELULA_GALLERY_ROTATE_MS,
   CELULA_GALLERY_VISIBLE_COUNT,
   CELULA_PHOTOS,
   type CelulaPhoto,
 } from "../data/celulaPhotos";
+import { galleryGridSizes } from "../data/galleryWebp";
+import {
+  pdcNotebookGalleryHintClass,
+  pdcNotebookGalleryMediaClass,
+  pdcNotebookGalleryTileClass,
+} from "./PdcSectionHeader";
+import { PdcGalleryLightboxPicture, PdcGalleryPicture } from "./PdcGalleryPicture";
 
 const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const easeReveal: [number, number, number, number] = [0.33, 1, 0.45, 1];
@@ -71,16 +79,17 @@ const PhotoTile: React.FC<PhotoTileProps> = ({ photo, eager = false, onOpen, red
     onClick={() => onOpen(photoPoolIndex(photo))}
     whileHover={reduceMotion ? undefined : { y: -2 }}
     whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-    className="group relative block h-full w-full overflow-hidden border-0 bg-[#0a1018]/80 text-left shadow-[0_16px_40px_-20px_rgba(0,0,0,0.75)] ring-1 ring-inset ring-white/10 transition-[box-shadow,ring-color] hover:ring-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+    className={`group relative block h-full w-full overflow-hidden border-0 bg-[#0a1018]/80 text-left shadow-[0_16px_40px_-20px_rgba(0,0,0,0.75)] ring-1 ring-inset ring-white/10 transition-[box-shadow,ring-color] hover:ring-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary ${pdcNotebookGalleryTileClass}`}
     aria-label={`Ver foto ampliada: ${photo.alt}`}
   >
-    <span className="relative block h-full w-full overflow-hidden">
-      <img
-        src={photo.src}
-        alt=""
-        aria-hidden
+    <span className={`relative block w-full overflow-hidden ${pdcNotebookGalleryMediaClass}`}>
+      <PdcGalleryPicture
+        folder={CELULA_GALLERY_FOLDER}
+        slug={photo.slug}
+        fallbackSrc={photo.src}
+        ariaHidden
         loading={eager ? "eager" : "lazy"}
-        decoding="async"
+        sizes={galleryGridSizes()}
         className={`${mediaClass} transition duration-700 group-hover:scale-[1.02] motion-reduce:transition-none`}
         style={photo.objectPosition ? { objectPosition: photo.objectPosition } : undefined}
       />
@@ -100,9 +109,10 @@ const PhotoTile: React.FC<PhotoTileProps> = ({ photo, eager = false, onOpen, red
 
 type IecComunidadGalleryProps = {
   formHref: string;
+  className?: string;
 };
 
-export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHref }) => {
+export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHref, className = "" }) => {
   const reduceMotion = useReducedMotion() ?? false;
   const [portalMounted, setPortalMounted] = useState(false);
   const [visible, setVisible] = useState<CelulaPhoto[]>(buildInitialVisible);
@@ -208,44 +218,50 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHr
             <ChevronRight className="h-6 w-6" aria-hidden />
           </button>
 
-          <motion.img
-            key={active.id}
-            src={active.src}
-            alt={active.alt}
-            className="max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] w-auto select-none rounded-lg object-contain shadow-[0_24px_80px_-20px_rgba(0,0,0,0.75)]"
-            style={active.objectPosition ? { objectPosition: active.objectPosition } : undefined}
+          <motion.div
             initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={reduceMotion ? undefined : { opacity: 0, scale: 0.98, y: 8 }}
             transition={{ duration: 0.3, ease: easeOut }}
             onClick={(e) => e.stopPropagation()}
-            draggable={false}
-          />
+          >
+            <PdcGalleryLightboxPicture
+              folder={CELULA_GALLERY_FOLDER}
+              slug={active.slug}
+              fallbackSrc={active.src}
+              alt={active.alt}
+              className="max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] w-auto select-none rounded-lg object-contain shadow-[0_24px_80px_-20px_rgba(0,0,0,0.75)]"
+              style={active.objectPosition ? { objectPosition: active.objectPosition } : undefined}
+            />
+          </motion.div>
         </motion.div>
       </AnimatePresence>
     ) : null;
 
   return (
     <>
-      <div id="iec-comunidad" className="scroll-mt-28 sm:scroll-mt-32">
+      <div
+        id="iec-comunidad"
+        className={`scroll-mt-28 sm:scroll-mt-32 ${className}`.trim()}
+      >
         <motion.header
           initial={reduceMotion ? false : { opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-8% 0px" }}
           transition={{ duration: 0.45, ease: easeOut }}
-          className="mb-3 text-center md:mb-4"
+          className="mb-3 shrink-0 text-center md:mb-4 notebook:mb-2"
         >
           <h2
             id="iec-comunidad-heading"
             data-pdc-scroll-focus
             className="font-serif text-xl font-medium text-[#f4f1ec] md:text-2xl"
           >
-            <span className="mb-1.5 block font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-secondary/80">
+            <span className="mb-1.5 block font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-secondary/80 notebook:mb-1">
               En un hogar
             </span>
             Así nos reunimos
           </h2>
-          <p className="mx-auto mt-2 max-w-sm font-sans text-xs text-white/45">
+          <p className={`mx-auto mt-2 max-w-sm font-sans text-xs text-white/45 ${pdcNotebookGalleryHintClass}`}>
             Tocá una foto para ampliar.
           </p>
         </motion.header>
@@ -255,14 +271,14 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHr
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-6% 0px" }}
           transition={{ duration: 0.45, ease: easeOut }}
-          className="mx-auto grid w-full max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5"
+          className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 notebook:mx-auto notebook:grid-cols-3 notebook:grid-rows-2 notebook:items-stretch notebook:gap-3 notebook:max-w-[min(99vw,70rem)] notebook:h-[min(50vh,440px)] desktop:max-w-[min(98vw,76rem)] desktop:gap-3.5"
           role="list"
           aria-label="Fotos de Iglesia en casa"
           aria-live="polite"
         >
           {visible.map((photo, i) => (
-            <div key={`iec-slot-${i}`} className="relative min-h-0" role="listitem">
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[#0a1018]/80 sm:rounded-xl">
+            <div key={`iec-slot-${i}`} className={`relative min-h-0 ${pdcNotebookGalleryTileClass}`} role="listitem">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[#0a1018]/80 sm:rounded-xl notebook:aspect-[unset] notebook:h-full notebook:min-h-0">
                 <AnimatePresence initial={false}>
                   <motion.div
                     key={photo.id}
@@ -284,18 +300,23 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({ formHr
             </div>
           ))}
         </motion.div>
-      </div>
 
-      <motion.div
-        initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mt-6 flex justify-center md:mt-8"
-      >
-        <a href={formHref} target="_blank" rel="noopener noreferrer" className="pdc-btn-on-dark-accent max-w-none">
-          <span className="relative z-[1]">Quiero conocer un grupo cerca mío</span>
-        </a>
-      </motion.div>
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative z-[1] mt-7 flex shrink-0 justify-center notebook:mt-6 md:mt-8"
+        >
+          <a
+            href={formHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pdc-btn-on-dark-accent max-w-none !min-h-0 px-5 py-2 text-xs font-semibold sm:px-6 sm:py-2.5 sm:text-sm md:px-6 md:py-2.5 md:text-sm"
+          >
+            <span className="relative z-[1]">Quiero conocer un grupo cerca mío</span>
+          </a>
+        </motion.div>
+      </div>
 
       {portalMounted ? createPortal(lightbox, document.body) : null}
     </>

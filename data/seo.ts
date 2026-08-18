@@ -1,13 +1,16 @@
 import { email, direccion, getSchemaTelephone } from "./contacto";
 import { horariosReunionGeneral } from "./horariosWeb";
+import { BETHEL_FAQ_SCHEMA } from "./bethelFaq";
 
 /** Dominio de producción — sitemap, canonical y Open Graph. */
 export const SITE_URL = "https://puertadelcielobaradero.com.ar";
 
 export const SITE_NAME = "Puerta del Cielo";
 
-/** Ruta bajo /public — OG por defecto (home y fallback). */
-export const DEFAULT_OG_IMAGE_PATH = "/assets/hero-poster.jpg";
+/** OG social (WhatsApp/Facebook): JPG 1200×630 en public/og/ — npm run optimize:og */
+export const OG_IMAGE_WIDTH = 1200;
+export const OG_IMAGE_HEIGHT = 630;
+export const DEFAULT_OG_IMAGE_PATH = "/og/home.jpg";
 
 export function ogImageUrl(imagePath: string): string {
   const path = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
@@ -38,6 +41,7 @@ export const SITEMAP_PATHS: readonly string[] = [
   "/area-educativa/discipulado",
   "/area-educativa/danza-artes",
   "/area-educativa/intercesion",
+  "/area-educativa/formacion-lideres",
   "/area-educativa/liderazgo",
   "/area-servicio/comunidad",
   "/conexion",
@@ -46,22 +50,41 @@ export const SITEMAP_PATHS: readonly string[] = [
   "/contacto",
 ] as const;
 
-/** Imagen OG por ruta canónica (archivos en public/). */
+/** Imagen OG por ruta canónica (JPG en public/og/). */
 const ROUTE_OG_IMAGE_PATH: Record<string, string> = {
   "/": DEFAULT_OG_IMAGE_PATH,
-  "/quienes-somos/vision": "/images/editorial/cruz-fe-1080.webp",
-  "/quienes-somos/equipo-ministerial": "/images/editorial/contacto-equipo-1080.webp",
-  "/quienes-somos/areas-servicio": "/images/editorial/santa-cena-1080.webp",
-  "/area-educativa": "/images/editorial/danza-escuela-960.webp",
-  "/area-educativa/discipulado": "/images/editorial/cruz-fe-1080.webp",
-  "/area-educativa/danza-artes": "/images/editorial/danza-grupo-escenario-1080.webp",
-  "/area-educativa/intercesion": "/images/editorial/bethel-adoracion-1080.webp",
-  "/area-educativa/liderazgo": "/images/editorial/contacto-equipo-1080.webp",
-  "/area-servicio/comunidad": "/images/editorial/contacto-lugares-1080.webp",
-  "/conexion": "/images/editorial/santa-cena-mesa-960.webp",
-  "/conexion/iglesia-en-casa": "/images/celula/celula1.jpeg",
-  "/bethel": "/images/editorial/bethel-encuentro-1080.webp",
-  "/contacto": "/images/editorial/contacto-lugares-1080.webp",
+  "/quienes-somos/vision": "/og/vision.jpg",
+  "/quienes-somos/equipo-ministerial": "/og/equipo.jpg",
+  "/quienes-somos/areas-servicio": "/og/areas-servicio.jpg",
+  "/area-educativa": "/og/area-educativa.jpg",
+  "/area-educativa/discipulado": "/og/discipulado.jpg",
+  "/area-educativa/danza-artes": "/og/danza.jpg",
+  "/area-educativa/intercesion": "/og/intercesion.jpg",
+  "/area-educativa/formacion-lideres": "/og/formacion-lideres.jpg",
+  "/area-educativa/liderazgo": "/og/liderazgo.jpg",
+  "/area-servicio/comunidad": "/og/comunidad.jpg",
+  "/conexion": "/og/conexion.jpg",
+  "/conexion/iglesia-en-casa": "/og/iglesia-en-casa.jpg",
+  "/bethel": "/og/bethel.jpg",
+  "/contacto": "/og/contacto.jpg",
+};
+
+const ROUTE_OG_IMAGE_ALT: Record<string, string> = {
+  "/": "Puerta del Cielo — iglesia cristiana en Baradero",
+  "/quienes-somos/vision": "Cruz de madera con paño rojo en el altar de Puerta del Cielo",
+  "/quienes-somos/equipo-ministerial": "Equipo de ungieres y bienvenida en el ingreso del templo",
+  "/quienes-somos/areas-servicio": "Mesa de Santa Cena en Puerta del Cielo",
+  "/area-educativa": "Ministerio de danza y artes en el culto",
+  "/area-educativa/discipulado": "Encuentro del programa de discipulado en el salón",
+  "/area-educativa/danza-artes": "Ministerio de danza adorando en el escenario",
+  "/area-educativa/intercesion": "Adoración con los brazos en alto durante el encuentro",
+  "/area-educativa/formacion-lideres": "Formación de líderes en el salón de Puerta del Cielo",
+  "/area-educativa/liderazgo": "Escuela de liderazgo — formación de líderes",
+  "/area-servicio/comunidad": "Voluntarios sirviendo a familias en la comunidad",
+  "/conexion": "Mesa de Santa Cena frente al altar del templo",
+  "/conexion/iglesia-en-casa": "Encuentro Iglesia en Casa en un hogar",
+  "/bethel": "Adoración durante un encuentro Bethel de doce horas",
+  "/contacto": "Congregación adorando en el templo de Puerta del Cielo",
 };
 
 const ROUTE_SEO: Record<string, PageSeo> = {
@@ -105,6 +128,11 @@ const ROUTE_SEO: Record<string, PageSeo> = {
     description:
       "Formación en intercesión y guerra espiritual (EIGE) en Baradero. Levantá intercesores con discernimiento y autoridad.",
   },
+  "/area-educativa/formacion-lideres": {
+    title: "Formación de líderes | Puerta del Cielo – Baradero",
+    description:
+      "Escuela de Formación de Líderes en Baradero. Efesios 4:12: perfeccionar a los santos para la obra del ministerio y la edificación del Cuerpo de Cristo.",
+  },
   "/area-educativa/liderazgo": {
     title: "Escuela de liderazgo | Puerta del Cielo – Baradero",
     description:
@@ -128,7 +156,7 @@ const ROUTE_SEO: Record<string, PageSeo> = {
   "/bethel": {
     title: "Bethel | Puerta del Cielo – Baradero",
     description:
-      "Experiencia Bethel y encuentro con la presencia de Dios. Conocé el llamado y la historia de Puerta del Cielo en Baradero.",
+      "Bethel: morada de su presencia en Puerta del Cielo, Baradero. Encuentros de doce horas de adoración, intercesión e intimidad profunda en comunidad.",
   },
   "/contacto": {
     title: "Contacto | Puerta del Cielo – Baradero",
@@ -148,6 +176,7 @@ const BREADCRUMB_LABELS: Record<string, string> = {
   "/area-educativa/discipulado": "Discipulado",
   "/area-educativa/danza-artes": "Danza y Artes Dinámicas",
   "/area-educativa/intercesion": "Intercesión EIGE",
+  "/area-educativa/formacion-lideres": "Formación de líderes",
   "/area-educativa/liderazgo": "Escuela de liderazgo",
   "/area-servicio": "Área de servicio",
   "/area-servicio/comunidad": "Servicio a la comunidad",
@@ -197,10 +226,17 @@ export function getOgImagePath(canonicalPath: string): string {
   return ROUTE_OG_IMAGE_PATH[canonicalPath] ?? DEFAULT_OG_IMAGE_PATH;
 }
 
+export function getOgImageAlt(canonicalPath: string): string {
+  return ROUTE_OG_IMAGE_ALT[canonicalPath] ?? `${SITE_NAME} — iglesia en Baradero`;
+}
+
 export function getPageSeo(pathname: string): PageSeo & {
   canonicalPath: string;
   ogImagePath: string;
   ogImage: string;
+  ogImageAlt: string;
+  ogImageWidth: number;
+  ogImageHeight: number;
 } {
   const canonicalPath = resolveCanonicalPath(pathname);
   const seo = ROUTE_SEO[canonicalPath] ?? DEFAULT_PAGE_SEO;
@@ -210,6 +246,9 @@ export function getPageSeo(pathname: string): PageSeo & {
     canonicalPath,
     ogImagePath,
     ogImage: ogImageUrl(ogImagePath),
+    ogImageAlt: getOgImageAlt(canonicalPath),
+    ogImageWidth: OG_IMAGE_WIDTH,
+    ogImageHeight: OG_IMAGE_HEIGHT,
   };
 }
 
@@ -290,7 +329,23 @@ export function buildBreadcrumbJsonLd(canonicalPath: string): Record<string, unk
   };
 }
 
-/** Grafo JSON-LD único (organización + página + migas). */
+export function buildFaqPageJsonLd(
+  items: readonly { title: string; summary: string }[]
+): Record<string, unknown> {
+  return {
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.title,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.summary,
+      },
+    })),
+  };
+}
+
+/** Grafo JSON-LD único (organización + página + migas + FAQ opcional). */
 export function buildPageJsonLdGraph(
   canonicalPath: string,
   title: string,
@@ -306,6 +361,10 @@ export function buildPageJsonLdGraph(
 
   const breadcrumb = buildBreadcrumbJsonLd(canonicalPath);
   if (breadcrumb) graph.push(breadcrumb);
+
+  if (canonicalPath === "/bethel") {
+    graph.push(buildFaqPageJsonLd(BETHEL_FAQ_SCHEMA));
+  }
 
   return {
     "@context": "https://schema.org",

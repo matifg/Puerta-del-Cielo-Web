@@ -1,7 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
-import { INTERCESION_MOMENTS, type IntercesionMoment } from "../data/intercesionPhotos";
+import { INTERCESION_MOMENTS, INTERCESION_GALLERY_FOLDER, type IntercesionMoment } from "../data/intercesionPhotos";
+import { galleryMasonrySizes } from "../data/galleryWebp";
+import {
+  pdcNotebookGalleryHintClass,
+  pdcNotebookGalleryMediaClass,
+  pdcNotebookGalleryTileClass,
+} from "./PdcSectionHeader";
+import { PdcGalleryLightboxPicture, PdcGalleryPicture } from "./PdcGalleryPicture";
 
 const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -25,17 +32,18 @@ const PhotoTile: React.FC<PhotoTileProps> = ({
     onClick={() => onOpen(globalIndex)}
     whileHover={reduceMotion ? undefined : { y: -3 }}
     whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-    className="group relative block w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+    className={`group relative block h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary notebook:rounded-xl ${pdcNotebookGalleryTileClass}`}
     aria-label={`Ver foto ampliada: ${photo.alt}`}
   >
-    <span className="relative block w-full">
-      <img
-        src={photo.src}
-        alt=""
-        aria-hidden
+    <span className={`relative block w-full overflow-hidden ${pdcNotebookGalleryMediaClass}`}>
+      <PdcGalleryPicture
+        folder={INTERCESION_GALLERY_FOLDER}
+        slug={photo.slug}
+        fallbackSrc={photo.src}
+        ariaHidden
         loading={eager ? "eager" : "lazy"}
-        decoding="async"
-        className="block h-auto w-full transition duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
+        sizes={galleryMasonrySizes()}
+        className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
         style={photo.objectPosition ? { objectPosition: photo.objectPosition } : undefined}
       />
 
@@ -90,36 +98,29 @@ export const IntercesionMomentsGallery: React.FC<IntercesionMomentsGalleryProps>
 
   return (
     <div className={className}>
-      <motion.p
-        initial={reduceMotion ? false : { opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="mx-auto mb-8 max-w-md text-center font-sans text-sm text-white/50"
-      >
+      <p className={`mx-auto mb-4 max-w-md text-center font-sans text-sm text-white/50 notebook:mb-3 md:mb-5 ${pdcNotebookGalleryHintClass}`}>
         Tocá una foto para verla en grande.
-      </motion.p>
+      </p>
 
-      <motion.div
-        initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-6% 0px" }}
-        transition={{ duration: 0.5, ease: easeOut }}
-        className="mx-auto max-w-5xl columns-2 gap-4 sm:gap-5 sm:columns-3"
+      <div
+        className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 notebook:mx-auto notebook:grid-cols-3 notebook:grid-rows-2 notebook:items-stretch notebook:gap-3 notebook:max-w-[min(99vw,70rem)] notebook:h-[min(50vh,440px)] desktop:max-w-[min(98vw,76rem)] desktop:gap-3.5"
         role="list"
         aria-label="Galería EIGE Intercesión"
       >
         {INTERCESION_MOMENTS.map((photo, i) => (
-          <div key={photo.id} className="mb-4 break-inside-avoid" role="listitem">
-            <PhotoTile
-              photo={photo}
-              globalIndex={i}
-              eager={i < 2}
-              onOpen={setLightboxIndex}
-              reduceMotion={reduceMotion}
-            />
+          <div key={photo.id} className={`relative min-h-0 ${pdcNotebookGalleryTileClass}`} role="listitem">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl notebook:aspect-[unset] notebook:h-full notebook:min-h-0 notebook:rounded-xl desktop:rounded-2xl">
+              <PhotoTile
+                photo={photo}
+                globalIndex={i}
+                eager={i < 3}
+                onOpen={setLightboxIndex}
+                reduceMotion={reduceMotion}
+              />
+            </div>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       <AnimatePresence>
         {active && lightboxIndex !== null ? (
@@ -167,18 +168,14 @@ export const IntercesionMomentsGallery: React.FC<IntercesionMomentsGalleryProps>
               <ChevronRight className="h-6 w-6" aria-hidden />
             </button>
 
-            <motion.img
-              key={active.id}
-              src={active.src}
+            <PdcGalleryLightboxPicture
+              folder={INTERCESION_GALLERY_FOLDER}
+              slug={active.slug}
+              fallbackSrc={active.src}
               alt={active.alt}
               className="max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] w-auto select-none rounded-lg object-contain shadow-[0_24px_80px_-20px_rgba(0,0,0,0.75)]"
-              initial={reduceMotion ? false : { opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={reduceMotion ? undefined : { opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.28, ease: easeOut }}
-              onClick={(e) => e.stopPropagation()}
-              draggable={false}
               style={active.objectPosition ? { objectPosition: active.objectPosition } : undefined}
+              onClick={(e) => e.stopPropagation()}
             />
           </motion.div>
         ) : null}

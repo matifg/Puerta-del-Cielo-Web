@@ -1,30 +1,23 @@
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { Hero } from './components/Hero.tsx';
-import { Rema } from './components/Rema.tsx';
-import { Anuncios } from './components/Anuncios.tsx';
-import { Eventos } from './components/Eventos.tsx';
-import { Devocional } from './components/Devocional.tsx';
-import { Multimedia } from './components/Multimedia.tsx';
-import { Team } from './components/Team.tsx';
 import { Navbar } from "./components/Navbar";
 
 import Home from "./pages/Home";
-import QuienesSomos from "./pages/QuienesSomos";
-import AreaEducativa from "./pages/AreaEducativa.tsx";
-import Conexion from "./pages/Conexion.tsx";
-import Bethel from "./pages/Bethel.tsx";
-import ContactoPage from "./pages/ContactoPage";
-import VisionPage from "./pages/VisionPage";
-import EquipoMinisterialPage from "./pages/EquipoMinisterialPage";
-import AreasServicioPage from "./pages/AreasServicioPage";
-import SePartePage from "./pages/SePartePage";
-import ConexionPage from "./pages/ConexionPage";
-import DiscipuladoPage from "./pages/DiscipuladoPage";
-import DanzaArtesPage from "./pages/DanzaArtesPage";
-import IntercesionPage from "./pages/IntercesionPage";
-import LiderazgoPage from "./pages/LiderazgoPage";
-import ServicioComunidadPage from "./pages/ServicioComunidadPage";
+const QuienesSomos = lazy(() => import("./pages/QuienesSomos"));
+const AreaEducativa = lazy(() => import("./pages/AreaEducativa.tsx"));
+const Conexion = lazy(() => import("./pages/Conexion.tsx"));
+const Bethel = lazy(() => import("./pages/Bethel.tsx"));
+const ContactoPage = lazy(() => import("./pages/ContactoPage"));
+const VisionPage = lazy(() => import("./pages/VisionPage"));
+const EquipoMinisterialPage = lazy(() => import("./pages/EquipoMinisterialPage"));
+const AreasServicioPage = lazy(() => import("./pages/AreasServicioPage"));
+const ConexionPage = lazy(() => import("./pages/ConexionPage"));
+const DiscipuladoPage = lazy(() => import("./pages/DiscipuladoPage"));
+const DanzaArtesPage = lazy(() => import("./pages/DanzaArtesPage"));
+const IntercesionPage = lazy(() => import("./pages/IntercesionPage"));
+const LiderazgoPage = lazy(() => import("./pages/LiderazgoPage"));
+const FormacionLideresPage = lazy(() => import("./pages/FormacionLideresPage"));
+const ServicioComunidadPage = lazy(() => import("./pages/ServicioComunidadPage"));
 import { whatsappBaseUrl } from "./data/contacto";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { PageSeo } from "./components/PageSeo";
@@ -169,6 +162,7 @@ const App: React.FC = () => {
       <PageSeo />
       <ScrollToTop />
       <AppShell>
+        <Suspense fallback={null}>
         <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/quienes-somos" element={<QuienesSomos />}>
@@ -185,11 +179,13 @@ const App: React.FC = () => {
         <Route path="/area-educativa/discipulado" element={<DiscipuladoPage />} />
         <Route path="/area-educativa/danza-artes" element={<DanzaArtesPage />} />
         <Route path="/area-educativa/intercesion" element={<IntercesionPage />} />
+        <Route path="/area-educativa/formacion-lideres" element={<FormacionLideresPage />} />
         <Route path="/liderazgo" element={<LiderazgoPage />} />
         <Route path="/area-educativa/liderazgo" element={<LiderazgoPage />} />
         <Route path="/servicio-comunidad" element={<ServicioComunidadPage />} />
         <Route path="/area-servicio/comunidad" element={<ServicioComunidadPage />} />
       </Routes>
+        </Suspense>
       </AppShell>
 
       {/* BOTÓN WHATSAPP PRO */}

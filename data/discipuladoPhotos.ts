@@ -1,5 +1,6 @@
 export type DiscipuladoMoment = {
   id: string;
+  slug: string;
   src: string;
   alt: string;
   /** Pie corto visible bajo la miniatura */
@@ -15,6 +16,7 @@ const discFile = (name: string) => `/images/discipulado/${name}`;
 export const DISCIPULADO_MOMENTS: DiscipuladoMoment[] = [
   {
     id: "disc-moment-1",
+    slug: "discipulado1",
     src: discFile("discipulado1.jpeg"),
     alt: "Encuentro del programa de discipulado en el salón de Puerta del Cielo",
     caption: "Encuentro",
@@ -22,6 +24,7 @@ export const DISCIPULADO_MOMENTS: DiscipuladoMoment[] = [
   },
   {
     id: "disc-moment-2",
+    slug: "discipulado2",
     src: discFile("discipulado2.jpeg"),
     alt: "Grupo durante una clase de formación bíblica en discipulado",
     caption: "Clase",
@@ -29,6 +32,7 @@ export const DISCIPULADO_MOMENTS: DiscipuladoMoment[] = [
   },
   {
     id: "disc-moment-3",
+    slug: "discipulado3",
     src: discFile("discipulado3.jpeg"),
     alt: "Momento de oración y comunión en un encuentro de discipulado",
     caption: "Oración",
@@ -36,6 +40,7 @@ export const DISCIPULADO_MOMENTS: DiscipuladoMoment[] = [
   },
   {
     id: "disc-moment-4",
+    slug: "discipulado4",
     src: discFile("discipulado4.jpeg"),
     alt: "Participantes compartiendo en el espacio de la escuela de discipulado",
     caption: "Comunidad",
@@ -43,6 +48,7 @@ export const DISCIPULADO_MOMENTS: DiscipuladoMoment[] = [
   },
   {
     id: "disc-moment-5",
+    slug: "discipulado5",
     src: discFile("discipulado5.png"),
     alt: "Grupo con Biblias y apuntes durante un encuentro quincenal de discipulado en el salón",
     caption: "En clase",
@@ -50,6 +56,12 @@ export const DISCIPULADO_MOMENTS: DiscipuladoMoment[] = [
     bento: "featured",
   },
 ];
+
+export const DISCIPULADO_GALLERY_FOLDER = "discipulado";
+
+/** Fondo hero — WebP responsivo (discipulado1) */
+export const DISCIPULADO_HERO_WEBP = "/images/discipulado/discipulado1-1080.webp";
+export const DISCIPULADO_HERO_FALLBACK = "/images/discipulado/discipulado1.jpeg";
 
 const BENTO_GRID_CLASS: Record<string, string> = {
   "disc-moment-5":

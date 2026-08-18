@@ -52,7 +52,8 @@ export function PageSeo(): null {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const { title, description, canonicalPath, ogImage } = getPageSeo(pathname);
+    const { title, description, canonicalPath, ogImage, ogImageAlt, ogImageWidth, ogImageHeight } =
+      getPageSeo(pathname);
     const canonicalUrl = absoluteUrl(canonicalPath);
 
     document.title = title;
@@ -67,6 +68,9 @@ export function PageSeo(): null {
     upsertMeta("og:url", canonicalUrl, "property");
     upsertMeta("og:type", DEFAULT_OG.type, "property");
     upsertMeta("og:image", ogImage, "property");
+    upsertMeta("og:image:width", String(ogImageWidth), "property");
+    upsertMeta("og:image:height", String(ogImageHeight), "property");
+    upsertMeta("og:image:alt", ogImageAlt, "property");
     upsertMeta("og:locale", DEFAULT_OG.locale, "property");
     upsertMeta("og:site_name", DEFAULT_OG.siteName, "property");
 
@@ -74,6 +78,7 @@ export function PageSeo(): null {
     upsertMeta("twitter:title", title);
     upsertMeta("twitter:description", description);
     upsertMeta("twitter:image", ogImage);
+    upsertMeta("twitter:image:alt", ogImageAlt);
 
     upsertJsonLd(buildPageJsonLdGraph(canonicalPath, title, description));
   }, [pathname]);

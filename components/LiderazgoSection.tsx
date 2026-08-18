@@ -2,7 +2,7 @@ import { Calendar, Clock, Crown } from "lucide-react";
 import { whatsappUrl } from "../data/contacto";
 import { Reveal } from "./bethel/Reveal";
 import { PdcPageShell } from "./PdcPageShell";
-import { PdcSectionHeader, pdcPageInnerWithHeroComfort, pdcPageIntroHeaderClass } from "./PdcSectionHeader";
+import { PdcSectionHeader, pdcGlassCardPadding, pdcPageInnerWithHeroComfort, pdcPageIntroHeaderClass, pdcSectionH3Class } from "./PdcSectionHeader";
 
 const glassCard =
   "rounded-2xl border border-white/[0.1] bg-white/[0.04] shadow-[0_20px_60px_-20px_rgba(0,0,0,0.65)] backdrop-blur-xl";
@@ -35,12 +35,12 @@ const LiderazgoSection = () => (
       </Reveal>
 
       <Reveal delayMs={80}>
-        <div id="liderazgo-contenido" className={`${glassCard} scroll-mt-28 p-6 md:p-10`}>
-          <p className="mx-auto mb-6 max-w-2xl text-center font-sans text-sm font-medium leading-relaxed text-white/92 md:text-base">
+        <div id="liderazgo-contenido" className={`${glassCard} ${pdcGlassCardPadding} scroll-mt-28`}>
+          <p className="mx-auto mb-5 max-w-2xl text-center font-sans text-sm font-medium leading-relaxed text-white/92">
             La Escuela de Liderazgo está diseñada para formar hombres y mujeres comprometidos con Dios y con las
             personas, capaces de influir, guiar y servir con integridad.
           </p>
-          <p className="mx-auto mb-8 max-w-2xl text-center font-sans text-sm font-medium leading-relaxed text-white/88 md:text-base">
+          <p className="mx-auto mb-6 max-w-2xl text-center font-sans text-sm font-medium leading-relaxed text-white/88">
             A través de principios bíblicos y herramientas prácticas, buscamos desarrollar líderes íntegros con corazón
             pastoral, entendiendo que el liderazgo verdadero nace del servicio, la responsabilidad y el compromiso.
           </p>
@@ -59,7 +59,7 @@ const LiderazgoSection = () => (
           </div>
 
           <div className="mb-8">
-            <h3 className="mb-5 text-center font-serif text-xl font-medium text-[#faf8f4] md:text-2xl">
+            <h3 className={`mb-4 text-center ${pdcSectionH3Class}`}>
               ¿Qué vas a recibir?
             </h3>
             <ul className="mx-auto grid max-w-2xl gap-3 text-white/90 md:grid-cols-2">

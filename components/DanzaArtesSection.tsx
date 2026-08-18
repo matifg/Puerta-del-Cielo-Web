@@ -10,7 +10,17 @@ import { PdcPhotoCarousel } from "./PdcPhotoCarousel";
 import { PdcEducativaDockHint } from "./PdcEducativaDockHint";
 import { PdcPlanDock } from "./PdcPlanDock";
 import { PdcPageShell } from "./PdcPageShell";
-import { PdcSectionHeader, pdcHeaderScrollMargin, pdcPageInnerWithHeroComfort, pdcPageIntroHeaderClass } from "./PdcSectionHeader";
+import {
+  PdcSectionHeader,
+  pdcCardStatClass,
+  pdcGlassCardPadding,
+  pdcHeaderScrollMargin,
+  pdcNotebookGalleryInnerClass,
+  pdcNotebookGallerySectionClass,
+  pdcPageInnerWithHeroComfort,
+  pdcPageIntroHeaderClass,
+  pdcSectionH3Class,
+} from "./PdcSectionHeader";
 
 const glassCard =
   "rounded-2xl border border-white/[0.1] bg-white/[0.04] shadow-[0_20px_60px_-20px_rgba(0,0,0,0.65)] backdrop-blur-xl";
@@ -128,9 +138,9 @@ const DanzaArtesSection = () => {
         </Reveal>
 
         <Reveal delayMs={60}>
-          <div id="danza-contenido" className={`${glassCard} scroll-mt-28 p-6 md:p-10`}>
-            <div data-pdc-scroll-focus className="mx-auto mb-10 max-w-2xl text-center">
-              <p className="font-sans text-sm font-medium leading-relaxed text-white/92 md:text-base">
+          <div id="danza-contenido" className={`${glassCard} ${pdcGlassCardPadding} scroll-mt-28`}>
+            <div data-pdc-scroll-focus className="mx-auto mb-8 max-w-2xl text-center">
+              <p className="font-sans text-sm font-medium leading-relaxed text-white/92">
                 {DANZA_INTRO_TEASER}
                 {introExpanded ? (
                   <>
@@ -149,13 +159,13 @@ const DanzaArtesSection = () => {
               </button>
             </div>
 
-            <div className="mx-auto mb-10 grid max-w-3xl gap-4 sm:grid-cols-2">
+            <div className="mx-auto mb-8 grid max-w-3xl gap-3 sm:grid-cols-2">
               {INFO_CARDS.map((card, i) => {
                 const Icon = card.icon;
                 return (
                   <motion.div
                     key={card.eyebrow}
-                    className={`relative overflow-hidden rounded-2xl border p-6 transition duration-500 md:p-7 ${
+                    className={`relative overflow-hidden rounded-2xl border p-5 transition duration-500 md:p-6 ${
                       card.accent
                         ? "border-secondary/35 bg-gradient-to-br from-secondary/15 via-[#0c1424]/80 to-[#080c16] shadow-[0_16px_48px_-24px_rgba(64,194,222,0.35)]"
                         : "border-white/12 bg-white/[0.05] hover:border-white/22 hover:bg-white/[0.08]"
@@ -178,15 +188,15 @@ const DanzaArtesSection = () => {
                     <p className="font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-zinc-500">
                       {card.eyebrow}
                     </p>
-                    <p className="mt-1 font-serif text-2xl text-[#faf8f4]">{card.title}</p>
+                    <p className={`mt-1 ${pdcCardStatClass}`}>{card.title}</p>
                     <p className="mt-2 font-sans text-sm leading-relaxed text-zinc-400">{card.body}</p>
                   </motion.div>
                 );
               })}
             </div>
 
-            <div className="mb-10">
-              <h3 className="mb-3 flex items-center justify-center gap-2 font-serif text-xl font-medium text-[#faf8f4] md:text-2xl">
+            <div className="mb-8">
+              <h3 className={`mb-2 flex items-center justify-center gap-2 ${pdcSectionH3Class}`}>
                 <Sparkles className="h-5 w-5 text-secondary" aria-hidden />
                 Lo que vas a vivir
               </h3>
@@ -216,26 +226,28 @@ const DanzaArtesSection = () => {
         <Reveal delayMs={80}>
           <div
             id="danza-galeria"
-            className={`mx-auto max-w-5xl notebook:max-w-[min(94vw,60rem)] notebook:px-1 desktop:max-w-[min(88vw,80rem)] desktop:px-2 ${pdcHeaderScrollMargin}`}
+            className={`mx-auto max-w-5xl desktop:max-w-[min(88vw,80rem)] ${pdcNotebookGallerySectionClass} ${pdcHeaderScrollMargin}`}
           >
             <h2
               data-pdc-scroll-focus
-              className="mb-2 text-center font-serif text-xl text-white md:text-2xl desktop:mb-3"
+              className={`mb-2 text-center notebook:mb-1.5 ${pdcSectionH3Class}`}
             >
               Galería
             </h2>
-            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:text-base notebook:mb-7 desktop:mb-10">
+            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 notebook:mb-2 notebook:text-xs md:text-base desktop:mb-10">
               Formación, ensayo y ministración — la creatividad al servicio de la adoración.
             </p>
-            <PdcPhotoCarousel
-              slides={DANZA_CAROUSEL_SLIDES}
-              airy
-              className="mb-6 md:mb-8"
-              ariaLabel="Galería Danza y Artes Dinámicas"
-              autoPlayMs={5500}
-              showSlideCaption={false}
-              showPlaybackHint={false}
-            />
+            <div className={pdcNotebookGalleryInnerClass}>
+              <PdcPhotoCarousel
+                slides={DANZA_CAROUSEL_SLIDES}
+                airy
+                className="mb-6 md:mb-8 notebook:mb-0"
+                ariaLabel="Galería Danza y Artes Dinámicas"
+                autoPlayMs={5500}
+                showSlideCaption={false}
+                showPlaybackHint={false}
+              />
+            </div>
           </div>
         </Reveal>
       </div>

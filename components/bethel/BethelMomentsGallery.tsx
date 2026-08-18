@@ -3,10 +3,14 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Maximize2, Play, X } from "lucide-react";
 import {
+  BETHEL_GALLERY_DEFAULT_OBJECT_POSITION,
   BETHEL_GALLERY_ITEMS,
   BETHEL_GALLERY_ROTATE_MS,
   BETHEL_GALLERY_VIDEO_PREVIEW_MS,
   BETHEL_GALLERY_VISIBLE_COUNT,
+  bethelImageSrcSet,
+  bethelImageSizes,
+  bethelLightboxSizes,
   type BethelGalleryItem,
 } from "../../data/bethelPhotos";
 
@@ -143,6 +147,8 @@ const MediaTile: React.FC<MediaTileProps> = ({
   }, [isVideo, playVideo, item.id]);
 
   const expandLabel = isVideo ? "Ver video ampliado" : "Ver foto ampliada";
+  const mediaPosition = item.objectPosition ?? BETHEL_GALLERY_DEFAULT_OBJECT_POSITION;
+  const mediaStyle = { objectPosition: mediaPosition };
 
   return (
     <motion.button
@@ -164,16 +170,21 @@ const MediaTile: React.FC<MediaTileProps> = ({
             playsInline
             preload={eager ? "auto" : "metadata"}
             className={`${mediaClass} bg-[#0a1018]`}
+            style={mediaStyle}
           />
         ) : (
-          <img
-            src={item.src}
-            alt=""
-            aria-hidden
-            loading={eager ? "eager" : "lazy"}
-            decoding="async"
-            className={`${mediaClass} transition duration-700 group-hover:scale-[1.02] motion-reduce:transition-none`}
-          />
+          <picture className="absolute inset-0 block">
+            <source type="image/webp" srcSet={bethelImageSrcSet(item.id)} sizes={bethelImageSizes()} />
+            <img
+              src={item.src}
+              alt=""
+              aria-hidden
+              loading={eager ? "eager" : "lazy"}
+              decoding="async"
+              className={`${mediaClass} transition duration-700 group-hover:scale-[1.02] motion-reduce:transition-none`}
+              style={mediaStyle}
+            />
+          </picture>
         )}
         <span
           className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/75 via-[#030508]/15 to-[#030508]/25"
@@ -414,14 +425,24 @@ export function BethelMomentsGallery() {
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <img
-            key={active.id}
-            src={active.src}
-            alt={active.alt}
-            className="max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] w-auto select-none rounded-lg object-contain shadow-[0_24px_80px_-20px_rgba(0,0,0,0.75)]"
-            onClick={(e) => e.stopPropagation()}
-            draggable={false}
-          />
+          <picture onClick={(e) => e.stopPropagation()} className="block">
+            <source
+              type="image/webp"
+              srcSet={bethelImageSrcSet(active.id)}
+              sizes={bethelLightboxSizes()}
+            />
+            <img
+              key={active.id}
+              src={active.src}
+              alt={active.alt}
+              className="max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] w-auto select-none rounded-lg object-contain shadow-[0_24px_80px_-20px_rgba(0,0,0,0.75)]"
+              draggable={false}
+              onError={(e) => {
+                const img = e.currentTarget;
+                if (img.src !== active.src) img.src = active.src;
+              }}
+            />
+          </picture>
         )}
       </div>
     ) : null;

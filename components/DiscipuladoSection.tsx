@@ -25,6 +25,7 @@ import {
   Users,
 } from "lucide-react";
 import { whatsappUrl } from "../data/contacto";
+import { DISCIPULADO_HERO_FALLBACK, DISCIPULADO_HERO_WEBP } from "../data/discipuladoPhotos";
 import { usePdcSectionFab } from "../hooks/usePdcSectionFab";
 import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { DiscipuladoMomentsBento } from "./DiscipuladoMomentsBento";
@@ -33,11 +34,13 @@ import { PdcPlanDock } from "./PdcPlanDock";
 import { PdcScrollFabButton } from "./PdcScrollFabButton";
 import {
   PdcSectionEyebrow,
+  pdcCardStatClass,
   pdcHeaderScrollMargin,
   pdcPageHeroTopComfort,
   pdcPageTitleAccentClass,
   pdcPageTitleClass,
   pdcPageTitleLineClass,
+  pdcSectionH2Class,
 } from "./PdcSectionHeader";
 
 const PDF_HREF = "/docs/escuela-discipulado.pdf";
@@ -264,7 +267,9 @@ const DiscipuladoSection = () => {
       >
         <motion.div
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.32] saturate-[1.05]"
-          style={{ backgroundImage: "url('/images/discipulado.jpeg')" }}
+          style={{
+            backgroundImage: `image-set(url('${DISCIPULADO_HERO_WEBP}') type('image/webp'), url('${DISCIPULADO_HERO_FALLBACK}') type('image/jpeg'))`,
+          }}
           aria-hidden
         />
         <div
@@ -299,7 +304,7 @@ const DiscipuladoSection = () => {
               <span className={pdcPageTitleLineClass}>Discipulado</span>
               <span className={pdcPageTitleAccentClass}>formación con propósito</span>
             </h1>
-            <p className="mx-auto mt-5 max-w-xl font-serif text-lg leading-relaxed text-white/85 md:text-xl">
+            <p className="mx-auto mt-4 max-w-xl font-serif text-base leading-relaxed text-white/85 md:text-lg">
               Crecimiento real: formación, acompañamiento y activación en el llamado.
             </p>
             <p className="mx-auto mt-3 max-w-lg font-sans text-sm font-medium leading-relaxed text-white/75 md:text-[0.95rem]">
@@ -341,14 +346,14 @@ const DiscipuladoSection = () => {
       {/* Resumen — cards */}
       <motion.section
         id="disc-resumen"
-        className={`relative px-4 py-14 sm:px-6 md:py-16 lg:px-10 ${pdcHeaderScrollMargin}`}
+        className={`relative px-4 py-10 sm:px-6 md:py-12 lg:px-10 ${pdcHeaderScrollMargin}`}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-8% 0px" }}
         variants={variants}
       >
         <motion.div className="mx-auto max-w-6xl" variants={staggerChildren} initial="hidden" whileInView="show" viewport={{ once: true }}>
-          <motion.h2 variants={staggerItem} className="mb-3 text-center font-serif text-2xl text-white md:text-3xl">
+          <motion.h2 variants={staggerItem} className={`mb-2 text-center ${pdcSectionH2Class}`}>
             Lo esencial del programa
           </motion.h2>
           <motion.p variants={staggerItem} className="mx-auto mb-10 max-w-xl text-center font-sans text-sm text-white/65 md:text-base">
@@ -370,7 +375,7 @@ const DiscipuladoSection = () => {
                   <Icon className="h-6 w-6 text-secondary" aria-hidden />
                 </div>
                 <p className="font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-secondary/80">{eyebrow}</p>
-                <p className="mt-1.5 font-serif text-2xl font-semibold text-white md:text-3xl">{title}</p>
+                <p className={`mt-1.5 font-semibold ${pdcCardStatClass}`}>{title}</p>
                 <p className="mt-2 font-sans text-sm leading-relaxed text-white/65">{body}</p>
               </motion.article>
             ))}
@@ -381,14 +386,14 @@ const DiscipuladoSection = () => {
       {/* Pilares */}
       <motion.section
         id="disc-pilares"
-        className={`relative border-t border-white/[0.06] px-4 py-14 sm:px-6 md:py-16 lg:px-10 ${pdcHeaderScrollMargin}`}
+        className={`relative border-t border-white/[0.06] px-4 py-10 sm:px-6 md:py-12 lg:px-10 ${pdcHeaderScrollMargin}`}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-8% 0px" }}
         variants={variants}
       >
         <motion.div className="mx-auto max-w-6xl" variants={staggerChildren} initial="hidden" whileInView="show" viewport={{ once: true }}>
-          <motion.h2 variants={staggerItem} className="mb-2 text-center font-serif text-2xl text-white md:text-3xl">
+          <motion.h2 variants={staggerItem} className={`mb-2 text-center ${pdcSectionH2Class}`}>
             ¿Qué vas a <span className="text-secondary">vivir</span>?
           </motion.h2>
           <motion.p variants={staggerItem} className="mx-auto mb-10 max-w-lg text-center font-sans text-sm text-white/65">
@@ -417,7 +422,7 @@ const DiscipuladoSection = () => {
       {/* Programa PDF */}
       <motion.section
         id="disc-programa"
-        className={`relative scroll-mt-28 px-4 py-14 sm:px-6 md:min-h-[min(42vh,360px)] md:py-16 lg:px-10 ${pdcHeaderScrollMargin}`}
+        className={`relative scroll-mt-28 px-4 py-10 sm:px-6 md:min-h-[min(42vh,360px)] md:py-12 lg:px-10 ${pdcHeaderScrollMargin}`}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-8% 0px" }}
@@ -435,7 +440,7 @@ const DiscipuladoSection = () => {
               <BookOpen className="h-8 w-8 text-secondary" aria-hidden />
             </div>
             <motion.div className="flex-1">
-              <h2 data-pdc-scroll-focus className="font-serif text-2xl text-white md:text-3xl">
+              <h2 data-pdc-scroll-focus className={pdcSectionH2Class}>
                 Programa completo en PDF
               </h2>
               <p className="mt-3 font-sans text-sm leading-relaxed text-white/70 md:text-base">
@@ -451,13 +456,13 @@ const DiscipuladoSection = () => {
       {/* Galería */}
       <motion.section
         id="disc-galeria"
-        className={`relative border-t border-white/[0.06] px-4 py-14 sm:px-6 md:py-16 lg:px-10 ${pdcHeaderScrollMargin}`}
+        className={`relative mx-auto w-full border-t border-white/[0.06] px-4 py-4 sm:px-6 md:py-5 notebook:-mx-2.5 notebook:mt-4 notebook:max-w-[min(99vw,76rem)] notebook:px-2.5 lg:px-4 lg:notebook:-mx-4 desktop:mt-8 ${pdcHeaderScrollMargin}`}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-8% 0px" }}
         variants={variants}
       >
-        <DiscipuladoMomentsBento className="mx-auto max-w-6xl" />
+        <DiscipuladoMomentsBento className="mx-auto w-full" />
       </motion.section>
 
       {/* CTA final */}

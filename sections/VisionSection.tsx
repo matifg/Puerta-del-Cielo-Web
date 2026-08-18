@@ -16,6 +16,8 @@ import {
   PdcSectionHeader,
   pdcPageInnerWithHeroComfort,
   pdcPageIntroHeaderClass,
+  pdcNotebookGalleryInnerClass,
+  pdcNotebookGallerySectionClass,
 } from "../components/PdcSectionHeader";
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -84,16 +86,18 @@ const VisionSection = () => {
         <Reveal delayMs={60}>
           <div
             id="vision-galeria"
-            className="mx-auto mb-14 max-w-5xl scroll-mt-28 md:mb-20"
+            className={`mx-auto mb-14 max-w-5xl scroll-mt-28 md:mb-20 ${pdcNotebookGallerySectionClass}`}
           >
-            <p className="mb-5 text-center font-sans text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+            <p className="mb-5 text-center font-sans text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-zinc-500 notebook:mb-2">
               Revelación de la Cruz · Santa Cena
             </p>
-            <PdcPhotoCarousel
-              photos={VISION_GALLERY}
-              ariaLabel="Galería Visión y propósito"
-              autoPlayMs={6000}
-            />
+            <div className={pdcNotebookGalleryInnerClass}>
+              <PdcPhotoCarousel
+                photos={VISION_GALLERY}
+                ariaLabel="Galería Visión y propósito"
+                autoPlayMs={6000}
+              />
+            </div>
           </div>
         </Reveal>
 

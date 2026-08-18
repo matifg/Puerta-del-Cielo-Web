@@ -3,14 +3,15 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import type { EditorialPhoto } from "../data/sitePhotos";
 import { editorialSizes, editorialSrc, editorialSrcSet } from "../data/sitePhotos";
-import { usePrefersSaveData } from "../hooks/usePrefersSaveData";
 
 /** Imagen por URL o clip en bucle (p. ej. galería Danza y Artes). */
 export type PdcCarouselSlide = {
   id: string;
   alt: string;
-  /** Imagen estática */
+  /** Imagen estática (fallback JPG/PNG) */
   src?: string;
+  srcSet?: string;
+  sizes?: string;
   objectPosition?: string;
   caption?: string;
   /** Logos o gráficos: encuadre completo */
@@ -39,10 +40,27 @@ type PdcPhotoCarouselProps = {
   showPlaybackHint?: boolean;
   /** Notebook/monitor: padding lateral y altura contenida para que el carrusel respire */
   airy?: boolean;
+  /** Con `airy`: ~18 % más alto en notebook/desktop */
+  airyBoost?: boolean;
 };
+
+const AIRY_ASPECT_CLASS =
+  "relative aspect-[4/3] w-full sm:aspect-[16/10] md:aspect-[2.1/1] notebook:aspect-[18/10] notebook:max-h-[min(52vh,520px)] desktop:aspect-[16/10] desktop:max-h-[min(58vh,620px)]";
+const AIRY_BOOST_ASPECT_CLASS =
+  "relative aspect-[4/3] w-full sm:aspect-[16/10] md:aspect-[2.1/1] notebook:aspect-[18/10] notebook:max-h-[min(61vh,615px)] desktop:aspect-[16/10] desktop:max-h-[min(68vh,730px)]";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const DEFAULT_AUTO_PLAY_MS = 5500;
+
+function armClipForAutoplay(video: HTMLVideoElement) {
+  video.muted = true;
+  video.defaultMuted = true;
+  video.volume = 0;
+  video.playsInline = true;
+  video.setAttribute("muted", "");
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "true");
+}
 
 export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
   photos = [],
@@ -55,10 +73,11 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
   showSlideCaption = true,
   showPlaybackHint = true,
   airy = false,
+  airyBoost = false,
 }) => {
   const reduceMotion = useReducedMotion() ?? false;
-  const saveData = usePrefersSaveData();
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);
@@ -85,7 +104,11 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
 
   const currentDirect = useDirect ? slides![index] : null;
   const isVideoSlide = Boolean(currentDirect?.video);
-  const playClip = !reduceMotion && !saveData;
+
+  const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
+    videoRef.current = node;
+    setVideoEl(node);
+  }, []);
 
   useEffect(() => {
     if (count <= 1 || reduceMotion || paused || isVideoSlide) return;
@@ -97,14 +120,30 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
   }, [count, reduceMotion, paused, autoPlayMs, bump, isVideoSlide]);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const video = videoEl;
     if (!video || !isVideoSlide) return;
-    if (!playClip) {
+
+    const tryPlay = () => {
+      armClipForAutoplay(video);
+      if (video.paused) {
+        void video.play().catch(() => {});
+      }
+    };
+
+    armClipForAutoplay(video);
+    tryPlay();
+    video.addEventListener("loadeddata", tryPlay);
+    video.addEventListener("canplay", tryPlay);
+
+    const raf = requestAnimationFrame(tryPlay);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      video.removeEventListener("loadeddata", tryPlay);
+      video.removeEventListener("canplay", tryPlay);
       video.pause();
-      return;
-    }
-    void video.play().catch(() => {});
-  }, [isVideoSlide, playClip, index]);
+    };
+  }, [videoEl, isVideoSlide, index]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -126,8 +165,8 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
     : photo
       ? editorialSrc(photo.slug, photo.layout === "portrait" ? 960 : 1440)
       : "";
-  const slideSrcSet = direct?.src ? undefined : photo ? editorialSrcSet(photo.slug, photo.layout) : undefined;
-  const slideSizes = direct?.src ? undefined : photo ? editorialSizes(photo.layout) : undefined;
+  const slideSrcSet = direct?.srcSet ?? (direct?.src ? undefined : photo ? editorialSrcSet(photo.slug, photo.layout) : undefined);
+  const slideSizes = direct?.sizes ?? (direct?.src ? undefined : photo ? editorialSizes(photo.layout) : undefined);
   const slideObjectPosition = direct
     ? direct.video?.objectPosition ?? direct.objectPosition
     : photo!.objectPosition;
@@ -141,7 +180,9 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
     : large
       ? "relative aspect-[4/3] w-full sm:aspect-[16/9] md:aspect-[2.25/1] md:min-h-[min(48vh,440px)]"
       : airy
-        ? "relative aspect-[4/3] w-full sm:aspect-[16/10] md:aspect-[2.1/1] notebook:aspect-[18/10] notebook:max-h-[min(52vh,520px)] desktop:aspect-[16/10] desktop:max-h-[min(58vh,620px)]"
+        ? airyBoost
+          ? AIRY_BOOST_ASPECT_CLASS
+          : AIRY_ASPECT_CLASS
         : "relative aspect-[4/3] w-full sm:aspect-[16/10] md:aspect-[2.1/1]";
 
   const mediaMotion = {
@@ -172,47 +213,37 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
         <motion.div layout className={aspectClass}>
           <AnimatePresence mode="wait" initial={false}>
             {isVideoSlide && direct?.video ? (
-              playClip ? (
-                <motion.video
-                  key={slideKey}
-                  ref={videoRef}
+              <div key={slideKey} className="absolute inset-0">
+                <video
+                  ref={setVideoRef}
                   src={direct.video.mp4}
                   poster={direct.video.poster}
                   muted
                   loop
                   playsInline
                   autoPlay
-                  preload="metadata"
+                  preload="auto"
                   aria-label={slideAlt}
                   className={mediaClass}
                   style={mediaStyle}
-                  {...mediaMotion}
                 />
-              ) : (
-                <motion.img
-                  key={`${slideKey}-poster`}
-                  src={direct.video.poster}
-                  alt={slideAlt}
-                  loading={index === 0 ? "eager" : "lazy"}
-                  decoding="async"
-                  className={mediaClass}
-                  style={mediaStyle}
-                  {...mediaMotion}
-                />
-              )
+              </div>
             ) : (
-              <motion.img
-                key={slideKey}
-                src={slideSrc}
-                srcSet={slideSrcSet}
-                sizes={slideSizes}
-                alt={slideAlt}
-                loading={index === 0 ? "eager" : "lazy"}
-                decoding="async"
-                className={mediaClass}
-                style={mediaStyle}
-                {...mediaMotion}
-              />
+              <motion.div key={slideKey} className="absolute inset-0" {...mediaMotion}>
+                <picture className="absolute inset-0 block">
+                  {slideSrcSet ? (
+                    <source type="image/webp" srcSet={slideSrcSet} sizes={slideSizes} />
+                  ) : null}
+                  <img
+                    src={slideSrc}
+                    alt={slideAlt}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                    className={mediaClass}
+                    style={mediaStyle}
+                  />
+                </picture>
+              </motion.div>
             )}
           </AnimatePresence>
           <motion.div

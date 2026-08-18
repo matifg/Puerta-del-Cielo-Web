@@ -1,10 +1,10 @@
 /**
  * Datos de contacto públicos — única fuente para Footer, Contacto y enlaces WhatsApp.
  */
-export const telefonoDisplay = "+54 (3329) 000-000";
+export const telefonoDisplay = "+54 9 3329 30-1815";
 
 /** Formato internacional sin + ni espacios (wa.me / tel) */
-export const telefonoE164 = "5493329000000";
+export const telefonoE164 = "5493329301815";
 
 /** true mientras el número sea placeholder — no incluir en JSON-LD. */
 export const telefonoEsPlaceholder =

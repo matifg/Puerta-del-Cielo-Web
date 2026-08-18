@@ -144,19 +144,22 @@ export const Footer: React.FC = () => {
                   />
                 </svg>
                 <div>
-                  <a
-                    href={telHref}
-                    className="text-sm text-zinc-400 transition hover:text-secondary"
-                  >
-                    {telefonoDisplay}
-                  </a>
+                  <p className="font-sans text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-secondary/90">
+                    WhatsApp institucional
+                  </p>
                   <a
                     href={whatsappUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="mt-1 block text-sm tabular-nums text-zinc-400 transition hover:text-secondary"
+                  >
+                    {telefonoDisplay}
+                  </a>
+                  <a
+                    href={telHref}
                     className="mt-1 block text-xs text-zinc-500 underline decoration-white/10 underline-offset-2 transition hover:text-secondary"
                   >
-                    WhatsApp
+                    Llamar
                   </a>
                 </div>
               </li>

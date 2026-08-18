@@ -7,10 +7,9 @@ import {
   UsersRound,
   Smile,
   Link as LinkIcon,
+  X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { SITE_PHOTOS } from "../data/sitePhotos";
-import { PdcEditorialPhoto } from "./PdcEditorialPhoto";
 import { PdcPageShell } from "./PdcPageShell";
 import { PdcSectionHeader, pdcPageInnerWithHeroComfort } from "./PdcSectionHeader";
 
@@ -21,7 +20,6 @@ type ServicioItem = {
   horarios: string[];
   edad?: string;
   conexion?: boolean;
-  modalPhoto?: (typeof SITE_PHOTOS)[keyof typeof SITE_PHOTOS];
 };
 
 const servicios: ServicioItem[] = [
@@ -33,7 +31,6 @@ const servicios: ServicioItem[] = [
       "Cada domingo es una invitación a experimentar la gloria de Dios.",
     ],
     horarios: ["Domingos", "Verano: 20:00 hs", "Invierno: 19:00 hs"],
-    modalPhoto: SITE_PHOTOS.santaCena,
   },
   {
     nombre: "Intercesión",
@@ -75,6 +72,58 @@ const servicios: ServicioItem[] = [
 ];
 
 const OVERLAY_Z = 10060;
+
+function HorariosList({ items }: { items: string[] }) {
+  const [first, ...rest] = items;
+  const dayOnly = rest.length > 0 && !/\d/.test(first);
+
+  if (dayOnly) {
+    return (
+      <div className="space-y-3">
+        <p className="text-center font-serif text-lg text-[#f5f2ec]">{first}</p>
+        <ul className={`grid gap-2 ${rest.length === 2 ? "sm:grid-cols-2" : ""}`}>
+          {rest.map((item) => {
+            const sep = item.indexOf(":");
+            const label = sep >= 0 ? item.slice(0, sep).trim() : item;
+            const hora = sep >= 0 ? item.slice(sep + 1).trim() : "";
+            return (
+              <li
+                key={item}
+                className="rounded-xl border border-white/[0.08] bg-[#0a1018]/70 px-3 py-3 text-center"
+              >
+                {hora ? (
+                  <>
+                    <span className="block font-sans text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+                      {label}
+                    </span>
+                    <span className="mt-1 block font-sans text-sm font-medium tabular-nums text-white/90">
+                      {hora}
+                    </span>
+                  </>
+                ) : (
+                  <span className="font-sans text-sm text-white/90">{item}</span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    );
+  }
+
+  return (
+    <ul className="space-y-2">
+      {items.map((item) => (
+        <li
+          key={item}
+          className="rounded-xl border border-white/[0.08] bg-[#0a1018]/70 px-4 py-2.5 text-center font-sans text-sm text-white/90"
+        >
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 const NuestrosServiciosSection: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -173,86 +222,74 @@ const NuestrosServiciosSection: React.FC = () => {
             />
 
             <div
-              className="animate-modal-card relative z-10 mx-auto flex w-full max-w-xl flex-col items-center overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[#121a2c] via-[#0c1220] to-[#080c14] p-8 shadow-[0_28px_80px_rgba(0,0,0,0.85)] ring-1 ring-black/50 md:p-12"
+              className="animate-modal-card relative z-10 mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-b from-[#121a2c] via-[#0c1220] to-[#080c14] px-6 py-8 shadow-[0_28px_80px_rgba(0,0,0,0.85)] sm:px-8 sm:py-10"
               role="dialog"
               aria-modal="true"
               aria-labelledby="servicio-modal-title"
               onClick={(e) => e.stopPropagation()}
             >
               <div
-                className="pointer-events-none absolute -left-20 -top-24 h-56 w-56 rounded-full bg-secondary/12 blur-3xl"
+                className="pointer-events-none absolute -left-16 -top-20 h-44 w-44 rounded-full bg-secondary/10 blur-3xl"
                 aria-hidden
               />
               <div
-                className="pointer-events-none absolute -bottom-28 -right-16 h-52 w-52 rounded-full bg-primary/12 blur-3xl"
+                className="pointer-events-none absolute -bottom-24 -right-12 h-40 w-40 rounded-full bg-primary/10 blur-3xl"
                 aria-hidden
               />
 
               <button
                 type="button"
                 onClick={handleCloseModal}
-                className="absolute right-4 top-4 z-[1] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#161f33] text-xl leading-none text-white/85 transition hover:border-secondary/35 hover:bg-[#1c2740] hover:text-white"
+                className="absolute right-3 top-3 z-[1] flex h-9 w-9 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-white/80 transition hover:border-secondary/35 hover:text-white"
                 aria-label="Cerrar"
               >
-                &times;
+                <X className="h-4 w-4" aria-hidden />
               </button>
 
-              <div className="mb-6 mt-2 flex flex-col items-center text-center">
-                <span className="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-secondary/30 bg-[#162032] shadow-inner">
-                  <modalServicio.icon className="h-7 w-7 text-secondary" />
+              <div className="relative flex flex-col items-center text-center">
+                <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-secondary/30 bg-secondary/10">
+                  <modalServicio.icon className="h-6 w-6 text-secondary" />
                 </span>
                 <h3
                   id="servicio-modal-title"
-                  className="font-serif text-2xl font-medium tracking-tight text-[#f5f2ec] md:text-3xl"
+                  className="font-serif text-[1.65rem] font-medium leading-tight tracking-tight text-[#f5f2ec] md:text-3xl"
                 >
                   {modalServicio.nombre}
                 </h3>
+                {modalServicio.edad ? (
+                  <p className="mt-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-white/70">
+                    {modalServicio.edad}
+                  </p>
+                ) : null}
               </div>
 
-              {modalServicio.modalPhoto ? (
-                <PdcEditorialPhoto
-                  photo={modalServicio.modalPhoto}
-                  className="mb-6 w-full border-white/12"
-                />
-              ) : null}
-
-              <div className="mb-8 flex w-full flex-col gap-3.5">
+              <div className="relative mt-6 space-y-3">
                 {modalServicio.descripcion.map((p: string, idx: number) => (
                   <p
                     key={idx}
-                    className="text-center text-[0.9375rem] leading-relaxed text-zinc-300 md:text-base"
+                    className={
+                      idx === 0
+                        ? "text-center font-serif text-base leading-relaxed text-[#ebe7df] md:text-lg"
+                        : "text-center font-sans text-sm leading-relaxed text-zinc-400 md:text-[0.95rem]"
+                    }
                   >
                     {p}
                   </p>
                 ))}
               </div>
 
-              <div className="mb-2 w-full">
-                <p className="mb-3 text-center font-sans text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-secondary/90">
+              <div className="relative mt-8 w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 sm:px-5">
+                <p className="mb-3 text-center font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-secondary/90">
                   Horarios
                 </p>
-                <ul className="flex flex-col gap-2">
-                  {modalServicio.horarios.map((h: string, idx: number) => (
-                    <li
-                      key={idx}
-                      className="rounded-xl border border-white/12 bg-[#141c2e] px-4 py-2.5 text-center text-sm text-zinc-200 transition hover:border-secondary/25 hover:bg-[#182236]"
-                    >
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-                {modalServicio.edad && (
-                  <p className="mt-4 text-center font-sans text-sm font-medium tracking-wide text-white/80">
-                    {modalServicio.edad}
-                  </p>
-                )}
+                <HorariosList items={modalServicio.horarios} />
               </div>
 
-              {modalServicio.conexion && (
-                <Link to="/conexion" className="pdc-btn-on-dark-accent mt-2 max-w-none">
+              {modalServicio.conexion ? (
+                <Link to="/conexion" className="pdc-btn-on-dark-accent relative mt-6 max-w-none">
                   <span className="relative z-[1]">Ir a Conexión</span>
                 </Link>
-              )}
+              ) : null}
             </div>
             <style>{`
               @keyframes modalCard {

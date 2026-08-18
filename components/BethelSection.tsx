@@ -4,12 +4,17 @@ import { BethelEncounterScenes } from "./bethel/BethelEncounterScenes";
 import { BethelTabImage } from "./bethel/BethelTabImage";
 import { Reveal } from "./bethel/Reveal";
 import { BETHEL_ENCOUNTER_SCROLL_ID, type BethelTabId } from "../data/bethelScenes";
+import { BETHEL_ACCORDION } from "../data/bethelFaq";
 import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { PdcPageShell } from "./PdcPageShell";
 import {
   PdcSectionHeader,
+  pdcAccordionTitleClass,
   pdcPageInnerClass,
   pdcPageIntroHeaderClass,
+  pdcQuoteClass,
+  pdcSectionH2Class,
+  pdcSectionH3Class,
 } from "./PdcSectionHeader";
 
 const TIMELINE = [
@@ -74,21 +79,6 @@ const BETHEL_QUE_ES = {
   ],
 } as const;
 
-const ACCORDION = [
-  {
-    id: "profecia",
-    title: "Profecía y confirmación",
-    summary:
-      "El llamado ardió en nuestro interior y fue afirmado mediante una profecía, alineada con la restauración del «tabernáculo de David» en Amós 9:11.",
-  },
-  {
-    id: "vivencia",
-    title: "¿Qué vivimos allí?",
-    summary:
-      "Adoración, intercesión e intimidad profunda: la atmósfera del cielo en la tierra. Un solo anhelo — que sea aquí como es allá.",
-  },
-] as const;
-
 const glassCard =
   "rounded-2xl border border-white/[0.1] bg-white/[0.04] shadow-[0_20px_60px_-20px_rgba(0,0,0,0.65)] backdrop-blur-xl transition duration-500 hover:border-secondary/25 hover:bg-white/[0.07] hover:shadow-[0_28px_70px_-18px_rgba(37,99,173,0.22)]";
 
@@ -102,7 +92,7 @@ function scrollToBethelGaleria() {
 
 const BethelSection = () => {
   const [tab, setTab] = useState<BethelTabId>(TABS[0].id);
-  const [openAccordion, setOpenAccordion] = useState<string | null>(ACCORDION[0].id);
+  const [openAccordion, setOpenAccordion] = useState<string | null>(BETHEL_ACCORDION[0].id);
 
   const activeTab = TABS.find((t) => t.id === tab) ?? TABS[0];
 
@@ -166,7 +156,7 @@ const BethelSection = () => {
                 className="absolute left-[0.65rem] top-2 bottom-2 w-px bg-gradient-to-b from-secondary/50 via-white/15 to-primary/30 sm:left-[0.85rem]"
                 aria-hidden
               />
-              <h3 className="mb-4 font-serif text-xl font-medium text-[#f4f1ec] md:text-2xl">
+              <h3 className={`mb-3 ${pdcSectionH3Class}`}>
                 {BETHEL_QUE_ES.title}
               </h3>
               <div className="mb-8 space-y-3">
@@ -219,7 +209,7 @@ const BethelSection = () => {
               <div className="relative flex gap-4">
                 <BookOpen className="mt-0.5 h-8 w-8 shrink-0 text-secondary/90" aria-hidden />
                 <div className="min-w-0">
-                  <blockquote className="font-serif text-lg font-normal leading-snug text-[#ebe7df] md:text-xl md:leading-snug">
+                  <blockquote className={pdcQuoteClass}>
                     <p>
                       <span className="text-secondary/80">«</span>
                       En aquel día yo levantaré el tabernáculo caído de David…
@@ -246,7 +236,7 @@ const BethelSection = () => {
           />
           <Reveal className="mb-16 lg:mb-24">
             <div className="mx-auto max-w-4xl">
-              <h3 className="mb-8 text-center font-serif text-2xl font-medium text-[#f4f1ec] md:text-3xl">
+              <h3 className={`mb-6 text-center ${pdcSectionH2Class}`}>
                 Mirá la historia desde tres ángulos
               </h3>
               <div role="tablist" className="mb-8 flex flex-col gap-2 sm:flex-row sm:justify-center sm:gap-3">
@@ -279,7 +269,7 @@ const BethelSection = () => {
                 className={`${glassCard} p-6 sm:p-8 md:p-10`}
               >
                 <BethelTabImage tabId={activeTab.id} />
-                <p className="mb-5 font-serif text-xl text-[#f0ebe3] md:text-2xl">{activeTab.headline}</p>
+                <p className={`mb-4 ${pdcSectionH3Class} text-[#f0ebe3]`}>{activeTab.headline}</p>
                 <div className="space-y-4">
                   {activeTab.lines.map((line, lineIdx) => (
                     <p
@@ -297,9 +287,9 @@ const BethelSection = () => {
 
         {/* FAQ */}
         <Reveal className="mb-16 lg:mb-24">
-          <h3 className="mb-8 text-center font-serif text-2xl font-medium text-[#f4f1ec] md:text-3xl">Preguntas frecuentes</h3>
+          <h3 className={`mb-6 text-center ${pdcSectionH2Class}`}>Preguntas frecuentes</h3>
           <div className="mx-auto max-w-3xl space-y-3">
-            {ACCORDION.map((item) => {
+            {BETHEL_ACCORDION.map((item) => {
               const open = openAccordion === item.id;
               return (
                 <div
@@ -318,7 +308,7 @@ const BethelSection = () => {
                     className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left sm:px-6 sm:py-5"
                     onClick={() => setOpenAccordion(open ? null : item.id)}
                   >
-                    <span className="font-serif text-lg text-[#ebe8e2] md:text-xl">{item.title}</span>
+                    <span className={pdcAccordionTitleClass}>{item.title}</span>
                     <ChevronDown
                       className={`h-5 w-5 shrink-0 text-secondary transition-transform duration-300 ${open ? "rotate-180" : ""}`}
                       aria-hidden

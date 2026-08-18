@@ -1,7 +1,19 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { ChevronDown, HandHeart } from "lucide-react";
+import {
+  SERVICIO_COMUNIDAD_GALLERY,
+  SERVICIO_COMUNIDAD_SCENES,
+  type ServicioPhoto,
+} from "../data/servicioComunidadPhotos";
+import {
+  galleryCarouselSizes,
+  galleryMasonrySizes,
+  galleryWebpSrc,
+  galleryWebpSrcSet,
+} from "../data/galleryWebp";
 import { PdcPhotoCarousel, type PdcCarouselSlide } from "./PdcPhotoCarousel";
+import { PdcGalleryPicture } from "./PdcGalleryPicture";
 import { PdcScrollFabButton } from "./PdcScrollFabButton";
 import {
   PdcSectionEyebrow,
@@ -22,25 +34,17 @@ type SceneId = Exclude<(typeof sectionIds)[number], "svc-hero" | "svc-fin">;
 
 type Scene = {
   id: SceneId;
-  image: { src: string; alt: string };
+  photo: ServicioPhoto;
   eyebrow: string;
   title: string;
-  /** Versículo NTV (texto completo del versículo o frase clave) */
   verse: string;
   verseRef: string;
-  /** Imagen a la derecha en md+ */
   imageRight: boolean;
 };
 
-const svc = (file: string) => `/images/servicios/${encodeURIComponent(file)}`;
-
-const scenes: Scene[] = [
+const sceneCopy: Omit<Scene, "photo">[] = [
   {
     id: "svc-p1",
-    image: {
-      src: "/images/servicios/areaservicio1.jpeg",
-      alt: "Voluntarios entregando alimentos y acompañando familias en la comunidad.",
-    },
     eyebrow: "En la calle",
     title: "Dar no es un discurso",
     verse:
@@ -50,10 +54,6 @@ const scenes: Scene[] = [
   },
   {
     id: "svc-p2",
-    image: {
-      src: "/images/servicios/areaservicio2.jpeg",
-      alt: "Equipo de la iglesia sirviendo junto en la ciudad.",
-    },
     eyebrow: "Juntos",
     title: "La iglesia que camina",
     verse: "Todos ustedes en conjunto son el cuerpo de Cristo, y cada uno de ustedes es parte de ese cuerpo.",
@@ -62,10 +62,6 @@ const scenes: Scene[] = [
   },
   {
     id: "svc-p3",
-    image: {
-      src: "/images/servicios/areaservicio3.jpeg",
-      alt: "Actividad solidaria al aire libre con familias.",
-    },
     eyebrow: "Cercanía",
     title: "Historias que importan",
     verse:
@@ -75,10 +71,6 @@ const scenes: Scene[] = [
   },
   {
     id: "svc-p4",
-    image: {
-      src: "/images/servicios/areaservicio7.jpeg",
-      alt: "Voluntarios con donaciones de alimentos y ropa, sirviendo con alegría en la comunidad.",
-    },
     eyebrow: "Impacto",
     title: "Sembrar esperanza",
     verse:
@@ -88,49 +80,18 @@ const scenes: Scene[] = [
   },
 ];
 
-const stripImages: { src: string; alt: string }[] = [
-  {
-    src: "/images/servicios/areaservicio8.jpeg",
-    alt: "Equipo con donaciones de alimentos y ropa en el salón de la iglesia.",
-  },
-  {
-    src: "/images/servicios/areaservicio5.jpeg",
-    alt: "Voluntarios organizando donaciones.",
-  },
-  {
-    src: "/images/servicios/areaservicio6.jpeg",
-    alt: "Momento de oración durante el servicio comunitario.",
-  },
-  {
-    src: svc("WhatsApp Image 2026-05-04 at 2.48.07 PM.jpeg"),
-    alt: "Equipo sirviendo en la comunidad.",
-  },
-  {
-    src: svc("WhatsApp Image 2026-05-04 at 2.48.08 PM.jpeg"),
-    alt: "Voluntarios en actividad solidaria.",
-  },
-  {
-    src: svc("WhatsApp Image 2026-05-04 at 2.48.08 3PM.jpeg"),
-    alt: "Encuentro de servicio comunitario.",
-  },
-  {
-    src: svc("WhatsApp Image 2026-05-04 at 2.52.28 PM.jpeg"),
-    alt: "Momento de compañerismo en el servicio.",
-  },
-  {
-    src: svc("WhatsApp Image 2026-05-04 at 2.52.29 PM.jpeg"),
-    alt: "Jornada de ayuda en la ciudad.",
-  },
-  {
-    src: svc("WhatsApp Image 2026-05-04 at 2.52.29 2PM.jpeg"),
-    alt: "Servicio a familias en la comunidad.",
-  },
-];
+const scenes: Scene[] = sceneCopy.map((copy, i) => ({
+  ...copy,
+  photo: SERVICIO_COMUNIDAD_SCENES[i],
+}));
 
-const servicioGallerySlides: PdcCarouselSlide[] = stripImages.map((img, i) => ({
-  id: `svc-gallery-${i}`,
-  src: img.src,
-  alt: img.alt,
+const servicioGallerySlides: PdcCarouselSlide[] = SERVICIO_COMUNIDAD_GALLERY.map((photo) => ({
+  id: photo.id,
+  src: galleryWebpSrc(photo.folder, photo.slug, 1080),
+  srcSet: galleryWebpSrcSet(photo.folder, photo.slug),
+  sizes: galleryCarouselSizes(),
+  alt: photo.alt,
+  objectPosition: photo.objectPosition,
 }));
 
 const imgZoomClass =
@@ -530,12 +491,19 @@ const ServicioComunidadSection: React.FC = () => {
           <div className="relative z-10 w-full shrink-0 lg:flex-1 lg:w-[58%]">
             <div className={`group ${photoFrameOuter}`}>
               <div className={photoFrameInner}>
-                <img
-                  src={scene.image.src}
-                  alt={scene.image.alt}
-                  className={`aspect-[4/3] w-full object-cover md:aspect-[5/4] md:min-h-[320px] lg:min-h-[420px] xl:min-h-[460px] ${imgZoomClass}`}
+                <PdcGalleryPicture
+                  folder={scene.photo.folder}
+                  slug={scene.photo.slug}
+                  fallbackSrc={scene.photo.src}
+                  alt={scene.photo.alt}
                   loading="lazy"
-                  decoding="async"
+                  sizes={galleryMasonrySizes()}
+                  className={`aspect-[4/3] w-full object-cover md:aspect-[5/4] md:min-h-[320px] lg:min-h-[420px] xl:min-h-[460px] ${imgZoomClass}`}
+                  style={
+                    scene.photo.objectPosition
+                      ? { objectPosition: scene.photo.objectPosition }
+                      : undefined
+                  }
                 />
               </div>
             </div>
@@ -574,12 +542,13 @@ const ServicioComunidadSection: React.FC = () => {
             Más fotos del servicio en la comunidad — deslizá o dejá que avance solo.
           </p>
 
-          <div className="mx-auto mt-8 max-w-4xl md:mt-10">
+          <div className="mx-auto mt-8 w-full max-w-6xl md:mt-10">
             <PdcPhotoCarousel
               slides={servicioGallerySlides}
-              compact
+              airy
+              airyBoost
               ariaLabel="Galería de servicio a la comunidad"
-              autoPlayMs={5500}
+              autoPlayMs={6000}
             />
           </div>
         </div>

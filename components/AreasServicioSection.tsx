@@ -18,7 +18,10 @@ import {
   Wrench,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { AREA_SERVICIO_IMAGES, type AreaServicioImage } from "../data/areasServicioImages";
+import { galleryMasonrySizes } from "../data/galleryWebp";
 import { PdcPageShell } from "./PdcPageShell";
+import { PdcGalleryPicture } from "./PdcGalleryPicture";
 import {
   PdcSectionHeader,
   pdcHeaderScrollMarginTop,
@@ -31,12 +34,7 @@ type Area = {
   description: string;
   full: string;
   icon: LucideIcon;
-  image?: {
-    src: string;
-    alt: string;
-    objectPosition?: string;
-    aspectClass?: string;
-  };
+  image?: AreaServicioImage;
 };
 
 const areas: Area[] = [
@@ -46,12 +44,7 @@ const areas: Area[] = [
     full:
       "Ministros y músicos apasionados que, con habilidad musical y sensibilidad espiritual, guían a otros en adoración y construyen ambientes para que la gloria de Dios se manifieste.",
     icon: Music,
-    image: {
-      src: "/images/areasServicio/areaservicio2.jpeg",
-      alt: "Alabanza y adoración: músicos y equipo ministrando en la reunión",
-      /** Recorte superior: prioriza pies y primer plano del ministerio. */
-      objectPosition: "50% 88%",
-    },
+    image: AREA_SERVICIO_IMAGES.alabanza,
   },
   {
     title: "Intercesión",
@@ -59,12 +52,7 @@ const areas: Area[] = [
     full:
       "Hombres y mujeres que, mediante la intercesión y la guerra espiritual, aceptan el llamado de colocarse en la brecha delante de Dios, a favor de las familias, la iglesia, la ciudad y la nación.",
     icon: HandHeart,
-    image: {
-      src: "/images/intercesion/intersecion.jpeg",
-      alt: "Intercesión: grupos orando en círculos durante el servicio",
-      /** Encuadre inferior: círculos de oración y pies visibles. */
-      objectPosition: "50% 78%",
-    },
+    image: AREA_SERVICIO_IMAGES.intercesion,
   },
   {
     title: "Artes Dinámicas",
@@ -72,11 +60,7 @@ const areas: Area[] = [
     full:
       "Este ministerio utiliza la expresión artística como un medio para honrar a Dios y comunicar verdades espirituales. Corazones son impactados a través de la danza, el movimiento y distintas manifestaciones creativas.",
     icon: Palette,
-    image: {
-      src: "/images/areasServicio/artesDinamicas.jpeg",
-      alt: "Artes dinámicas: ministerio expresando adoración en movimiento",
-      objectPosition: "50% 55%",
-    },
+    image: AREA_SERVICIO_IMAGES.artes,
   },
   {
     title: "Medios Audiovisuales",
@@ -84,11 +68,7 @@ const areas: Area[] = [
     full:
       "Mediante la tecnología y la comunicación visual, esparcimos el mensaje del evangelio. Este ministerio integra redes sociales, producción audiovisual, proyección de letras y monitoreo de las pantallas interactivas.",
     icon: Video,
-    image: {
-      src: "/images/areasServicio/areaservicio3.png",
-      alt: "Medios audiovisuales: equipo de producción y pantallas en el servicio",
-      objectPosition: "50% 48%",
-    },
+    image: { ...AREA_SERVICIO_IMAGES.medios, objectPosition: "50% 48%" },
   },
   {
     title: "Audio y Sonido",
@@ -103,11 +83,7 @@ const areas: Area[] = [
     full:
       "Este equipo de servidores trabaja con entusiasmo para que cada persona que asiste a los servicios tenga una experiencia agradable desde el ingreso, con asistencia durante toda la reunión y al regresar a casa.",
     icon: Users,
-    image: {
-      src: "/images/areasServicio/anfitriones.jpg",
-      alt: "Anfitriones: equipo recibiendo y acompañando en la entrada",
-      objectPosition: "50% 42%",
-    },
+    image: AREA_SERVICIO_IMAGES.anfitriones,
   },
   {
     title: "Mantenimiento Integral",
@@ -122,11 +98,7 @@ const areas: Area[] = [
     full:
       "Esta área es un brazo extendido a la comunidad, con el propósito de atender necesidades, brindar asistencia y compartir el mensaje de esperanza con los sectores más vulnerables.",
     icon: Heart,
-    image: {
-      src: "/images/areasServicio/areaSocial.jpeg",
-      alt: "Área social: servicio y ayuda a la comunidad",
-      objectPosition: "50% 52%",
-    },
+    image: { ...AREA_SERVICIO_IMAGES.social, objectPosition: "50% 52%" },
   },
   {
     title: "Área Educativa",
@@ -134,11 +106,7 @@ const areas: Area[] = [
     full:
       "El crecimiento y madurez integral mediante la enseñanza bíblica es una de nuestras prioridades. Se brindan espacios de formación, entrenamiento y discipulado durante todo el año.",
     icon: BookOpen,
-    image: {
-      src: "/images/areasServicio/areaEducativa.jpeg",
-      alt: "Área educativa: formación y enseñanza bíblica",
-      objectPosition: "50% 50%",
-    },
+    image: AREA_SERVICIO_IMAGES.educativa,
   },
   {
     title: "Juventud Inquebrantable",
@@ -470,20 +438,26 @@ const AreasServicioSection: React.FC = () => {
                                         <div
                                           className={`relative w-full ${area.image.aspectClass ?? DEFAULT_IMAGE_ASPECT}`}
                                         >
-                                          <motion.img
-                                            src={area.image.src}
-                                            alt={area.image.alt}
-                                            loading="lazy"
-                                            decoding="async"
+                                          <motion.div
                                             initial={reduceMotion ? false : { opacity: 0, scale: 1.02 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             transition={{ duration: 0.65, ease: easeOut }}
-                                            className="absolute inset-0 h-full w-full object-cover"
-                                            style={{
-                                              objectPosition:
-                                                area.image.objectPosition ?? "50% 50%",
-                                            }}
-                                          />
+                                            className="absolute inset-0"
+                                          >
+                                            <PdcGalleryPicture
+                                              folder={area.image.folder}
+                                              slug={area.image.slug}
+                                              fallbackSrc={area.image.src}
+                                              alt={area.image.alt}
+                                              loading="lazy"
+                                              sizes={galleryMasonrySizes()}
+                                              className="absolute inset-0 h-full w-full object-cover"
+                                              style={{
+                                                objectPosition:
+                                                  area.image.objectPosition ?? "50% 50%",
+                                              }}
+                                            />
+                                          </motion.div>
                                           <div
                                             className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/40 via-transparent to-[#030508]/10"
                                             aria-hidden
