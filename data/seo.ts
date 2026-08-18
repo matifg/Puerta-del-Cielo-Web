@@ -70,7 +70,7 @@ const ROUTE_OG_IMAGE_PATH: Record<string, string> = {
 };
 
 const ROUTE_OG_IMAGE_ALT: Record<string, string> = {
-  "/": "Puerta del Cielo — iglesia cristiana en Baradero",
+  "/": "Logo de Puerta del Cielo sobre fondo negro",
   "/quienes-somos/vision": "Cruz de madera con paño rojo en el altar de Puerta del Cielo",
   "/quienes-somos/equipo-ministerial": "Equipo de ungieres y bienvenida en el ingreso del templo",
   "/quienes-somos/areas-servicio": "Mesa de Santa Cena en Puerta del Cielo",
