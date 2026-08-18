@@ -19,10 +19,18 @@ type PdcMinisterPortraitProps = {
   fetchPriority?: "high" | "auto";
 };
 
-const variantClass: Record<PortraitVariant, string> = {
+const frameClass: Record<PortraitVariant, string> = {
   team:
-    "relative h-32 w-32 rounded-full border-2 border-secondary/80 object-cover shadow-lg shadow-black/25 grayscale transition-[transform,filter,border-color,box-shadow] duration-500 ease-out group-hover:scale-105 group-hover:border-secondary group-hover:shadow-2xl group-hover:shadow-black/40 md:h-28 md:w-28 md:group-hover:grayscale-0 lg:h-40 lg:w-40 motion-reduce:grayscale motion-reduce:transition-none motion-reduce:group-hover:scale-100",
-  lead: "relative h-72 w-72 rounded-full border-4 border-white/20 bg-black/10 object-cover shadow-2xl transition-[filter] duration-500 ease-out group-hover:brightness-105 md:h-80 md:w-80 lg:h-96 lg:w-96 motion-reduce:transition-none",
+    "relative h-32 w-32 overflow-hidden rounded-full border-2 border-secondary/80 shadow-lg shadow-black/25 transition-[border-color,box-shadow] duration-500 ease-out group-hover:border-secondary group-hover:shadow-2xl group-hover:shadow-black/40 md:h-28 md:w-28 lg:h-40 lg:w-40",
+  lead:
+    "relative h-72 w-72 overflow-hidden rounded-full border-4 border-white/20 bg-black/10 shadow-2xl md:h-80 md:w-80 lg:h-96 lg:w-96",
+};
+
+const imgClass: Record<PortraitVariant, string> = {
+  team:
+    "h-full w-full scale-100 object-cover grayscale transition-[transform,filter] duration-700 ease-out will-change-transform hover:scale-110 group-hover:scale-110 group-hover:grayscale-0",
+  lead:
+    "h-full w-full scale-100 object-cover transition-[transform,filter] duration-700 ease-out will-change-transform hover:scale-110 group-hover:scale-110 group-hover:brightness-105",
 };
 
 const intrinsic: Record<PortraitVariant, { width: number; height: number }> = {
@@ -52,7 +60,6 @@ function PortraitPlaceholder({
   );
 }
 
-
 export const PdcMinisterPortrait: React.FC<PdcMinisterPortraitProps> = ({
   slug,
   displayName,
@@ -64,7 +71,6 @@ export const PdcMinisterPortrait: React.FC<PdcMinisterPortraitProps> = ({
 }) => {
   const [failed, setFailed] = useState(false);
   const dim = intrinsic[variant];
-  const imgClass = `${variantClass[variant]} ${className}`.trim();
 
   if (failed) {
     return <PortraitPlaceholder displayName={displayName} variant={variant} />;
@@ -74,29 +80,31 @@ export const PdcMinisterPortrait: React.FC<PdcMinisterPortraitProps> = ({
   const jpgSrc = ministerRawSrc(slug);
 
   return (
-    <picture>
-      <source type="image/webp" srcSet={ministerSrcSet(slug, variant)} sizes={ministerSizes(variant)} />
-      <img
-        src={webpSrc}
-        alt={displayName}
-        width={dim.width}
-        height={dim.height}
-        sizes={ministerSizes(variant)}
-        decoding="async"
-        loading={loading}
-        fetchPriority={fetchPriority}
-        className={imgClass}
-        style={{ objectPosition }}
-        onError={(e) => {
-          const img = e.currentTarget;
-          if (img.src.includes(".webp") && !img.dataset.fallback) {
-            img.dataset.fallback = "1";
-            img.src = jpgSrc;
-            return;
-          }
-          setFailed(true);
-        }}
-      />
-    </picture>
+    <div className={`${frameClass[variant]} ${className}`.trim()}>
+      <picture className="block h-full w-full">
+        <source type="image/webp" srcSet={ministerSrcSet(slug, variant)} sizes={ministerSizes(variant)} />
+        <img
+          src={webpSrc}
+          alt={displayName}
+          width={dim.width}
+          height={dim.height}
+          sizes={ministerSizes(variant)}
+          decoding="async"
+          loading={loading}
+          fetchPriority={fetchPriority}
+          className={imgClass[variant]}
+          style={{ objectPosition }}
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.src.includes(".webp") && !img.dataset.fallback) {
+              img.dataset.fallback = "1";
+              img.src = jpgSrc;
+              return;
+            }
+            setFailed(true);
+          }}
+        />
+      </picture>
+    </div>
   );
 };

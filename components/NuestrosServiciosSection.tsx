@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { horariosServicios, type ServicioHorarioKey } from "../data/horariosWeb";
 import { PdcPageShell } from "./PdcPageShell";
 import { PdcSectionHeader, pdcPageInnerWithHeroComfort } from "./PdcSectionHeader";
 
@@ -17,7 +18,7 @@ type ServicioItem = {
   nombre: string;
   icon: typeof CalendarDays;
   descripcion: string[];
-  horarios: string[];
+  horarioKey: ServicioHorarioKey;
   edad?: string;
   conexion?: boolean;
 };
@@ -30,7 +31,7 @@ const servicios: ServicioItem[] = [
       "Adoración profunda, palabra fresca y comunión en familia.",
       "Cada domingo es una invitación a experimentar la gloria de Dios.",
     ],
-    horarios: ["Domingos", "Verano: 20:00 hs", "Invierno: 19:00 hs"],
+    horarioKey: "reunionGeneral",
   },
   {
     nombre: "Intercesión",
@@ -39,34 +40,34 @@ const servicios: ServicioItem[] = [
       "Tiempos especiales de búsqueda profunda.",
       "Milagros, liberaciones y manifestaciones sobrenaturales.",
     ],
-    horarios: ["Miércoles 20:00 hs"],
+    horarioKey: "intercesion",
   },
   {
     nombre: "Jóvenes",
     icon: Flame,
     descripcion: ["Transformación real y conexión genuina con Dios."],
     edad: "+15 años",
-    horarios: ["Sábados 20:00 hs"],
+    horarioKey: "jovenes",
   },
   {
     nombre: "Teens",
     icon: UsersRound,
     descripcion: ["Espacios de amistad, juegos y enseñanza bíblica."],
     edad: "12 a 15 años",
-    horarios: ["Sábados 18:00 hs"],
+    horarioKey: "teens",
   },
   {
     nombre: "Kids",
     icon: Smile,
     descripcion: ["Clases llenas de alegría y aprendizaje."],
     edad: "3 a 11 años",
-    horarios: ["Domingos 20:00 hs"],
+    horarioKey: "kids",
   },
   {
     nombre: "Conexión",
     icon: LinkIcon,
     descripcion: ["Grupos en casas para crecer en fe y comunidad."],
-    horarios: ["Durante la semana"],
+    horarioKey: "conexion",
     conexion: true,
   },
 ];
@@ -192,9 +193,9 @@ const NuestrosServiciosSection: React.FC = () => {
                   {servicio.nombre}
                 </h3>
 
-                {servicio.horarios && (
-                  <p className="text-sm leading-snug text-zinc-400">{servicio.horarios[0]}</p>
-                )}
+                <p className="text-sm leading-snug text-zinc-400">
+                  {horariosServicios[servicio.horarioKey].resumenCard}
+                </p>
 
                 <p className="mt-3 font-sans text-[0.65rem] uppercase tracking-[0.18em] text-zinc-500 transition group-hover:text-zinc-400">
                   Ver detalles
@@ -282,7 +283,7 @@ const NuestrosServiciosSection: React.FC = () => {
                 <p className="mb-3 text-center font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-secondary/90">
                   Horarios
                 </p>
-                <HorariosList items={modalServicio.horarios} />
+                <HorariosList items={[...horariosServicios[modalServicio.horarioKey].modalItems]} />
               </div>
 
               {modalServicio.conexion ? (
