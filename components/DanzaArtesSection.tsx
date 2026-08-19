@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from "react";
-import { Calendar, ChevronDown, Clock, Images, Palette, Sparkles } from "lucide-react";
+import { Calendar, ChevronDown, ChevronUp, Clock, Images, Palette, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { whatsappUrl } from "../data/contacto";
-import { DANZA_CAROUSEL_SLIDES } from "../data/danzaPhotos";
+import { DANZA_CAROUSEL_SLIDES, DANZA_MOMENTOS, danzaSrcSet, danzaWebpSrc } from "../data/danzaPhotos";
+
 import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { Reveal } from "./bethel/Reveal";
 import { PdcPhotoCarousel } from "./PdcPhotoCarousel";
@@ -77,6 +78,86 @@ const DANZA_INTRO_REST =
 
 const DANZA_PDF_HREF = "/docs/escuela-dya.pdf";
 const DANZA_WA_HREF = whatsappUrl("Hola! Quiero info sobre Danza y Artes Dinámicas");
+
+const FOTOS_INICIALES = 4;
+
+const GaleriaFotos: React.FC = () => {
+  const [expanded, setExpanded] = useState(false);
+  const visibles = expanded ? DANZA_MOMENTOS : DANZA_MOMENTOS.slice(0, FOTOS_INICIALES);
+  const hayMas = DANZA_MOMENTOS.length > FOTOS_INICIALES;
+
+  return (
+    <div id="danza-fotos" className="mt-5 md:mt-6">
+      <div className="grid grid-cols-2 gap-3 md:gap-4">
+        {visibles.map((photo) =>
+          photo.id === "danza-08" ? (
+            <div key={photo.id} className="col-span-2 overflow-hidden rounded-2xl">
+              <picture>
+                <source
+                  type="image/webp"
+                  srcSet={danzaSrcSet(photo.slug)}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 960px"
+                />
+                <img
+                  src={danzaWebpSrc(photo.slug, 1080)}
+                  alt={photo.alt}
+                  width={1080}
+                  height={810}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-[min(52vw,24rem)] w-full object-cover transition duration-700 hover:scale-[1.02]"
+                  style={{ objectPosition: photo.objectPosition }}
+                />
+              </picture>
+            </div>
+          ) : (
+            <div key={photo.id} className="overflow-hidden rounded-2xl">
+              <picture>
+                <source
+                  type="image/webp"
+                  srcSet={danzaSrcSet(photo.slug)}
+                  sizes="(max-width: 640px) 50vw, (max-width: 1200px) 45vw, 480px"
+                />
+                <img
+                  src={danzaWebpSrc(photo.slug, 720)}
+                  alt={photo.alt}
+                  width={720}
+                  height={960}
+                  loading="lazy"
+                  decoding="async"
+                  className="aspect-[3/4] w-full object-cover transition duration-700 hover:scale-[1.03]"
+                  style={{ objectPosition: photo.objectPosition }}
+                />
+              </picture>
+            </div>
+          )
+        )}
+      </div>
+
+      {hayMas && (
+        <div className="mt-5 flex justify-center md:mt-6">
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="pdc-btn-on-dark-ghost inline-flex items-center gap-2"
+          >
+            {expanded ? (
+              <>
+                <ChevronUp className="relative z-[1] h-4 w-4 shrink-0 text-secondary" aria-hidden />
+                <span className="relative z-[1]">Ver menos</span>
+              </>
+            ) : (
+              <>
+                <Images className="relative z-[1] h-4 w-4 shrink-0 text-secondary" aria-hidden />
+                <span className="relative z-[1]">Ver más fotos</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const DanzaArtesSection = () => {
   const [introExpanded, setIntroExpanded] = useState(false);
@@ -241,13 +322,31 @@ const DanzaArtesSection = () => {
               <PdcPhotoCarousel
                 slides={DANZA_CAROUSEL_SLIDES}
                 airy
-                className="mb-6 md:mb-8 notebook:mb-0"
+                className="notebook:mb-0"
                 ariaLabel="Galería Danza y Artes Dinámicas"
                 autoPlayMs={5500}
                 showSlideCaption={false}
                 showPlaybackHint={false}
               />
             </div>
+
+            {/* Botón "Ver fotos" debajo del carrusel, alineado a la derecha */}
+            <div className="mb-2 mt-3 flex justify-end md:mt-4">
+              <button
+                type="button"
+                onClick={() => {
+                  const el = document.getElementById("danza-fotos");
+                  el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="pdc-btn-on-dark-ghost inline-flex items-center gap-2"
+              >
+                <Images className="relative z-[1] h-4 w-4 shrink-0 text-secondary" aria-hidden />
+                <span className="relative z-[1]">Ver fotos</span>
+              </button>
+            </div>
+
+            {/* Grilla de fotos con "Ver más" */}
+            <GaleriaFotos />
           </div>
         </Reveal>
       </div>
