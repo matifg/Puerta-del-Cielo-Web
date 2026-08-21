@@ -28,7 +28,7 @@ export function BethelTabImage({ tabId, className = "" }: BethelTabImageProps) {
           animate={{ opacity: 1 }}
           exit={reduceMotion ? undefined : { opacity: 0 }}
           transition={{ duration: reduceMotion ? 0 : 0.35, ease }}
-          className="relative aspect-[2.4/1] w-full max-h-[min(32vh,220px)] sm:aspect-[2.2/1] lg:max-h-[min(36vh,280px)]"
+          className="relative aspect-[2.4/1] w-full max-h-[min(42vh,300px)] sm:aspect-[2.2/1] lg:max-h-[min(48vh,380px)]"
         >
           <img
             src={img.src}

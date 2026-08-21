@@ -120,10 +120,10 @@ const IglesiaEnCasaSection: React.FC = () => {
 
       {/* Galería */}
       <section
-        className={`border-t border-white/[0.06] py-4 md:py-5 notebook:mt-4 desktop:mt-8 ${pdcHeaderScrollMargin}`}
+        className={`border-t border-white/[0.06] py-10 md:py-14 ${pdcHeaderScrollMargin}`}
         aria-labelledby="iec-comunidad-heading"
       >
-        <div className={`${pdcPageInnerClass} notebook:max-w-[min(99vw,76rem)] notebook:px-2.5 lg:px-4`}>
+        <div className={`${pdcPageInnerClass} lg:px-4`}>
           <IecComunidadGallery formHref={FORM_HREF} />
         </div>
       </section>

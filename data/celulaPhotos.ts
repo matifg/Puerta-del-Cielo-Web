@@ -9,10 +9,6 @@ export type CelulaPhoto = {
 
 const celulaFile = (name: string) => `/images/celula/${name}`;
 
-/** Huecos visibles en el muro; el resto del pool rota de a uno */
-export const CELULA_GALLERY_VISIBLE_COUNT = 6;
-export const CELULA_GALLERY_ROTATE_MS = 5000;
-
 /** Pool «Así nos reunimos» — public/images/celula/ */
 export const CELULA_PHOTOS: CelulaPhoto[] = [
   {
