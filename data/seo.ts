@@ -72,11 +72,11 @@ const ROUTE_OG_IMAGE_PATH: Record<string, string> = {
 const ROUTE_OG_IMAGE_ALT: Record<string, string> = {
   "/": "Logo de Puerta del Cielo sobre fondo negro",
   "/quienes-somos/vision": "Cruz de madera con paño rojo en el altar de Puerta del Cielo",
-  "/quienes-somos/equipo-ministerial": "Equipo de ungieres y bienvenida en el ingreso del templo",
+  "/quienes-somos/equipo-ministerial": "Jorge y Gabriela Bugueño, pastores generales de Puerta del Cielo",
   "/quienes-somos/areas-servicio": "Mesa de Santa Cena en Puerta del Cielo",
   "/area-educativa": "Ministerio de danza y artes en el culto",
   "/area-educativa/discipulado": "Encuentro del programa de discipulado en el salón",
-  "/area-educativa/danza-artes": "Ministerio de danza adorando en el escenario",
+  "/area-educativa/danza-artes": "Bailarina con velos violeta y rojo en movimiento durante la adoración",
   "/area-educativa/intercesion": "Adoración con los brazos en alto durante el encuentro",
   "/area-educativa/formacion-lideres": "Formación de líderes en el salón de Puerta del Cielo",
   "/area-educativa/liderazgo": "Escuela de liderazgo — formación de líderes",

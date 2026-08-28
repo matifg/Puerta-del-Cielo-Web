@@ -19,11 +19,11 @@ const QUALITY = 84;
 const SPECS = [
   { out: "home", src: "public/assets/og-logo-source.png", containOnBlack: true },
   { out: "vision", src: "public/images/editorial/cruz-fe.jpg" },
-  { out: "equipo", src: "public/images/editorial/contacto-equipo.jpg" },
+  { out: "equipo", src: "public/images/ministros/jorge-gabriela.jpg" },
   { out: "areas-servicio", src: "public/images/editorial/santa-cena.jpg" },
   { out: "area-educativa", src: "public/images/danzas/danza-00.jpg" },
   { out: "discipulado", src: "public/images/discipulado/discipulado1.jpeg" },
-  { out: "danza", src: "public/images/danzas/danza-01.png" },
+  { out: "danza", src: "public/images/danzas/danza-09.png" },
   { out: "intercesion", src: "public/images/editorial/bethel-adoracion.jpg" },
   { out: "formacion-lideres", src: "public/images/formacionLideres/formacion-01.jpg" },
   { out: "liderazgo", src: "public/images/formacionLideres/formacion-02.jpg" },
