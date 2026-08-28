@@ -4,7 +4,7 @@ import { devocionalHoy } from '../data/devocional';
 
 export const Devocional: React.FC = () => {
   return (
-    <section id="devocional" className="py-24 bg-slate-900 text-white relative overflow-hidden">
+    <section id="devocional" className="py-24 bg-[#1b1610] text-white relative overflow-hidden">
       <div className="absolute top-0 right-0 w-1/2 h-full bg-amber-500/5 -skew-x-12 transform translate-x-1/2"></div>
       
       <div className="max-w-4xl mx-auto px-6 relative z-10">
@@ -31,7 +31,7 @@ export const Devocional: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4 pt-8 border-t border-white/10">
-            <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center font-bold text-slate-900">
+            <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center font-bold text-[#1b1610]">
               {devocionalHoy.author.split(' ')[1][0]}
             </div>
             <div>

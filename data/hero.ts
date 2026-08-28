@@ -28,14 +28,14 @@ export type HeroOverlayTokens = {
 
 export const heroOverlayPresets: Record<HeroOverlayPreset, HeroOverlayTokens> = {
   vivid: {
-    edgeClass: "bg-gradient-to-b from-[#030508]/20 via-transparent to-[#030508]/28",
+    edgeClass: "bg-gradient-to-b from-[#0e0b08]/20 via-transparent to-[#0e0b08]/28",
     scrimOpacity: 0.18,
     contentBackdrop: false,
     blobPrimaryClass: "bg-primary/8",
     blobSecondaryClass: "bg-secondary/6",
   },
   readable: {
-    edgeClass: "bg-gradient-to-b from-[#030508]/32 via-transparent to-[#030508]/42",
+    edgeClass: "bg-gradient-to-b from-[#0e0b08]/32 via-transparent to-[#0e0b08]/42",
     scrimOpacity: 0.26,
     contentBackdrop: true,
     blobPrimaryClass: "bg-primary/10",

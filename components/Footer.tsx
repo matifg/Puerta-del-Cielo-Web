@@ -14,11 +14,11 @@ export const Footer: React.FC = () => {
   return (
     <footer className="relative overflow-hidden border-t border-white/10 pt-20 pb-12">
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-black via-[#020617] to-black opacity-95"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#080605] via-[#0b0806] to-[#080605] opacity-95"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#080605]/80 via-transparent to-[#080605]/40"
         aria-hidden
       />
 
@@ -29,7 +29,7 @@ export const Footer: React.FC = () => {
               Puerta del Cielo
             </h3>
             <div className="mb-6 h-px w-14 rounded-full bg-gradient-to-r from-secondary/80 to-transparent" />
-            <p className="mb-8 text-sm font-normal leading-relaxed text-zinc-400 md:text-[0.95rem] md:leading-[1.7]">
+            <p className="mb-8 text-sm font-normal leading-relaxed text-stone-400 md:text-[0.95rem] md:leading-[1.7]">
               Una iglesia comprometida con la verdad del Evangelio y el amor al prójimo. Te esperamos con los brazos
               abiertos.
             </p>
@@ -94,7 +94,7 @@ export const Footer: React.FC = () => {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              <p className="text-sm leading-relaxed text-zinc-400">
+              <p className="text-sm leading-relaxed text-stone-400">
                 Manuel Belgrano 2053,
                 <br />
                 B2942 Baradero,
@@ -115,7 +115,7 @@ export const Footer: React.FC = () => {
               {horariosReunionGeneral.map((h) => (
                 <li
                   key={`rg-${h.dia}`}
-                  className="flex justify-between gap-3 rounded-lg border border-white/[0.07] bg-white/[0.04] px-3 py-2 text-zinc-400"
+                  className="flex justify-between gap-3 rounded-lg border border-white/[0.07] bg-white/[0.04] px-3 py-2 text-stone-400"
                 >
                   <span>{h.dia}</span>
                   <span className="shrink-0 font-medium tabular-nums text-[#ebe8e2]">{h.hora}</span>
@@ -151,13 +151,13 @@ export const Footer: React.FC = () => {
                     href={whatsappUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 block text-sm tabular-nums text-zinc-400 transition hover:text-secondary"
+                    className="mt-1 block text-sm tabular-nums text-stone-400 transition hover:text-secondary"
                   >
                     {telefonoDisplay}
                   </a>
                   <a
                     href={telHref}
-                    className="mt-1 block text-xs text-zinc-500 underline decoration-white/10 underline-offset-2 transition hover:text-secondary"
+                    className="mt-1 block text-xs text-stone-500 underline decoration-white/10 underline-offset-2 transition hover:text-secondary"
                   >
                     Llamar
                   </a>
@@ -180,7 +180,7 @@ export const Footer: React.FC = () => {
                 </svg>
                 <a
                   href={`mailto:${email}`}
-                  className="text-sm text-zinc-400 underline decoration-white/12 underline-offset-[3px] transition hover:text-secondary hover:decoration-secondary/45"
+                  className="text-sm text-stone-400 underline decoration-white/12 underline-offset-[3px] transition hover:text-secondary hover:decoration-secondary/45"
                 >
                   {email}
                 </a>
@@ -190,7 +190,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-white/10 pt-10 text-center">
-          <p className="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-zinc-600">
+          <p className="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-stone-600">
             &copy; {new Date().getFullYear()} Puerta del Cielo - Baradero. Todos los derechos reservados.
           </p>
         </div>

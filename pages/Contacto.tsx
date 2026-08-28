@@ -14,7 +14,7 @@ const Contacto = () => (
       {/* Contenido centrado */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center w-full">
         <h1 className="text-5xl font-bold text-white">Contacto</h1>
-        <p className="text-gray-300 mt-4 text-lg md:text-2xl">
+        <p className="text-stone-300 mt-4 text-lg md:text-2xl">
           Estamos para escucharte
         </p>
       </div>

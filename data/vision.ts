@@ -14,3 +14,7 @@ export const PROPOSITO_PARAGRAPHS: readonly string[] = [
 
 export const PROPOSITO_CIERRE =
   "Te invitamos a ser parte: ven a adorar con nosotros, conectate en comunidad y descubrí el diseño que Dios tiene para tu vida.";
+
+/** Pie corto bajo fotos (redacción pastoral) */
+export const CENA_DEL_SENOR_CAPTION =
+  "Cena del Señor — Recordamos su sacrificio, proclamamos su victoria y esperamos su venida.";

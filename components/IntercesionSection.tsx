@@ -27,33 +27,27 @@ const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const INFO_CARDS: readonly {
   eyebrow: string;
   title: string;
-  body: string;
   icon: LucideIcon;
   accent?: boolean;
 }[] = [
   {
     eyebrow: "Duración",
     title: "2 años",
-    body: "Formación profunda con práctica ministerial y salidas a terreno.",
     icon: Clock,
   },
   {
     eyebrow: "Modalidad",
     title: "Presencial quincenal",
-    body: "Encuentros quincenales para crecer en oración e impartición.",
     icon: Calendar,
     accent: true,
   },
 ];
 
 const LIVE_CHIPS = [
-  "Fundamentos bíblicos",
-  "Material actualizado",
-  "Formación del intercesor",
-  "Comunidad y acompañamiento",
-  "Espacios de consulta",
-  "Ministración e impartición",
-  "Práctica ministerial",
+  "Vigilias y altar",
+  "Guerra espiritual",
+  "Discernimiento",
+  "Ministración",
   "Salidas a terreno",
 ] as const;
 
@@ -83,9 +77,9 @@ const IntercesionSection = () => {
 
   return (
     <PdcPageShell id="intercesion-inicio" aria-labelledby="intercesion-heading">
-      <div className={`${pdcPageInnerWithHeroComfort} pb-20 sm:pb-24`}>
+      <div className={`${pdcPageInnerWithHeroComfort} pb-6 sm:pb-8`}>
         <Reveal>
-          <header className={pdcPageIntroHeaderClass}>
+          <header className={`${pdcPageIntroHeaderClass} flex min-h-[calc(100svh-6.5rem)] flex-col justify-center pb-12 md:min-h-[calc(100svh-7rem)]`}>
             <PdcSectionHeader
               headingId="intercesion-heading"
               eyebrow="Área educativa"
@@ -95,7 +89,7 @@ const IntercesionSection = () => {
               subtitle="Formación presencial para levantar intercesores con discernimiento y autoridad."
               showSegmentBar
             >
-              <div className="mx-auto mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <div className="mx-auto flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <motion.button
                   type="button"
                   onClick={() => scrollToSection("intercesion-contenido")}
@@ -110,7 +104,7 @@ const IntercesionSection = () => {
                   >
                     <ChevronDown className="h-5 w-5" strokeWidth={2.25} aria-hidden />
                   </motion.span>
-                  <span className="relative z-[1]">Ver programa</span>
+                  <span className="relative z-[1]">Horarios y modalidad</span>
                 </motion.button>
                 <motion.button
                   type="button"
@@ -145,7 +139,7 @@ const IntercesionSection = () => {
                     key={card.eyebrow}
                     className={`relative overflow-hidden rounded-2xl border p-5 transition duration-500 md:p-6 ${
                       card.accent
-                        ? "border-secondary/35 bg-gradient-to-br from-secondary/15 via-[#0c1424]/80 to-[#080c16] shadow-[0_16px_48px_-24px_rgba(64,194,222,0.35)]"
+                        ? "border-secondary/35 bg-gradient-to-br from-secondary/15 via-[#1d1711]/80 to-[#14100c] shadow-[0_16px_48px_-24px_rgba(64,194,222,0.35)]"
                         : "border-white/12 bg-white/[0.05] hover:border-white/22 hover:bg-white/[0.08]"
                     }`}
                     initial="hidden"
@@ -163,24 +157,20 @@ const IntercesionSection = () => {
                     >
                       <Icon className="h-6 w-6" aria-hidden />
                     </span>
-                    <p className="font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                    <p className="font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-stone-500">
                       {card.eyebrow}
                     </p>
                     <p className={`mt-1 ${pdcCardStatClass}`}>{card.title}</p>
-                    <p className="mt-2 font-sans text-sm leading-relaxed text-zinc-400">{card.body}</p>
                   </motion.div>
                 );
               })}
             </div>
 
             <div className="mb-8">
-              <h3 className={`mb-2 flex items-center justify-center gap-2 ${pdcSectionH3Class}`}>
+              <h3 className={`mb-5 flex items-center justify-center gap-2 ${pdcSectionH3Class}`}>
                 <Sparkles className="h-5 w-5 text-secondary" aria-hidden />
                 Lo que vas a vivir
               </h3>
-              <p className="mb-6 text-center font-sans text-sm text-zinc-400 md:text-base">
-                Fundamentos, impartición y salidas a terreno
-              </p>
               <ul className="mx-auto flex max-w-3xl flex-wrap justify-center gap-2.5 sm:gap-3" role="list">
                 {LIVE_CHIPS.map((item, i) => (
                   <motion.li
@@ -202,19 +192,13 @@ const IntercesionSection = () => {
         </Reveal>
 
         <Reveal delayMs={80}>
-          <div
-            id="intercesion-galeria"
-            className={`mx-auto w-full py-4 notebook:-mx-2.5 notebook:mt-4 notebook:max-w-[min(99vw,76rem)] notebook:px-0 md:py-5 lg:notebook:-mx-4 desktop:mt-8 ${pdcHeaderScrollMargin}`}
-          >
+          <div id="intercesion-galeria" className={`mx-auto w-full max-w-5xl ${pdcHeaderScrollMargin}`}>
             <h2
               data-pdc-scroll-focus
-              className={`mb-2 shrink-0 text-center notebook:mb-1.5 ${pdcSectionH3Class}`}
+              className={`mb-5 text-center ${pdcSectionH3Class} md:mb-6`}
             >
               Galería
             </h2>
-            <p className="mx-auto mb-4 max-w-lg shrink-0 text-center font-serif text-sm italic leading-relaxed text-white/70 notebook:mb-2 notebook:text-xs md:mb-5 md:text-base">
-              Vigilias, altar y comunidad de intercesores en acción.
-            </p>
             <IntercesionMomentsGallery />
           </div>
         </Reveal>
@@ -224,6 +208,7 @@ const IntercesionSection = () => {
         pdfHref={EIGE_PDF_HREF}
         waHref={EIGE_WA_HREF}
         waLabel="Consultar por WhatsApp sobre EIGE Intercesión"
+        revealAfterId="intercesion-contenido"
       />
     </PdcPageShell>
   );

@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useInView, useReducedMotion } from "framer-motion";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Users } from "lucide-react";
-import type { MinisterSlug } from "../data/ministros";
+import { MINISTER_LEAD_LQIP, type MinisterSlug } from "../data/ministros";
 import { PdcMinisterPortrait } from "./PdcMinisterPortrait";
 import { Reveal } from "./bethel/Reveal";
 import { PdcPageShell } from "./PdcPageShell";
@@ -30,7 +30,101 @@ const pastors: Member = {
   slug: "jorge-gabriela",
   displayName: "Jorge y Gabriela Bugueño",
   role: "Pastores generales",
-  objectPosition: "center 30%",
+  objectPosition: "center center",
+};
+
+const PASTORS_EASE = [0.22, 1, 0.36, 1] as const;
+
+const PASTORS_NAME_WORDS = pastors.displayName.split(" ");
+/** Un párrafo por idea: cada uno sube con su propia máscara al revelarse. */
+const PASTORS_BIO_LINES = [
+  "Son un matrimonio profundamente apasionado por la expansión del Reino de Dios.",
+  "Más de 30 años formando personas y levantando líderes.",
+];
+
+/**
+ * Coreografía del bloque de pastores. Los delays son absolutos (no stagger)
+ * para que foto y texto entren entrelazados según un guion fijo.
+ */
+const T = {
+  glow: 0,
+  photo: 0.2,
+  sheen: 0.95,
+  role: 0.3,
+  nameWord: 0.6,
+  rule: 1.1,
+  bioLine: 1.35,
+} as const;
+
+/** Con `reduced motion` solo cruzamos opacidad: sin desplazamientos ni blur. */
+function fadeOnly(delay: number) {
+  return {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.35, delay, ease: "linear" as const } },
+  };
+}
+
+function maskRise(delay: number, distance = "100%") {
+  return {
+    hidden: { y: distance, opacity: 0 },
+    visible: {
+      y: "0%",
+      opacity: 1,
+      transition: { duration: 1.25, delay, ease: PASTORS_EASE },
+    },
+  };
+}
+
+const pastorsRoleReveal = {
+  hidden: { opacity: 0, letterSpacing: "0.6em", filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    letterSpacing: "0.22em",
+    filter: "blur(0px)",
+    transition: { duration: 1.6, delay: T.role, ease: PASTORS_EASE },
+  },
+};
+
+const pastorsRule = {
+  hidden: { scaleX: 0, opacity: 0 },
+  visible: {
+    scaleX: 1,
+    opacity: 1,
+    transition: { duration: 1.4, delay: T.rule, ease: PASTORS_EASE },
+  },
+};
+
+/** Cortina de abajo hacia arriba + desenfoque que se resuelve. */
+const pastorsPhotoFrame = {
+  hidden: {
+    clipPath: "inset(100% 0% 0% 0% round 1.75rem)",
+    scale: 1.06,
+    filter: "blur(16px)",
+  },
+  visible: {
+    clipPath: "inset(0% 0% 0% 0% round 1.75rem)",
+    scale: 1,
+    filter: "blur(0px)",
+    transition: { duration: 2.3, delay: T.photo, ease: PASTORS_EASE },
+  },
+};
+
+const pastorsPhotoGlow = {
+  hidden: { opacity: 0, scale: 0.86 },
+  visible: {
+    opacity: 0.85,
+    scale: 1,
+    transition: { duration: 2.2, delay: T.glow, ease: PASTORS_EASE },
+  },
+};
+
+const pastorsSheen = {
+  hidden: { x: "-150%", opacity: 0 },
+  visible: {
+    x: "150%",
+    opacity: [0, 0.8, 0],
+    transition: { duration: 1.8, delay: T.sheen, ease: PASTORS_EASE },
+  },
 };
 
 const team: Member[] = [
@@ -131,6 +225,8 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
 }) => {
   const dimOthers = Boolean(hovered && hovered !== person.name);
   const glowClass = glow === "secondary" ? "bg-secondary/25" : "bg-primary/25";
+  const [firstName, ...rest] = person.displayName.split(" ");
+  const lastName = rest.join(" ");
 
   return (
     <div
@@ -157,13 +253,33 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
           objectPosition={person.objectPosition}
         />
       </div>
-      <div className="max-w-[11rem] font-sans text-xs font-semibold leading-snug tracking-wide text-[#faf8f4] md:max-w-[11rem] lg:max-w-[12rem] lg:text-sm">
-        {person.displayName}
+      {/* Nombre en dos líneas (nombre / apellido): lectura más ordenada en la grilla. */}
+      <div className="max-w-[11rem] font-serif text-[0.95rem] leading-[1.2] text-[#faf8f4] lg:max-w-[12rem] lg:text-[1.05rem]">
+        <span className="block">{firstName}</span>
+        {lastName ? <span className="block">{lastName}</span> : null}
       </div>
-      <div className={`${mutedRole} mt-1 max-w-[11rem] lg:max-w-[12rem]`}>{person.role}</div>
+      <div className={`${mutedRole} mt-1.5 max-w-[11rem] lg:max-w-[12rem]`}>{person.role}</div>
     </div>
   );
 };
+
+/**
+ * Arranca la coreografía cuando el bloque está a la vista Y la foto ya decodificó,
+ * así la secuencia no se consume durante el primer pintado de la página.
+ */
+function usePastorsPlayback(inView: boolean) {
+  const [portraitReady, setPortraitReady] = useState(false);
+  const handlePortraitReady = useCallback(() => setPortraitReady(true), []);
+
+  // Si la foto tarda o falla, la secuencia arranca igual.
+  useEffect(() => {
+    if (portraitReady) return;
+    const t = window.setTimeout(() => setPortraitReady(true), 1400);
+    return () => window.clearTimeout(t);
+  }, [portraitReady]);
+
+  return { play: inView && portraitReady, handlePortraitReady };
+}
 
 const EquipoMinisterialSection: React.FC = () => {
   const firstRow = team.slice(0, 4);
@@ -171,10 +287,16 @@ const EquipoMinisterialSection: React.FC = () => {
   const { setRevealRef, revealed } = useRevealOnScroll(0.15);
   const [hovered, setHovered] = useState<string | null>(null);
   const reduceMotion = useReducedMotion() ?? false;
-  const pastorsPortraitRef = useRef<HTMLDivElement | null>(null);
-  // Mantener useInView por consistencia con el resto del componente;
-  // si el elemento ya está visible al montar, la animación igual debe notarse.
-  const pastorsPortraitInView = useInView(pastorsPortraitRef, { once: true });
+
+  const pastorsBlockRef = useRef<HTMLDivElement | null>(null);
+  const pastorsInView = useInView(pastorsBlockRef, { once: true, amount: 0.2 });
+  const { play: pastorsPlay, handlePortraitReady } = usePastorsPlayback(pastorsInView);
+
+  const { scrollYProgress } = useScroll({
+    target: pastorsBlockRef,
+    offset: ["start end", "end start"],
+  });
+  const photoParallax = useTransform(scrollYProgress, [0, 1], [22, -22]);
 
   return (
     <PdcPageShell aria-labelledby="equipo-heading">
@@ -192,33 +314,83 @@ const EquipoMinisterialSection: React.FC = () => {
       </header>
       </Reveal>
 
-      <Reveal delayMs={80}>
-      <div id="equipo-pastores" className="mb-10 scroll-mt-28 md:mb-12 lg:mb-16">
-        <div className="grid items-center gap-8 md:grid-cols-2 md:gap-10 lg:gap-14">
-          <div className="space-y-5 text-center md:space-y-6">
-            <h2 className="font-serif text-3xl leading-tight text-white sm:text-4xl md:text-5xl">
-              {pastors.displayName}
+      <div id="equipo-pastores" className="mb-8 scroll-mt-28 md:mb-10 lg:mb-12">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-7 md:flex-row md:items-center md:justify-center md:gap-10 lg:gap-12">
+          <motion.div
+            className="order-2 max-w-md space-y-3.5 text-center md:order-1 md:space-y-4 md:text-left"
+            initial={pastorsPlay ? "visible" : "hidden"}
+            animate={pastorsPlay ? "visible" : "hidden"}
+          >
+            <motion.p
+              variants={reduceMotion ? fadeOnly(T.role) : pastorsRoleReveal}
+              className={`${mutedRole} tracking-[0.22em]`}
+            >
+              {pastors.role}
+            </motion.p>
+
+            <h2 className="font-serif text-[1.85rem] leading-[1.1] text-white sm:text-[2.15rem] md:text-[2.3rem] lg:text-[2.6rem]">
+              <span className="sr-only">{pastors.displayName}</span>
+              <span className="flex flex-wrap justify-center gap-x-[0.28em] md:justify-start" aria-hidden>
+                {PASTORS_NAME_WORDS.map((word, i) => (
+                  <span key={`${word}-${i}`} className="inline-block overflow-hidden pb-[0.08em]">
+                    <motion.span
+                      className="inline-block"
+                      variants={
+                        reduceMotion
+                          ? fadeOnly(T.nameWord + i * 0.05)
+                          : maskRise(T.nameWord + i * 0.11)
+                      }
+                    >
+                      {word}
+                    </motion.span>
+                  </span>
+                ))}
+              </span>
             </h2>
-            <div
-              className="mx-auto h-px w-20 bg-gradient-to-r from-transparent via-secondary/65 to-transparent md:w-28"
+
+            <motion.div
+              variants={reduceMotion ? fadeOnly(T.rule) : pastorsRule}
+              className="mx-auto h-px w-24 origin-center bg-gradient-to-r from-transparent via-secondary/70 to-transparent md:mx-0 md:w-32 md:origin-left"
               aria-hidden
             />
-            <p className={`${mutedRole} tracking-[0.22em]`}>{pastors.role}</p>
-            <p className={`${bodyText} mx-auto max-w-md text-[0.95rem] md:text-base`}>
-              Son un matrimonio profundamente apasionado por la expansión del Reino de Dios. Más de 30 años
-              formando personas y levantando líderes.
-            </p>
-          </div>
 
-          <div className="flex justify-center">
             <div
-              ref={pastorsPortraitRef}
-              className={`group relative flex flex-col items-center transition-[transform,opacity] duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)]
-                ${reduceMotion || pastorsPortraitInView ? "scale-100 translate-y-0 opacity-100" : "scale-[0.86] translate-y-2.5 opacity-95"}`}
+              className={`${bodyText} mx-auto max-w-md space-y-3 text-[0.9rem] md:mx-0 md:text-[0.95rem] md:leading-[1.75]`}
             >
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
-                <div className="h-[min(20rem,calc(100vw-2rem))] w-[min(20rem,calc(100vw-2rem))] rounded-full bg-secondary/25 blur-2xl opacity-70 transition duration-500 group-hover:opacity-100 md:h-[min(22rem,calc(100vw-2rem))] md:w-[min(22rem,calc(100vw-2rem))] lg:h-[min(24rem,calc(100vw-2rem))] lg:w-[min(24rem,calc(100vw-2rem))] motion-reduce:opacity-80" />
-              </div>
+              {PASTORS_BIO_LINES.map((line, i) => (
+                <p key={i} className="overflow-hidden">
+                  <motion.span
+                    className="block"
+                    variants={
+                      reduceMotion
+                        ? fadeOnly(T.bioLine + i * 0.08)
+                        : maskRise(T.bioLine + i * 0.18, "115%")
+                    }
+                  >
+                    {line}
+                  </motion.span>
+                </p>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            ref={pastorsBlockRef}
+            className="group relative order-1 w-[min(78vw,17rem)] shrink-0 sm:w-[19rem] md:order-2 md:w-[20rem] lg:w-[22rem]"
+            initial={pastorsPlay ? "visible" : "hidden"}
+            animate={pastorsPlay ? "visible" : "hidden"}
+            style={reduceMotion ? undefined : { y: photoParallax }}
+          >
+            <motion.div
+              variants={reduceMotion ? fadeOnly(T.glow) : pastorsPhotoGlow}
+              className="pointer-events-none absolute -inset-5 -z-10 rounded-[2.5rem] bg-secondary/20 blur-3xl sm:-inset-7"
+              aria-hidden
+            />
+
+            <motion.div
+              variants={reduceMotion ? fadeOnly(T.photo) : pastorsPhotoFrame}
+              className="relative overflow-hidden rounded-[1.5rem] will-change-transform sm:rounded-[1.75rem]"
+            >
               <PdcMinisterPortrait
                 slug={pastors.slug}
                 displayName={pastors.displayName}
@@ -226,19 +398,33 @@ const EquipoMinisterialSection: React.FC = () => {
                 objectPosition={pastors.objectPosition}
                 loading="eager"
                 fetchPriority="high"
+                lqip={MINISTER_LEAD_LQIP}
+                onReady={handlePortraitReady}
               />
-            </div>
-          </div>
+
+              {!reduceMotion ? (
+                <motion.div
+                  variants={pastorsSheen}
+                  className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-transparent via-white/25 to-transparent"
+                  aria-hidden
+                />
+              ) : null}
+
+              <div
+                className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[#0e0b08]/35 via-transparent to-white/[0.04]"
+                aria-hidden
+              />
+            </motion.div>
+          </motion.div>
         </div>
       </div>
-      </Reveal>
 
       <div
         id="equipo-ministros"
-        className="mb-6 scroll-mt-28 border-t border-white/10 pt-6 text-center md:mb-8 md:pt-8 lg:mb-12 lg:pt-12"
+        className="mb-6 scroll-mt-28 border-t border-white/10 pt-6 text-center md:mb-7 md:pt-7 lg:mb-8 lg:pt-8"
       >
-        <h2 className="font-serif text-2xl text-white md:text-[1.65rem] lg:text-3xl">Ministros y liderazgo</h2>
-        <p className={`${bodyText} mx-auto mt-3 max-w-xl text-sm md:text-[0.8125rem] lg:mt-4 lg:text-base`}>
+        <h2 className="font-serif text-2xl text-white md:text-[1.65rem] lg:text-[1.85rem]">Ministros y liderazgo</h2>
+        <p className={`${bodyText} mx-auto mt-2.5 max-w-xl text-sm md:text-[0.8125rem] lg:mt-3 lg:text-[0.9rem]`}>
           Personas comprometidas con servir, acompañar y transformar vidas.
         </p>
       </div>
@@ -246,7 +432,7 @@ const EquipoMinisterialSection: React.FC = () => {
       <div
         id="equipo-grid"
         ref={setRevealRef}
-        className="scroll-mt-28 grid grid-cols-2 justify-items-center gap-x-6 gap-y-8 pb-2 md:grid-cols-8 md:gap-x-7 md:gap-y-6 lg:gap-x-8 lg:gap-y-10"
+        className="scroll-mt-28 grid grid-cols-2 justify-items-center gap-x-6 gap-y-7 pb-2 md:grid-cols-8 md:gap-x-7 md:gap-y-6 lg:gap-x-8 lg:gap-y-8"
         role="list"
       >
         {firstRow.map((person, i) => (

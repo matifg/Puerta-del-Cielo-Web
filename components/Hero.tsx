@@ -87,7 +87,7 @@ export const Hero: React.FC = () => {
   return (
     <section
       id="home-hero"
-      className="relative flex min-h-[100svh] min-h-screen flex-col overflow-x-hidden bg-[#030508]"
+      className="relative flex min-h-[100svh] min-h-screen flex-col overflow-x-hidden bg-[#0e0b08]"
       onMouseMove={onHeroMove}
       onMouseLeave={onHeroLeave}
       aria-label="Inicio"
@@ -131,7 +131,7 @@ export const Hero: React.FC = () => {
       <div className="relative z-10 mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 pb-[max(3.5rem,env(safe-area-inset-bottom,0px))] pt-[calc(4.5rem+env(safe-area-inset-top,0px))] sm:px-6 sm:pb-16 sm:pt-[calc(4.75rem+env(safe-area-inset-top,0px))] md:max-w-3xl md:pb-20 md:pt-[calc(5rem+env(safe-area-inset-top,0px))]">
         {overlay.contentBackdrop ? (
           <div
-            className="pointer-events-none absolute inset-x-4 top-[calc(3.5rem+env(safe-area-inset-top,0px))] bottom-24 max-w-2xl rounded-[2rem] bg-[#030508]/25 blur-md md:inset-x-auto md:left-1/2 md:w-[min(100%,42rem)] md:-translate-x-1/2"
+            className="pointer-events-none absolute inset-x-4 top-[calc(3.5rem+env(safe-area-inset-top,0px))] bottom-24 max-w-2xl rounded-[2rem] bg-[#0e0b08]/25 blur-md md:inset-x-auto md:left-1/2 md:w-[min(100%,42rem)] md:-translate-x-1/2"
             aria-hidden
           />
         ) : null}

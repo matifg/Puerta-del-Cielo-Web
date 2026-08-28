@@ -4,7 +4,7 @@ import { Footer } from "../components/Footer";
 const DiscipuladoPage = () => (
   <>
     <DiscipuladoSection />
-    <div id="disc-footer-root" className="relative bg-[#030508]">
+    <div id="disc-footer-root" className="relative bg-[#0e0b08]">
       <Footer />
     </div>
   </>

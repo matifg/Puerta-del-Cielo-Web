@@ -106,7 +106,7 @@ export const Navbar = () => {
   const mobileMenu =
     open && mobileMounted ? (
       <div
-        className="fixed inset-0 z-[49] flex flex-col bg-[#030508]/98 px-6 pb-10 pt-[calc(4.75rem+env(safe-area-inset-top,0px))] backdrop-blur-lg md:hidden"
+        className="fixed inset-0 z-[49] flex flex-col bg-[#0e0b08]/98 px-6 pb-10 pt-[calc(4.75rem+env(safe-area-inset-top,0px))] backdrop-blur-lg md:hidden"
         role="dialog"
         aria-modal="true"
         aria-label="Menú de navegación"
@@ -183,7 +183,7 @@ export const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 isolate z-50 w-full pt-[env(safe-area-inset-top,0px)] text-[#faf8f4] transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-out ${
         elevated
-          ? "border-b border-white/[0.08] bg-[#030508]/92 shadow-[0_10px_40px_-16px_rgba(0,0,0,0.65)] backdrop-blur-md"
+          ? "border-b border-white/[0.08] bg-[#0e0b08]/92 shadow-[0_10px_40px_-16px_rgba(0,0,0,0.65)] backdrop-blur-md"
           : "border-b border-white/[0.12] bg-transparent shadow-none backdrop-blur-[10px]"
       }`}
       aria-label="Principal"
@@ -243,7 +243,7 @@ export const Navbar = () => {
                       : "pointer-events-none invisible -translate-y-1 opacity-0"
                   }`}
                 >
-                  <div className="min-w-[12.5rem] rounded-xl border border-white/12 bg-[#0a0f18]/95 py-1 shadow-[0_20px_50px_-18px_rgba(0,0,0,0.7)] backdrop-blur-md">
+                  <div className="min-w-[12.5rem] rounded-xl border border-white/12 bg-[#17130e]/95 py-1 shadow-[0_20px_50px_-18px_rgba(0,0,0,0.7)] backdrop-blur-md">
                     {link.subLinks
                       .filter((sub) => !sub.navHidden)
                       .map((sub) => (

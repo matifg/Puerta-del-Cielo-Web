@@ -25,7 +25,7 @@ export const PdcGalleryPicture: React.FC<PdcGalleryPictureProps> = ({
   loading = "lazy",
   sizes,
 }) => (
-  <picture className="block h-full w-full">
+  <picture className="absolute inset-0 block h-full w-full">
     <source
       type="image/webp"
       srcSet={galleryWebpSrcSet(folder, slug)}
@@ -37,7 +37,7 @@ export const PdcGalleryPicture: React.FC<PdcGalleryPictureProps> = ({
       aria-hidden={ariaHidden || undefined}
       loading={loading}
       decoding="async"
-      className={className}
+      className={className.includes("absolute") ? className : `h-full w-full object-cover ${className}`.trim()}
       style={style}
     />
   </picture>
@@ -62,7 +62,10 @@ export const PdcGalleryLightboxPicture: React.FC<PdcGalleryLightboxPictureProps>
   style,
   onClick,
 }) => (
-  <picture onClick={onClick} className="block">
+  <picture
+    onClick={onClick}
+    className="inline-flex max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] items-center justify-center"
+  >
     <source
       type="image/webp"
       srcSet={galleryWebpSrcSet(folder, slug)}

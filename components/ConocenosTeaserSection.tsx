@@ -16,7 +16,7 @@ const linkClass =
 const ConocenosTeaserSection: React.FC = () => (
   <section
     id="home-conocenos"
-    className="scroll-mt-24 border-t border-white/[0.06] bg-[#030508] py-12 sm:scroll-mt-28 sm:py-14 md:py-16"
+    className="scroll-mt-24 border-t border-white/[0.06] bg-[#0e0b08] py-12 sm:scroll-mt-28 sm:py-14 md:py-16"
     aria-labelledby="home-conocenos-heading"
   >
     <div className={pdcPageInnerClass}>

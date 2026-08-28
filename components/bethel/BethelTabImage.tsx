@@ -18,7 +18,7 @@ export function BethelTabImage({ tabId, className = "" }: BethelTabImageProps) {
 
   return (
     <motion.div
-      className={`relative mb-6 overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] ${className}`}
+      className={`relative mb-6 overflow-hidden rounded-2xl border border-white/10 bg-[#17130e]/80 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] ${className}`}
       layout={!reduceMotion}
     >
       <AnimatePresence mode="wait" initial={false}>
@@ -37,7 +37,7 @@ export function BethelTabImage({ tabId, className = "" }: BethelTabImageProps) {
             style={img.objectPosition ? { objectPosition: img.objectPosition } : undefined}
           />
           <motion.div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/55 via-transparent to-[#030508]/20"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0e0b08]/55 via-transparent to-[#0e0b08]/20"
             aria-hidden
           />
         </motion.div>

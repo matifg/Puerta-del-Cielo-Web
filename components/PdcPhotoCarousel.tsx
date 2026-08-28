@@ -208,7 +208,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
       <motion.div
         layout
         transition={{ layout: { duration: 0.35, ease } }}
-        className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)]"
+        className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#17130e]/80 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)]"
       >
         <motion.div layout className={aspectClass}>
           <AnimatePresence mode="wait" initial={false}>
@@ -248,7 +248,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
           </AnimatePresence>
           <motion.div
             layout
-            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/55 via-transparent to-[#030508]/10"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0e0b08]/55 via-transparent to-[#0e0b08]/10"
             aria-hidden
           />
 
@@ -266,14 +266,14 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
 
           {count > 1 ? (
             <div className="absolute right-3 top-3 z-10 flex items-center gap-2">
-              <span className="rounded-full border border-white/15 bg-[#030508]/80 px-2.5 py-1 font-sans text-[0.65rem] font-semibold tabular-nums text-zinc-300 backdrop-blur-sm">
+              <span className="rounded-full border border-white/15 bg-[#0e0b08]/80 px-2.5 py-1 font-sans text-[0.65rem] font-semibold tabular-nums text-stone-300 backdrop-blur-sm">
                 {index + 1}/{count}
               </span>
               {!isVideoSlide ? (
                 <button
                   type="button"
                   onClick={() => setPaused((p) => !p)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-[#030508]/80 text-white/85 backdrop-blur-sm transition hover:border-secondary/40 hover:text-secondary"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-[#0e0b08]/80 text-white/85 backdrop-blur-sm transition hover:border-secondary/40 hover:text-secondary"
                   aria-label={paused ? "Reanudar carrusel" : "Pausar carrusel"}
                 >
                   {paused ? (
@@ -291,7 +291,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
               <button
                 type="button"
                 onClick={() => go(-1)}
-                className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-[#030508]/85 text-white shadow-lg backdrop-blur-sm transition hover:border-secondary/50 hover:text-secondary sm:left-4"
+                className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/85 text-white shadow-lg backdrop-blur-sm transition hover:border-secondary/50 hover:text-secondary sm:left-4"
                 aria-label="Diapositiva anterior"
               >
                 <ChevronLeft className="h-5 w-5" aria-hidden />
@@ -299,7 +299,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
               <button
                 type="button"
                 onClick={() => go(1)}
-                className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-[#030508]/85 text-white shadow-lg backdrop-blur-sm transition hover:border-secondary/50 hover:text-secondary sm:right-4"
+                className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/85 text-white shadow-lg backdrop-blur-sm transition hover:border-secondary/50 hover:text-secondary sm:right-4"
                 aria-label="Diapositiva siguiente"
               >
                 <ChevronRight className="h-5 w-5" aria-hidden />
@@ -309,7 +309,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
         </motion.div>
 
         {showSlideCaption && slideCaption ? (
-          <p className="border-t border-white/[0.08] px-4 py-3 text-center font-sans text-sm font-medium leading-relaxed text-zinc-300 md:px-6 md:py-4">
+          <p className="border-t border-white/[0.08] px-4 py-3 text-center font-sans text-sm font-medium leading-relaxed text-stone-300 md:px-6 md:py-4">
             {slideCaption}
           </p>
         ) : null}
@@ -340,7 +340,7 @@ export const PdcPhotoCarousel: React.FC<PdcPhotoCarouselProps> = ({
             );
           })}
           {showPlaybackHint && !isVideoSlide ? (
-            <span className="w-full text-center font-sans text-[0.65rem] text-zinc-500 sm:w-auto sm:pl-2">
+            <span className="w-full text-center font-sans text-[0.65rem] text-stone-500 sm:w-auto sm:pl-2">
               {paused ? "Pausado" : `Cambia cada ${seconds} s`}
             </span>
           ) : null}

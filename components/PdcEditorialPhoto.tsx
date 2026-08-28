@@ -26,7 +26,7 @@ export const PdcEditorialPhoto: React.FC<PdcEditorialPhotoProps> = ({
 
   return (
     <figure
-      className={`overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] ${className}`}
+      className={`overflow-hidden rounded-2xl border border-white/10 bg-[#17130e]/80 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] ${className}`}
     >
       <div className={`relative w-full ${aspectByLayout[photo.layout]}`}>
         <img
@@ -42,13 +42,13 @@ export const PdcEditorialPhoto: React.FC<PdcEditorialPhotoProps> = ({
         />
         {!hideOverlay ? (
           <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/50 via-transparent to-[#030508]/15"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0e0b08]/50 via-transparent to-[#0e0b08]/15"
             aria-hidden
           />
         ) : null}
       </div>
       {photo.caption ? (
-        <figcaption className="border-t border-white/[0.08] bg-[#0a1018]/90 px-4 py-3 text-center font-sans text-sm font-medium leading-relaxed text-zinc-300 md:px-5 md:py-3.5">
+        <figcaption className="border-t border-white/[0.08] bg-[#17130e]/90 px-4 py-3 text-center font-sans text-sm font-medium leading-relaxed text-stone-300 md:px-5 md:py-3.5">
           {photo.caption}
         </figcaption>
       ) : null}

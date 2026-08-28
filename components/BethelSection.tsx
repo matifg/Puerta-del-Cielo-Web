@@ -107,7 +107,7 @@ const BethelSection = () => {
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#030508] via-[#030508]/97 to-[#050810]"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0e0b08] via-[#0e0b08]/97 to-[#100d09]"
         aria-hidden
       />
 
@@ -164,7 +164,7 @@ const BethelSection = () => {
                   <p
                     key={`bethel-que-es-${pIdx}`}
                     className={`font-serif text-base leading-relaxed md:text-[1.05rem] ${
-                      pIdx === 0 ? "text-white/88" : "text-zinc-400"
+                      pIdx === 0 ? "text-white/88" : "text-stone-400"
                     }`}
                   >
                     {paragraph}
@@ -179,7 +179,7 @@ const BethelSection = () => {
                   const Icon = step.icon;
                   return (
                     <li key={step.title} className="relative">
-                      <div className="absolute -left-8 flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-[#0a0f18] shadow-[0_0_24px_rgba(64,194,222,0.15)] sm:-left-10 sm:h-9 sm:w-9">
+                      <div className="absolute -left-8 flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-[#17130e] shadow-[0_0_24px_rgba(64,194,222,0.15)] sm:-left-10 sm:h-9 sm:w-9">
                         <Icon className="h-4 w-4 text-secondary sm:h-[1.05rem] sm:w-[1.05rem]" aria-hidden />
                       </div>
                       <div className={`${glassCard} p-4 sm:p-5`}>
@@ -189,7 +189,7 @@ const BethelSection = () => {
                             {step.year}
                           </span>
                         </div>
-                        <p className="text-sm leading-relaxed text-zinc-400 md:text-[0.95rem] md:leading-relaxed">
+                        <p className="text-sm leading-relaxed text-stone-400 md:text-[0.95rem] md:leading-relaxed">
                           {step.body}
                         </p>
                       </div>
@@ -201,7 +201,7 @@ const BethelSection = () => {
           </Reveal>
 
           <Reveal delayMs={120} className="lg:col-span-5">
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900/80 to-black/90 p-5 shadow-[0_24px_70px_-24px_rgba(0,0,0,0.75)] sm:p-6 lg:p-7">
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-stone-900/80 to-[#080605]/90 p-5 shadow-[0_24px_70px_-24px_rgba(0,0,0,0.75)] sm:p-6 lg:p-7">
               <div
                 className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-secondary/20 blur-3xl"
                 aria-hidden
@@ -216,7 +216,7 @@ const BethelSection = () => {
                       <span className="text-secondary/80">»</span>
                     </p>
                   </blockquote>
-                  <cite className="mt-4 block font-sans text-sm font-medium not-italic tracking-wide text-zinc-500">
+                  <cite className="mt-4 block font-sans text-sm font-medium not-italic tracking-wide text-stone-500">
                     Amós 9:11
                   </cite>
                 </div>
@@ -253,7 +253,7 @@ const BethelSection = () => {
                       className={`relative min-h-[3rem] overflow-hidden rounded-2xl border px-5 py-3 font-sans text-sm font-medium tracking-wide transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary ${
                         selected
                           ? "border-secondary/40 bg-secondary/15 text-[#f0fbfd] shadow-[0_0_40px_-8px_rgba(64,194,222,0.35)]"
-                          : "border-white/10 bg-white/[0.04] text-zinc-400 hover:border-white/18 hover:bg-white/[0.07] hover:text-zinc-200"
+                          : "border-white/10 bg-white/[0.04] text-stone-400 hover:border-white/18 hover:bg-white/[0.07] hover:text-stone-200"
                       }`}
                       onClick={() => setTab(t.id)}
                     >
@@ -274,7 +274,7 @@ const BethelSection = () => {
                   {activeTab.lines.map((line, lineIdx) => (
                     <p
                       key={`${activeTab.id}-${lineIdx}`}
-                      className="text-sm leading-relaxed text-zinc-400 md:text-[0.95rem] md:leading-relaxed"
+                      className="text-sm leading-relaxed text-stone-400 md:text-[0.95rem] md:leading-relaxed"
                     >
                       {line}
                     </p>
@@ -326,7 +326,7 @@ const BethelSection = () => {
                           <p
                             key={`${item.id}-p-${pIdx}`}
                             className={`text-sm leading-relaxed sm:text-[0.95rem] ${
-                              pIdx === 0 ? "text-white/88" : "text-zinc-400"
+                              pIdx === 0 ? "text-white/88" : "text-stone-400"
                             }`}
                           >
                             {paragraph}

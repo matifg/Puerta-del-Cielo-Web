@@ -4,8 +4,7 @@ import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
 import { INTERCESION_MOMENTS, INTERCESION_GALLERY_FOLDER, type IntercesionMoment } from "../data/intercesionPhotos";
 import { galleryMasonrySizes } from "../data/galleryWebp";
 import {
-  pdcNotebookGalleryHintClass,
-  pdcNotebookGalleryMediaClass,
+  pdcQuietGalleryGridClass,
   pdcNotebookGalleryTileClass,
 } from "./PdcSectionHeader";
 import { PdcGalleryLightboxPicture, PdcGalleryPicture } from "./PdcGalleryPicture";
@@ -32,10 +31,10 @@ const PhotoTile: React.FC<PhotoTileProps> = ({
     onClick={() => onOpen(globalIndex)}
     whileHover={reduceMotion ? undefined : { y: -3 }}
     whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-    className={`group relative block h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary notebook:rounded-xl ${pdcNotebookGalleryTileClass}`}
+    className={`group relative block h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-[#17130e]/80 text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary ${pdcNotebookGalleryTileClass}`}
     aria-label={`Ver foto ampliada: ${photo.alt}`}
   >
-    <span className={`relative block w-full overflow-hidden ${pdcNotebookGalleryMediaClass}`}>
+    <span className="relative block aspect-[4/3] w-full overflow-hidden">
       <PdcGalleryPicture
         folder={INTERCESION_GALLERY_FOLDER}
         slug={photo.slug}
@@ -48,12 +47,12 @@ const PhotoTile: React.FC<PhotoTileProps> = ({
       />
 
       <span
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/40 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0e0b08]/40 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
         aria-hidden
       />
 
       <span
-        className="pointer-events-none absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-[#030508]/75 text-secondary opacity-0 shadow-md backdrop-blur-sm transition group-hover:opacity-100 group-focus-visible:opacity-100 md:right-2.5 md:top-2.5"
+        className="pointer-events-none absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/75 text-secondary opacity-0 shadow-md backdrop-blur-sm transition group-hover:opacity-100 group-focus-visible:opacity-100 md:right-2.5 md:top-2.5"
         aria-hidden
       >
         <Maximize2 className="h-3.5 w-3.5" strokeWidth={2.25} />
@@ -98,26 +97,20 @@ export const IntercesionMomentsGallery: React.FC<IntercesionMomentsGalleryProps>
 
   return (
     <div className={className}>
-      <p className={`mx-auto mb-4 max-w-md text-center font-sans text-sm text-white/50 notebook:mb-3 md:mb-5 ${pdcNotebookGalleryHintClass}`}>
-        Tocá una foto para verla en grande.
-      </p>
-
       <div
-        className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 notebook:mx-auto notebook:grid-cols-3 notebook:grid-rows-2 notebook:items-stretch notebook:gap-3 notebook:max-w-[min(99vw,70rem)] notebook:h-[min(50vh,440px)] desktop:max-w-[min(98vw,76rem)] desktop:gap-3.5"
+        className={pdcQuietGalleryGridClass}
         role="list"
         aria-label="Galería EIGE Intercesión"
       >
         {INTERCESION_MOMENTS.map((photo, i) => (
-          <div key={photo.id} className={`relative min-h-0 ${pdcNotebookGalleryTileClass}`} role="listitem">
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl notebook:aspect-[unset] notebook:h-full notebook:min-h-0 notebook:rounded-xl desktop:rounded-2xl">
-              <PhotoTile
-                photo={photo}
-                globalIndex={i}
-                eager={i < 3}
-                onOpen={setLightboxIndex}
-                reduceMotion={reduceMotion}
-              />
-            </div>
+          <div key={photo.id} className="relative min-h-0" role="listitem">
+            <PhotoTile
+              photo={photo}
+              globalIndex={i}
+              eager={i < 3}
+              onOpen={setLightboxIndex}
+              reduceMotion={reduceMotion}
+            />
           </div>
         ))}
       </div>
@@ -126,7 +119,7 @@ export const IntercesionMomentsGallery: React.FC<IntercesionMomentsGalleryProps>
         {active && lightboxIndex !== null ? (
           <motion.div
             key="eige-lightbox"
-            className="fixed inset-0 z-[10025] flex items-center justify-center bg-[#030508]/88 p-4 backdrop-blur-md sm:p-6"
+            className="fixed inset-0 z-[10025] flex items-center justify-center bg-[#0e0b08]/88 p-4 backdrop-blur-md sm:p-6"
             role="dialog"
             aria-modal="true"
             aria-label={active.alt}
@@ -139,7 +132,7 @@ export const IntercesionMomentsGallery: React.FC<IntercesionMomentsGalleryProps>
             <motion.button
               type="button"
               onClick={closeLightbox}
-              className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
+              className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
               aria-label="Cerrar foto"
             >
               <X className="h-5 w-5" aria-hidden />
@@ -151,7 +144,7 @@ export const IntercesionMomentsGallery: React.FC<IntercesionMomentsGalleryProps>
                 e.stopPropagation();
                 goLightbox(-1);
               }}
-              className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:left-4"
+              className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:left-4"
               aria-label="Foto anterior"
             >
               <ChevronLeft className="h-6 w-6" aria-hidden />
@@ -162,7 +155,7 @@ export const IntercesionMomentsGallery: React.FC<IntercesionMomentsGalleryProps>
                 e.stopPropagation();
                 goLightbox(1);
               }}
-              className="absolute right-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-4"
+              className="absolute right-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-4"
               aria-label="Foto siguiente"
             >
               <ChevronRight className="h-6 w-6" aria-hidden />

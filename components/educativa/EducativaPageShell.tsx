@@ -25,7 +25,7 @@ export function EducativaPageShell({
       <div
         id={scrollEndId}
         aria-hidden
-        className="pointer-events-none h-24 w-full shrink-0 sm:h-28"
+        className="pointer-events-none h-px w-full shrink-0"
       />
       <FloatingScrollButton
         sections={sections}
@@ -33,7 +33,7 @@ export function EducativaPageShell({
         footerProximityRootId={footerRootId}
         offsetClassName="bottom-24 right-4 sm:bottom-28 sm:right-6 lg:right-[max(1.5rem,env(safe-area-inset-right,0px))]"
       />
-      <div id={footerRootId} className="relative bg-[#030508]">
+      <div id={footerRootId} className="relative bg-[#0e0b08]">
         <Footer />
       </div>
     </>

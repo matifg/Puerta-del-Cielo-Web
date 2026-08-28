@@ -24,7 +24,7 @@ const EquipoMinisterialPage = () => {
           className="pointer-events-auto shadow-[0_8px_40px_rgba(0,0,0,0.65)]"
         />
       </div>
-      <div id={EQUIPO_FOOTER_ROOT_ID} className="relative bg-[#030508]">
+      <div id={EQUIPO_FOOTER_ROOT_ID} className="relative bg-[#0e0b08]">
         <Footer />
       </div>
     </>

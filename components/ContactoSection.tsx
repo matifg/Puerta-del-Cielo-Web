@@ -33,7 +33,7 @@ const ContactoSection: React.FC = () => (
     </header>
 
     <div className="mx-auto mb-10 max-w-4xl">
-      <p className="mb-4 text-center font-sans text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+      <p className="mb-4 text-center font-sans text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-stone-500">
         Ungieres y bienvenida
       </p>
       <PdcEditorialPhoto photo={SITE_PHOTOS.contactoEquipo} priority />
@@ -60,7 +60,7 @@ const ContactoSection: React.FC = () => (
         </a>
         <a
           href={`mailto:${email}`}
-          className="block text-sm text-zinc-400 underline decoration-white/12 underline-offset-[3px] transition hover:text-secondary hover:decoration-secondary/45"
+          className="block text-sm text-stone-400 underline decoration-white/12 underline-offset-[3px] transition hover:text-secondary hover:decoration-secondary/45"
         >
           {email}
         </a>
@@ -92,7 +92,7 @@ const ContactoSection: React.FC = () => (
             {horariosReunionGeneral.map((h) => (
               <li
                 key={`contacto-${h.dia}`}
-                className="flex justify-between gap-3 rounded-lg border border-white/[0.07] bg-white/[0.04] px-3 py-2 text-zinc-400"
+                className="flex justify-between gap-3 rounded-lg border border-white/[0.07] bg-white/[0.04] px-3 py-2 text-stone-400"
               >
                 <span>{h.dia}</span>
                 <span className="shrink-0 font-medium tabular-nums text-[#ebe8e2]">{h.hora}</span>
@@ -107,7 +107,7 @@ const ContactoSection: React.FC = () => (
     </div>
 
     <div className="mt-12 text-center">
-      <p className="mb-5 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+      <p className="mb-5 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-stone-500">
         Redes sociales
       </p>
       <div className="flex flex-wrap justify-center gap-3">

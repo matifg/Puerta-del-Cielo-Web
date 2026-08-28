@@ -38,27 +38,26 @@ export const SITE_PHOTOS = {
   },
   santaCena: {
     slug: "santa-cena",
-    alt: "Mesa preparada para la Santa Cena con pan y copas",
+    alt: "Mesa preparada para la Cena del Señor con pan y copas",
+    /** Fuente casi cuadrada; WebP generados con anchos landscape (720/1080/1440). */
     layout: "landscape",
     objectPosition: "center 45%",
-    caption:
-      "En la mesa del Señor recordamos su sacrificio, renovamos nuestra fe y compartimos como familia el pan y el cáliz.",
+    caption: "Recordamos su sacrificio, proclamamos su victoria y esperamos su venida.",
   },
   santaCenaSimbolo: {
     slug: "santa-cena-simbolo",
     alt: "Copas de comunión frente a la cruz con paño rojo en el altar",
+    /** Fuente vertical; WebP con anchos landscape — mostrar en marco 3:4, no en carrusel 2:1. */
     layout: "landscape",
-    objectPosition: "center 48%",
-    caption:
-      "En la mesa del Señor recordamos su sacrificio, renovamos nuestra fe y compartimos como familia el pan y el cáliz.",
+    objectPosition: "center 42%",
+    caption: "Hasta que Él venga, lo anunciamos y lo recordamos.",
   },
   santaCenaMesa: {
     slug: "santa-cena-mesa",
-    alt: "Mesa de Santa Cena con pan, uvas y copas frente al altar del templo",
+    alt: "Mesa de la Cena del Señor con pan, uvas y copas frente al altar del templo",
     layout: "portrait",
-    objectPosition: "center 40%",
-    caption:
-      "En la mesa del Señor recordamos su sacrificio, renovamos nuestra fe y compartimos como familia el pan y el cáliz.",
+    objectPosition: "center 38%",
+    caption: "La Cena del Señor nos recuerda el sacrificio de Cristo y la esperanza de su regreso.",
   },
   contactoEquipo: {
     slug: "contacto-equipo",
@@ -88,18 +87,9 @@ export const SITE_PHOTOS = {
   },
 } as const satisfies Record<string, EditorialPhoto>;
 
-/** Galería Visión y propósito (Revelación de la Cruz / Santa Cena) */
-export const VISION_GALLERY: EditorialPhoto[] = [
-  SITE_PHOTOS.santaCenaMesa,
-  SITE_PHOTOS.cruzFe,
-  SITE_PHOTOS.santaCenaSimbolo,
-  SITE_PHOTOS.contactoLugares,
-];
-
-/** Carrusel EIGE Intercesión (adoración y altar) */
-export const INTERCESION_GALLERY: EditorialPhoto[] = [
-  SITE_PHOTOS.cruzFe,
-  SITE_PHOTOS.contactoLugares,
-  SITE_PHOTOS.santaCenaSimbolo,
-];
+/** Visión — par visual Cena del Señor / Cruz (sin carrusel panorámico). */
+export const VISION_CENA_PHOTOS = {
+  mesa: SITE_PHOTOS.santaCenaMesa,
+  cruz: SITE_PHOTOS.cruzFe,
+} as const;
 

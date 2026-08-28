@@ -17,7 +17,7 @@ export function BethelEncounterScenes() {
             id="bethel-encuentro-heading"
             className="font-serif text-xl font-medium leading-snug text-[#f4f1ec] md:text-2xl desktop:text-3xl"
           >
-            <span className="mb-2 block font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-zinc-500 notebook:mb-1">
+            <span className="mb-2 block font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-stone-500 notebook:mb-1">
               En el encuentro
             </span>
             Así se vive Bethel

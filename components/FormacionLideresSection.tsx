@@ -1,35 +1,62 @@
-import { useCallback, useState } from "react";
-import { BookOpen, ChevronDown, GraduationCap, Images } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GraduationCap, Images, Maximize2, X } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { whatsappUrl } from "../data/contacto";
 import {
   FORMATION_ACCORDION,
   FORMATION_EFESIOS_VERSE,
+  FORMATION_GALLERY_FOLDER,
+  FORMATION_MOMENTS,
   FORMATION_VISION_INTRO,
 } from "../data/formacionLideres";
+import { galleryMasonrySizes, galleryWebpSrcSet } from "../data/galleryWebp";
 import { scrollToPdcSectionId } from "../lib/pdcScrollNav";
 import { Reveal } from "./bethel/Reveal";
 import { PdcEducativaDockHint } from "./PdcEducativaDockHint";
-import { FormacionMomentsBento } from "./FormacionMomentsBento";
+import { PdcGalleryLightboxPicture } from "./PdcGalleryPicture";
 import { PdcPageShell } from "./PdcPageShell";
+import PdcSegmentBar from "./PdcSegmentBar";
 import {
-  PdcSectionHeader,
+  PdcSectionEyebrow,
   pdcAccordionTitleClass,
   pdcBodyLeadClass,
   pdcGlassCardPadding,
   pdcHeaderScrollMargin,
   pdcPageInnerWithHeroComfort,
   pdcPageIntroHeaderClass,
-  pdcQuoteClass,
+  pdcPageTitleAccentClass,
+  pdcPageTitleClass,
+  pdcPageTitleLineClass,
   pdcSectionH3Class,
 } from "./PdcSectionHeader";
 
 const glassCard =
   "rounded-2xl border border-white/[0.1] bg-white/[0.04] shadow-[0_20px_60px_-20px_rgba(0,0,0,0.65)] backdrop-blur-xl";
 
+/** Masonry: landscapes primero (evita columna altísima / hueco negro); máx. 6 */
+const FORMACION_IMAGES = FORMATION_MOMENTS.filter((m) => m.kind === "image");
+const FORMACION_GALLERY_ITEMS = [
+  ...FORMACION_IMAGES.filter((m) => m.bento !== "featured"),
+  ...FORMACION_IMAGES.filter((m) => m.bento === "featured"),
+].slice(0, 6);
+const FOTOS_INICIALES = 4;
+
 const FormacionLideresSection = () => {
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [galleryExpanded, setGalleryExpanded] = useState(false);
+  const [portalReady, setPortalReady] = useState(false);
   const reduceMotion = useReducedMotion() ?? false;
+
+  const galleryVisibles = galleryExpanded
+    ? FORMACION_GALLERY_ITEMS
+    : FORMACION_GALLERY_ITEMS.slice(0, FOTOS_INICIALES);
+  const hayMasFotos = FORMACION_GALLERY_ITEMS.length > FOTOS_INICIALES;
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
 
   const scrollToSection = useCallback(
     (id: string) => {
@@ -38,65 +65,66 @@ const FormacionLideresSection = () => {
     [reduceMotion]
   );
 
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+
+  const goLightbox = useCallback((delta: number) => {
+    setLightboxIndex((i) => {
+      if (i === null) return null;
+      return (i + delta + FORMACION_GALLERY_ITEMS.length) % FORMACION_GALLERY_ITEMS.length;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") goLightbox(-1);
+      if (e.key === "ArrowRight") goLightbox(1);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [lightboxIndex, closeLightbox, goLightbox]);
+
+  const active = lightboxIndex !== null ? FORMACION_GALLERY_ITEMS[lightboxIndex] : null;
+
   return (
     <PdcPageShell id="formacion-lideres-inicio" aria-labelledby="formacion-lideres-heading">
-      <div className={`${pdcPageInnerWithHeroComfort} pb-16 sm:pb-20`}>
+      <div className={`${pdcPageInnerWithHeroComfort} pb-6 sm:pb-8`}>
+        {/* Intro quote-first: el verso abre la página, no el patrón CTA+glass */}
         <Reveal>
-          <header className={pdcPageIntroHeaderClass}>
-            <PdcSectionHeader
-              headingId="formacion-lideres-heading"
-              eyebrow="Área educativa"
-              eyebrowIcon={GraduationCap}
-              title="Escuela de"
-              titleAccent="formación de líderes"
-              subtitle="Perfeccionar a los santos para la obra del ministerio y la edificación del Cuerpo de Cristo."
-              showSegmentBar
+          <header className={`${pdcPageIntroHeaderClass} mx-auto max-w-3xl text-center`}>
+            <PdcSectionEyebrow label="Área educativa" icon={GraduationCap} />
+            <p className="mb-3 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-secondary/90">
+              Efesios 4:12
+            </p>
+            <blockquote className="mx-auto max-w-2xl font-serif text-[clamp(1.25rem,3.2vw,1.85rem)] font-normal leading-snug text-[#f5f1ea]">
+              <span className="text-secondary/75">«</span>
+              {FORMATION_EFESIOS_VERSE}
+              <span className="text-secondary/75">»</span>
+            </blockquote>
+            <h1 id="formacion-lideres-heading" className={`${pdcPageTitleClass} mt-8`}>
+              <span className={pdcPageTitleLineClass}>Escuela de</span>
+              <span className={pdcPageTitleAccentClass}>formación de líderes</span>
+            </h1>
+            <PdcSegmentBar size="md" className="mx-auto mt-5" />
+            <button
+              type="button"
+              onClick={() => scrollToSection("formacion-lideres-contenido")}
+              className="mt-6 inline-flex items-center gap-1.5 font-sans text-sm font-medium text-white/55 transition hover:text-secondary"
             >
-              <div className="mx-auto flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
-                <motion.button
-                  type="button"
-                  onClick={() => scrollToSection("formacion-lideres-contenido")}
-                  className="pdc-btn-on-dark"
-                  whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                >
-                  <motion.span
-                    className="relative z-[1] flex shrink-0 text-secondary"
-                    animate={reduceMotion ? undefined : { y: [0, 5, 0] }}
-                    transition={{ duration: 1.65, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    <ChevronDown className="h-5 w-5" strokeWidth={2.25} aria-hidden />
-                  </motion.span>
-                  <span className="relative z-[1]">Ver programa</span>
-                </motion.button>
-                <motion.button
-                  type="button"
-                  onClick={() => scrollToSection("formacion-lideres-galeria")}
-                  className="pdc-btn-on-dark-ghost"
-                  whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                >
-                  <Images className="relative z-[1] h-5 w-5 shrink-0 text-secondary" aria-hidden />
-                  <span className="relative z-[1]">Galería</span>
-                </motion.button>
-              </div>
-            </PdcSectionHeader>
+              Ver el programa
+              <ChevronDown className="h-4 w-4 text-secondary/80" aria-hidden />
+            </button>
           </header>
         </Reveal>
 
         <Reveal delayMs={60}>
           <div id="formacion-lideres-contenido" className={`${glassCard} ${pdcGlassCardPadding} scroll-mt-28`}>
-            <div className="mx-auto mb-6 max-w-2xl text-center">
-              <p className="mb-2 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-secondary/85">
-                Efesios 4:12
-              </p>
-              <blockquote className={pdcQuoteClass}>
-                <span className="text-secondary/80">«</span>
-                {FORMATION_EFESIOS_VERSE}
-                <span className="text-secondary/80">»</span>
-              </blockquote>
-              <p className={`mt-4 ${pdcBodyLeadClass}`}>{FORMATION_VISION_INTRO}</p>
-            </div>
+            <p className={`mx-auto mb-6 max-w-2xl text-center ${pdcBodyLeadClass}`}>{FORMATION_VISION_INTRO}</p>
 
             <div className="mx-auto mb-6 max-w-2xl space-y-2.5">
               {FORMATION_ACCORDION.map((item) => {
@@ -136,7 +164,7 @@ const FormacionLideresSection = () => {
                             <p
                               key={`${item.id}-p-${pIdx}`}
                               className={`text-sm leading-relaxed ${
-                                pIdx === 0 ? "text-white/88" : "text-zinc-400"
+                                pIdx === 0 ? "text-white/88" : "text-stone-400"
                               }`}
                             >
                               {paragraph}
@@ -145,7 +173,7 @@ const FormacionLideresSection = () => {
                           {item.bullets ? (
                             <ul className="space-y-1.5 pt-1">
                               {item.bullets.map((bullet) => (
-                                <li key={bullet} className="flex items-start gap-2 text-sm text-zinc-400">
+                                <li key={bullet} className="flex items-start gap-2 text-sm text-stone-400">
                                   <span className="mt-1 text-secondary" aria-hidden>
                                     •
                                   </span>
@@ -160,13 +188,6 @@ const FormacionLideresSection = () => {
                   </div>
                 );
               })}
-            </div>
-
-            <div className="mx-auto mb-6 max-w-2xl rounded-xl border border-white/10 bg-white/[0.04] p-4 text-center md:p-5">
-              <BookOpen className="mx-auto mb-2 h-5 w-5 text-secondary" aria-hidden />
-              <p className="font-serif text-sm italic leading-relaxed text-[#ebe7df] md:text-base">
-                «{FORMATION_EFESIOS_VERSE}» (Efesios 4:12).
-              </p>
             </div>
 
             <div id="formacion-lideres-cta" className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
@@ -188,18 +209,153 @@ const FormacionLideresSection = () => {
         </Reveal>
 
         <Reveal delayMs={100}>
-          <div
+          <section
             id="formacion-lideres-galeria"
-            className={`mx-auto w-full scroll-mt-28 py-4 notebook:-mx-2.5 notebook:mt-4 notebook:max-w-[min(99vw,76rem)] notebook:px-0 md:py-5 lg:notebook:-mx-4 desktop:mt-8 ${pdcHeaderScrollMargin}`}
+            className={`mx-auto w-full max-w-5xl desktop:max-w-[min(98vw,76rem)] ${pdcHeaderScrollMargin}`}
+            aria-labelledby="formacion-galeria-titulo"
           >
             <h2
+              id="formacion-galeria-titulo"
               data-pdc-scroll-focus
-              className={`mb-2 shrink-0 text-center notebook:mb-1.5 ${pdcSectionH3Class}`}
+              className={`mb-2 text-center ${pdcSectionH3Class}`}
             >
               Momentos de formación
             </h2>
-            <FormacionMomentsBento />
-          </div>
+            <p className="mx-auto mb-5 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 md:mb-6 md:text-base">
+              Enseñanza, comunidad y ministración.
+            </p>
+
+            {/* Masonry CSS columns — landscapes primero, 2 cols (menos hueco negro) */}
+            <div
+              className="mx-auto columns-2 gap-3 sm:gap-4"
+              role="list"
+              aria-label="Galería Formación de Líderes"
+            >
+              {galleryVisibles.map((photo, i) => (
+                <button
+                  key={photo.id}
+                  type="button"
+                  role="listitem"
+                  onClick={() =>
+                    setLightboxIndex(FORMACION_GALLERY_ITEMS.findIndex((p) => p.id === photo.id))
+                  }
+                  className="group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-2xl border border-white/10 bg-[#17130e] text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:mb-4"
+                  aria-label={`Ampliar: ${photo.alt}`}
+                >
+                  <picture className="block w-full">
+                    <source
+                      type="image/webp"
+                      srcSet={galleryWebpSrcSet(FORMATION_GALLERY_FOLDER, photo.slug)}
+                      sizes={galleryMasonrySizes()}
+                    />
+                    <img
+                      src={photo.src}
+                      alt=""
+                      aria-hidden
+                      loading={i < 3 ? "eager" : "lazy"}
+                      decoding="async"
+                      className="block h-auto w-full transition duration-500 group-hover:scale-[1.02]"
+                    />
+                  </picture>
+                  <span
+                    className="pointer-events-none absolute right-2 top-2 z-[1] flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/75 text-secondary opacity-0 shadow-md backdrop-blur-sm transition group-hover:opacity-100 group-focus-visible:opacity-100"
+                    aria-hidden
+                  >
+                    <Maximize2 className="h-3.5 w-3.5" strokeWidth={2.25} />
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {hayMasFotos ? (
+              <div className="mt-5 flex justify-center md:mt-6">
+                <button
+                  type="button"
+                  onClick={() => setGalleryExpanded((v) => !v)}
+                  className="pdc-btn-on-dark-ghost inline-flex items-center gap-2"
+                >
+                  {galleryExpanded ? (
+                    <>
+                      <ChevronUp className="relative z-[1] h-4 w-4 shrink-0 text-secondary" aria-hidden />
+                      <span className="relative z-[1]">Ver menos</span>
+                    </>
+                  ) : (
+                    <>
+                      <Images className="relative z-[1] h-4 w-4 shrink-0 text-secondary" aria-hidden />
+                      <span className="relative z-[1]">Ver más fotos</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            ) : null}
+
+            {portalReady
+              ? createPortal(
+                  <AnimatePresence>
+                    {active && lightboxIndex !== null ? (
+                      <motion.div
+                        key="formacion-lightbox"
+                        className="fixed inset-0 z-[10050] flex items-center justify-center bg-[#0e0b08]/88 p-4 backdrop-blur-md sm:p-6"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={active.alt}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: reduceMotion ? 0.1 : 0.25 }}
+                        onClick={closeLightbox}
+                      >
+                        <button
+                          type="button"
+                          onClick={closeLightbox}
+                          className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white sm:right-6 sm:top-6"
+                          aria-label="Cerrar"
+                        >
+                          <X className="h-5 w-5" aria-hidden />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            goLightbox(-1);
+                          }}
+                          className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white sm:left-4 md:left-6"
+                          aria-label="Anterior"
+                        >
+                          <ChevronLeft className="h-6 w-6" aria-hidden />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            goLightbox(1);
+                          }}
+                          className="absolute right-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white sm:right-4 md:right-6"
+                          aria-label="Siguiente"
+                        >
+                          <ChevronRight className="h-6 w-6" aria-hidden />
+                        </button>
+
+                        <div
+                          className="relative z-[1] flex max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] items-center justify-center"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <PdcGalleryLightboxPicture
+                            folder={FORMATION_GALLERY_FOLDER}
+                            slug={active.slug}
+                            fallbackSrc={active.src}
+                            alt={active.alt}
+                            className="max-h-[min(92vh,100dvh-2rem)] max-w-[min(96vw,100dvw-2rem)] h-auto w-auto select-none rounded-lg object-contain shadow-[0_24px_80px_-20px_rgba(0,0,0,0.75)]"
+                          />
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>,
+                  document.body
+                )
+              : null}
+          </section>
         </Reveal>
       </div>
     </PdcPageShell>

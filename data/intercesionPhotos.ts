@@ -1,3 +1,6 @@
+import type { PdcCarouselSlide } from "../components/PdcPhotoCarousel";
+import { galleryCarouselSizes, galleryWebpSrc, galleryWebpSrcSet } from "./galleryWebp";
+
 export type IntercesionMoment = {
   id: string;
   /** Nombre base del archivo en public/images/intercesion/ */
@@ -9,6 +12,8 @@ export type IntercesionMoment = {
 };
 
 const intercesionFile = (name: string) => `/images/intercesion/${name}`;
+
+export const INTERCESION_GALLERY_FOLDER = "intercesion";
 
 /** Galería EIGE — public/images/intercesion/ (WebP: npm run optimize:galleries) */
 export const INTERCESION_MOMENTS: IntercesionMoment[] = [
@@ -62,4 +67,13 @@ export const INTERCESION_MOMENTS: IntercesionMoment[] = [
   },
 ];
 
-export const INTERCESION_GALLERY_FOLDER = "intercesion";
+/** Carrusel estilo Danza (`airy`) */
+export const INTERCESION_CAROUSEL_SLIDES: PdcCarouselSlide[] = INTERCESION_MOMENTS.map((photo) => ({
+  id: photo.id,
+  alt: photo.alt,
+  src: galleryWebpSrc(INTERCESION_GALLERY_FOLDER, photo.slug, 1080),
+  srcSet: galleryWebpSrcSet(INTERCESION_GALLERY_FOLDER, photo.slug),
+  sizes: galleryCarouselSizes(),
+  objectPosition: photo.objectPosition,
+  caption: photo.caption,
+}));

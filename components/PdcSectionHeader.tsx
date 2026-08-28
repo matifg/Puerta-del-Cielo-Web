@@ -22,16 +22,21 @@ export const pdcQuoteClass =
 export const pdcAccordionTitleClass = "font-serif text-base text-[#ebe8e2] md:text-lg";
 export const pdcGlassCardPadding = "p-5 md:p-8";
 
-/** Galerías — notebook (1024–1535px): grilla 3×2 compacta que cabe en viewport */
+/** Galerías — tokens de shell (cada página elige su ritmo) */
 export const pdcNotebookGallerySectionClass =
   "notebook:mx-auto notebook:mt-4 notebook:max-w-4xl desktop:mt-8";
 export const pdcNotebookGalleryInnerClass = "";
 export const pdcNotebookGalleryPageInnerClass = "";
-export const pdcNotebookGalleryGridClass =
-  "notebook:mx-auto notebook:max-w-3xl notebook:grid-cols-3 notebook:grid-rows-2 notebook:h-[min(34vh,260px)] notebook:items-stretch notebook:gap-2";
-export const pdcNotebookGalleryTileClass = "notebook:h-full notebook:min-h-0";
-export const pdcNotebookGalleryMediaClass =
-  "aspect-[4/3] notebook:aspect-[unset] notebook:h-full notebook:min-h-0";
+/** Grilla quieta 3×2 (Intercesión) — tiles 4:3, sin forzar altura de viewport */
+export const pdcQuietGalleryGridClass =
+  "mx-auto grid w-full max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-3.5 md:gap-4 desktop:max-w-[min(98vw,76rem)]";
+/** Bento Discipulado — featured vertical + landscapes */
+export const pdcBentoGalleryGridClass =
+  "mx-auto grid w-full max-w-5xl grid-cols-2 auto-rows-auto gap-2.5 sm:gap-3 md:grid-cols-3 md:grid-rows-2 md:gap-4 desktop:max-w-[min(98vw,76rem)] desktop:gap-4";
+/** @deprecated — preferir pdcQuiet / pdcBento según página */
+export const pdcNotebookGalleryGridClass = pdcQuietGalleryGridClass;
+export const pdcNotebookGalleryTileClass = "min-h-0";
+export const pdcNotebookGalleryMediaClass = "aspect-[4/3]";
 export const pdcNotebookGalleryHintClass = "notebook:mb-2 notebook:text-xs";
 export const pdcNotebookGalleryCaptionClass = "notebook:hidden desktop:block";
 
@@ -40,7 +45,7 @@ export const pdcHeaderScrollMarginTop = "scroll-mt-28 sm:scroll-mt-32";
 export const pdcHeaderScrollMargin = `${pdcHeaderScrollMarginTop} scroll-mb-20`;
 /** Shell de página: sin padding superior (`App` compensa el navbar fijo). */
 export const pdcPageSectionClass =
-  "relative isolate w-full overflow-hidden bg-[#030508] pb-20 md:pb-28";
+  "relative isolate w-full overflow-hidden bg-[#0e0b08] pb-10 md:pb-12";
 
 /** Bloque inicial de título (patrón Equipo ministerial). */
 export const pdcPageIntroHeaderClass = "mb-6 scroll-mt-28 md:mb-8";

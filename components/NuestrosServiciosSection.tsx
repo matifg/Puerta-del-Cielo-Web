@@ -90,11 +90,11 @@ function HorariosList({ items }: { items: string[] }) {
             return (
               <li
                 key={item}
-                className="rounded-xl border border-white/[0.08] bg-[#0a1018]/70 px-3 py-3 text-center"
+                className="rounded-xl border border-white/[0.08] bg-[#17130e]/70 px-3 py-3 text-center"
               >
                 {hora ? (
                   <>
-                    <span className="block font-sans text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+                    <span className="block font-sans text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-stone-500">
                       {label}
                     </span>
                     <span className="mt-1 block font-sans text-sm font-medium tabular-nums text-white/90">
@@ -117,7 +117,7 @@ function HorariosList({ items }: { items: string[] }) {
       {items.map((item) => (
         <li
           key={item}
-          className="rounded-xl border border-white/[0.08] bg-[#0a1018]/70 px-4 py-2.5 text-center font-sans text-sm text-white/90"
+          className="rounded-xl border border-white/[0.08] bg-[#17130e]/70 px-4 py-2.5 text-center font-sans text-sm text-white/90"
         >
           {item}
         </li>
@@ -156,7 +156,7 @@ const NuestrosServiciosSection: React.FC = () => {
 
   return (
     <PdcPageShell id="servicios" gradients={false}>
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-[#020617] to-black opacity-90" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#080605] via-[#0b0806] to-[#080605] opacity-90" />
 
       <div className={`${pdcPageInnerWithHeroComfort} relative z-10`}>
         <PdcSectionHeader
@@ -185,7 +185,7 @@ const NuestrosServiciosSection: React.FC = () => {
                     handleOpenModal(servicio);
                   }
                 }}
-                className="group cursor-pointer rounded-2xl border border-white/12 bg-[#0a1018]/95 p-7 text-center shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-1.5 hover:border-white/22 hover:bg-[#0f1622] hover:shadow-[0_12px_40px_rgba(64,194,222,0.14)] md:bg-[#090e14]"
+                className="group cursor-pointer rounded-2xl border border-white/12 bg-[#17130e]/95 p-7 text-center shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-1.5 hover:border-white/22 hover:bg-[#1f1912] hover:shadow-[0_12px_40px_rgba(64,194,222,0.14)] md:bg-[#15110d]"
               >
                 <Icon className="mx-auto mb-4 h-10 w-10 text-secondary transition duration-500 group-hover:scale-105" />
 
@@ -193,11 +193,11 @@ const NuestrosServiciosSection: React.FC = () => {
                   {servicio.nombre}
                 </h3>
 
-                <p className="text-sm leading-snug text-zinc-400">
+                <p className="text-sm leading-snug text-stone-400">
                   {horariosServicios[servicio.horarioKey].resumenCard}
                 </p>
 
-                <p className="mt-3 font-sans text-[0.65rem] uppercase tracking-[0.18em] text-zinc-500 transition group-hover:text-zinc-400">
+                <p className="mt-3 font-sans text-[0.65rem] uppercase tracking-[0.18em] text-stone-500 transition group-hover:text-stone-400">
                   Ver detalles
                 </p>
               </div>
@@ -217,13 +217,13 @@ const NuestrosServiciosSection: React.FC = () => {
           >
             <button
               type="button"
-              className="absolute inset-0 cursor-default bg-[#030508]/95"
+              className="absolute inset-0 cursor-default bg-[#0e0b08]/95"
               onClick={handleCloseModal}
               aria-label="Cerrar"
             />
 
             <div
-              className="animate-modal-card relative z-10 mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-b from-[#121a2c] via-[#0c1220] to-[#080c14] px-6 py-8 shadow-[0_28px_80px_rgba(0,0,0,0.85)] sm:px-8 sm:py-10"
+              className="animate-modal-card relative z-10 mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-b from-[#241d15] via-[#1b1610] to-[#14100c] px-6 py-8 shadow-[0_28px_80px_rgba(0,0,0,0.85)] sm:px-8 sm:py-10"
               role="dialog"
               aria-modal="true"
               aria-labelledby="servicio-modal-title"
@@ -271,7 +271,7 @@ const NuestrosServiciosSection: React.FC = () => {
                     className={
                       idx === 0
                         ? "text-center font-serif text-base leading-relaxed text-[#ebe7df] md:text-lg"
-                        : "text-center font-sans text-sm leading-relaxed text-zinc-400 md:text-[0.95rem]"
+                        : "text-center font-sans text-sm leading-relaxed text-stone-400 md:text-[0.95rem]"
                     }
                   >
                     {p}

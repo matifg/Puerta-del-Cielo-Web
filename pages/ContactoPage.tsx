@@ -5,7 +5,7 @@ import { Footer } from "../components/Footer";
 const ContactoPage: React.FC = () => (
   <>
     <ContactoSection />
-    <div id="contacto-footer-root" className="relative bg-[#030508]">
+    <div id="contacto-footer-root" className="relative bg-[#0e0b08]">
       <Footer />
     </div>
   </>

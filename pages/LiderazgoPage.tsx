@@ -5,6 +5,7 @@ import type { FloatingScrollNavSection } from "../components/FloatingScrollButto
 const LIDERAZGO_SCROLL_SECTIONS: FloatingScrollNavSection[] = [
   { id: "liderazgo-inicio", title: "Liderazgo" },
   { id: "liderazgo-contenido", title: "Programa" },
+  { id: "liderazgo-galeria", title: "Galería" },
 ];
 
 const LiderazgoPage = () => (

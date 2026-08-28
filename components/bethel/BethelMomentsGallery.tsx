@@ -44,7 +44,7 @@ const StripTile: React.FC<StripTileProps> = ({ item, eager, onOpen, idx, reduceM
       onClick={() => onOpen(idx)}
       whileHover={reduceMotion ? undefined : { y: -3 }}
       whileTap={reduceMotion ? undefined : { scale: 0.985 }}
-      className="group relative block h-full w-full shrink-0 overflow-hidden rounded-2xl border-0 bg-[#0a1018] text-left ring-1 ring-inset ring-white/10 transition-[box-shadow,ring-color] hover:ring-secondary/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+      className="group relative block h-full w-full shrink-0 overflow-hidden rounded-2xl border-0 bg-[#17130e] text-left ring-1 ring-inset ring-white/10 transition-[box-shadow,ring-color] hover:ring-secondary/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
       aria-label={`${isVideo ? "Ver video" : "Ver foto"}: ${item.alt}`}
     >
       {isVideo ? (
@@ -56,7 +56,7 @@ const StripTile: React.FC<StripTileProps> = ({ item, eager, onOpen, idx, reduceM
           loop
           playsInline
           preload={eager ? "auto" : "metadata"}
-          className={`${mediaClass} bg-[#0a1018]`}
+          className={`${mediaClass} bg-[#17130e]`}
           style={{ objectPosition: mediaPosition }}
         />
       ) : (
@@ -76,14 +76,14 @@ const StripTile: React.FC<StripTileProps> = ({ item, eager, onOpen, idx, reduceM
 
       {/* Gradiente inferior */}
       <span
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/80 via-[#030508]/10 to-transparent"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0e0b08]/80 via-[#0e0b08]/10 to-transparent"
         aria-hidden
       />
 
       {/* Ícono play */}
       {isVideo && (
         <span
-          className="pointer-events-none absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-[#030508]/75 text-secondary backdrop-blur-sm"
+          className="pointer-events-none absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/75 text-secondary backdrop-blur-sm"
           aria-hidden
         >
           <Play className="h-3.5 w-3.5 fill-current" />
@@ -104,7 +104,7 @@ const StripTile: React.FC<StripTileProps> = ({ item, eager, onOpen, idx, reduceM
 
       {/* Ampliar */}
       <span
-        className="pointer-events-none absolute right-2.5 bottom-2.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-[#030508]/80 text-secondary opacity-0 backdrop-blur-sm transition duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute right-2.5 bottom-2.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/80 text-secondary opacity-0 backdrop-blur-sm transition duration-300 group-hover:opacity-100"
         aria-hidden
       >
         <Maximize2 className="h-3 w-3" strokeWidth={2.25} />
@@ -153,7 +153,7 @@ const Lightbox: React.FC<LightboxProps> = ({ index, items, onClose, onNav, reduc
 
   return (
     <div
-      className={`fixed inset-0 ${BETHEL_LIGHTBOX_Z} flex items-center justify-center bg-[#030508]/92 p-4 backdrop-blur-md sm:p-6`}
+      className={`fixed inset-0 ${BETHEL_LIGHTBOX_Z} flex items-center justify-center bg-[#0e0b08]/92 p-4 backdrop-blur-md sm:p-6`}
       role="dialog"
       aria-modal="true"
       aria-label={active.alt}
@@ -162,7 +162,7 @@ const Lightbox: React.FC<LightboxProps> = ({ index, items, onClose, onNav, reduc
       <button
         type="button"
         onClick={onClose}
-        className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
+        className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
         aria-label="Cerrar"
       >
         <X className="h-5 w-5" aria-hidden />
@@ -170,7 +170,7 @@ const Lightbox: React.FC<LightboxProps> = ({ index, items, onClose, onNav, reduc
       <button
         type="button"
         onClick={(e) => { e.stopPropagation(); onNav(-1); }}
-        className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:left-4 md:left-6"
+        className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:left-4 md:left-6"
         aria-label="Anterior"
       >
         <ChevronLeft className="h-6 w-6" aria-hidden />
@@ -178,7 +178,7 @@ const Lightbox: React.FC<LightboxProps> = ({ index, items, onClose, onNav, reduc
       <button
         type="button"
         onClick={(e) => { e.stopPropagation(); onNav(1); }}
-        className="absolute right-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-4 md:right-6"
+        className="absolute right-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-4 md:right-6"
         aria-label="Siguiente"
       >
         <ChevronRight className="h-6 w-6" aria-hidden />
@@ -278,7 +278,7 @@ export function BethelMomentsGallery() {
         <button
           type="button"
           onClick={() => scrollStrip(-1)}
-          className="absolute -left-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center h-10 w-10 rounded-full border border-white/15 bg-[#0a1524]/90 text-white/80 transition hover:border-secondary/35 hover:text-white md:flex"
+          className="absolute -left-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center h-10 w-10 rounded-full border border-white/15 bg-[#1d1711]/90 text-white/80 transition hover:border-secondary/35 hover:text-white md:flex"
           aria-label="Anterior"
         >
           <ChevronLeft className="h-5 w-5" aria-hidden />
@@ -286,7 +286,7 @@ export function BethelMomentsGallery() {
         <button
           type="button"
           onClick={() => scrollStrip(1)}
-          className="absolute -right-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center h-10 w-10 rounded-full border border-white/15 bg-[#0a1524]/90 text-white/80 transition hover:border-secondary/35 hover:text-white md:flex"
+          className="absolute -right-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center h-10 w-10 rounded-full border border-white/15 bg-[#1d1711]/90 text-white/80 transition hover:border-secondary/35 hover:text-white md:flex"
           aria-label="Siguiente"
         >
           <ChevronRight className="h-5 w-5" aria-hidden />
@@ -327,7 +327,7 @@ export function BethelMomentsGallery() {
 
         {/* Fade lateral derecho — indica que hay más */}
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[#030508] to-transparent md:w-24"
+          className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[#0e0b08] to-transparent md:w-24"
           aria-hidden
         />
       </div>

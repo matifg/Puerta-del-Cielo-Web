@@ -32,8 +32,8 @@ const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <div
         className={
           isHome
-            ? "min-h-screen bg-[#030508]"
-            : "min-h-screen bg-[#030508] pt-16"
+            ? "min-h-screen bg-[#0e0b08]"
+            : "min-h-screen bg-[#0e0b08] pt-16"
         }
       >
         {children}
@@ -47,7 +47,7 @@ const App: React.FC = () => {
 
   if (maintenanceMode) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-[#0a1837] via-[#1e335c] to-[#0a1837]">
+      <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-[#221a12] via-[#1e335c] to-[#221a12]">
         <div className="relative flex-1 flex items-center justify-center w-full">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             {/* Glow animado detrás del logo */}

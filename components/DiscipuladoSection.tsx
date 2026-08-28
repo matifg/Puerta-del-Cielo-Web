@@ -163,6 +163,7 @@ function DiscipuladoChromePortals({
         pdfDownloadLabel="Descargar programa PDF"
         waLabel="Consultar por WhatsApp sobre Discipulado"
         className={DISC_CHROME_Z}
+        revealAfterId="disc-resumen"
       />
 
       {!hideFab ? (
@@ -247,7 +248,7 @@ const DiscipuladoSection = () => {
   };
 
   return (
-    <div ref={sectionRef as React.RefObject<HTMLDivElement>} className="relative isolate bg-[#030508]">
+    <div ref={sectionRef as React.RefObject<HTMLDivElement>} className="relative isolate bg-[#0e0b08]">
       {/* Progreso */}
       <div className="pointer-events-none fixed left-0 top-0 z-[9970] h-0.5 w-full bg-white/[0.06]" aria-hidden>
         <motion.div
@@ -276,7 +277,7 @@ const DiscipuladoSection = () => {
           className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_95%_75%_at_50%_38%,rgba(37,99,173,0.08)_0%,rgba(3,5,8,0.92)_100%)]"
           aria-hidden
         />
-        <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-b from-[#030508]/90 via-slate-950/55 to-[#030508]" aria-hidden />
+        <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-b from-[#0e0b08]/90 via-[#0b0806]/55 to-[#0e0b08]" aria-hidden />
 
         {!reduceMotion ? (
           <>
@@ -407,7 +408,7 @@ const DiscipuladoSection = () => {
                 whileHover={reduceMotion ? undefined : { scale: 1.02 }}
                 className="group flex gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] px-4 py-3.5 backdrop-blur-sm transition hover:border-secondary/30 hover:bg-white/[0.07]"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-[#0a1524]/80 text-secondary transition group-hover:border-secondary/40 group-hover:bg-secondary/10">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-[#1d1711]/80 text-secondary transition group-hover:border-secondary/40 group-hover:bg-secondary/10">
                   <Icon className="h-[1.1rem] w-[1.1rem]" aria-hidden />
                 </div>
                 <span className="pt-1.5 font-sans text-sm font-medium leading-snug text-white/85 group-hover:text-white">
@@ -429,7 +430,7 @@ const DiscipuladoSection = () => {
         variants={variants}
       >
         <motion.div
-          className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.08] to-[#0a1524]/80 p-8 shadow-[0_32px_90px_-24px_rgba(37,99,173,0.35)] backdrop-blur-md md:p-10"
+          className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.08] to-[#1d1711]/80 p-8 shadow-[0_32px_90px_-24px_rgba(37,99,173,0.35)] backdrop-blur-md md:p-10"
           variants={staggerItem}
           initial="hidden"
           whileInView="show"
@@ -453,10 +454,10 @@ const DiscipuladoSection = () => {
         </motion.div>
       </motion.section>
 
-      {/* Galería */}
+      {/* Galería — bento (1 vertical + landscapes) */}
       <motion.section
         id="disc-galeria"
-        className={`relative mx-auto w-full border-t border-white/[0.06] px-4 py-4 sm:px-6 md:py-5 notebook:-mx-2.5 notebook:mt-4 notebook:max-w-[min(99vw,76rem)] notebook:px-2.5 lg:px-4 lg:notebook:-mx-4 desktop:mt-8 ${pdcHeaderScrollMargin}`}
+        className={`relative mx-auto w-full max-w-5xl border-t border-white/[0.06] px-4 py-8 sm:px-6 md:py-10 desktop:max-w-[min(98vw,76rem)] ${pdcHeaderScrollMargin}`}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-8% 0px" }}

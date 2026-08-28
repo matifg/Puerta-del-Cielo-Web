@@ -145,7 +145,7 @@ const easeSoft: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const DEFAULT_IMAGE_ASPECT = "aspect-[4/3] sm:aspect-[3/2] md:aspect-[16/10]";
 const IMAGE_WRAP_CLASS = "mx-auto w-full max-w-md sm:max-w-lg md:max-w-xl";
 const IMAGE_FRAME_CLASS =
-  "w-full overflow-hidden rounded-2xl border border-white/10 bg-[#080c14] shadow-[0_20px_60px_-28px_rgba(0,0,0,0.75)]";
+  "w-full overflow-hidden rounded-2xl border border-white/10 bg-[#14100c] shadow-[0_20px_60px_-28px_rgba(0,0,0,0.75)]";
 
 function areaSlug(title: string) {
   return title
@@ -321,7 +321,7 @@ const AreasServicioSection: React.FC = () => {
                     variants={listItem}
                     className={`relative overflow-hidden rounded-2xl border transition-[border-color,box-shadow,background-color] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
                       isOpen
-                        ? "border-secondary/45 bg-gradient-to-br from-white/[0.07] via-[#0c1424]/90 to-[#080c16] shadow-[0_0_0_1px_rgba(64,194,222,0.12),0_24px_80px_-32px_rgba(37,99,173,0.45),inset_0_1px_0_rgba(255,255,255,0.06)]"
+                        ? "border-secondary/45 bg-gradient-to-br from-white/[0.07] via-[#1d1711]/90 to-[#14100c] shadow-[0_0_0_1px_rgba(64,194,222,0.12),0_24px_80px_-32px_rgba(37,99,173,0.45),inset_0_1px_0_rgba(255,255,255,0.06)]"
                         : "border-white/[0.09] bg-white/[0.02] shadow-none hover:border-white/15 hover:bg-white/[0.04]"
                     }`}
                   >
@@ -459,7 +459,7 @@ const AreasServicioSection: React.FC = () => {
                                             />
                                           </motion.div>
                                           <div
-                                            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/40 via-transparent to-[#030508]/10"
+                                            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0e0b08]/40 via-transparent to-[#0e0b08]/10"
                                             aria-hidden
                                           />
                                         </div>

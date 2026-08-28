@@ -3,22 +3,30 @@ import { Church, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
+  CENA_DEL_SENOR_CAPTION,
   PROPOSITO_CIERRE,
   PROPOSITO_PARAGRAPHS,
   VISION_LEMA,
   VISION_STATEMENT,
 } from "../data/vision";
-import { VISION_GALLERY } from "../data/sitePhotos";
+import {
+  VISION_CENA_PHOTOS,
+  editorialSizes,
+  editorialSrc,
+  editorialSrcSet,
+} from "../data/sitePhotos";
+import type { PdcCarouselSlide } from "../components/PdcPhotoCarousel";
 import { Reveal } from "../components/bethel/Reveal";
 import { PdcPhotoCarousel } from "../components/PdcPhotoCarousel";
 import { PdcPageShell } from "../components/PdcPageShell";
 import {
   PdcSectionHeader,
-  pdcPageInnerWithHeroComfort,
-  pdcPageIntroHeaderClass,
   pdcNotebookGalleryInnerClass,
   pdcNotebookGallerySectionClass,
+  pdcPageInnerWithHeroComfort,
+  pdcPageIntroHeaderClass,
 } from "../components/PdcSectionHeader";
+
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const fadeUp = {
@@ -35,6 +43,27 @@ const PROPOSITO_ACCORDION = [
   { id: "mision", title: "Nuestra misión", body: PROPOSITO_PARAGRAPHS[1] },
   { id: "vida", title: "Cómo lo vivimos", body: PROPOSITO_PARAGRAPHS[2] },
 ] as const;
+
+const { mesa, cruz } = VISION_CENA_PHOTOS;
+
+const VISION_CAROUSEL_SLIDES: PdcCarouselSlide[] = [
+  {
+    id: cruz.slug,
+    alt: cruz.alt,
+    src: editorialSrc(cruz.slug, 1440),
+    srcSet: editorialSrcSet(cruz.slug, "landscape"),
+    sizes: editorialSizes("landscape"),
+    objectPosition: cruz.objectPosition,
+  },
+  {
+    id: mesa.slug,
+    alt: mesa.alt,
+    src: editorialSrc(mesa.slug, 960),
+    srcSet: editorialSrcSet(mesa.slug, "portrait"),
+    sizes: editorialSizes("portrait"),
+    objectPosition: mesa.objectPosition,
+  },
+];
 
 const VisionSection = () => {
   const [openProposito, setOpenProposito] = useState<string | null>(PROPOSITO_ACCORDION[0].id);
@@ -85,19 +114,23 @@ const VisionSection = () => {
 
         <Reveal delayMs={60}>
           <div
-            id="vision-galeria"
-            className={`mx-auto mb-14 max-w-5xl scroll-mt-28 md:mb-20 ${pdcNotebookGallerySectionClass}`}
+            id="vision-cena"
+            className={`mx-auto mb-14 max-w-5xl scroll-mt-28 md:mb-20 desktop:max-w-[min(88vw,80rem)] ${pdcNotebookGallerySectionClass}`}
           >
-            <p className="mb-5 text-center font-sans text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-zinc-500 notebook:mb-2">
-              Revelación de la Cruz · Santa Cena
-            </p>
             <div className={pdcNotebookGalleryInnerClass}>
               <PdcPhotoCarousel
-                photos={VISION_GALLERY}
-                ariaLabel="Galería Visión y propósito"
-                autoPlayMs={6000}
+                slides={VISION_CAROUSEL_SLIDES}
+                airy
+                className="notebook:mb-0"
+                ariaLabel="Cena del Señor y la cruz"
+                autoPlayMs={5500}
+                showSlideCaption={false}
+                showPlaybackHint={false}
               />
             </div>
+            <p className="mt-4 text-center font-sans text-sm font-medium leading-relaxed text-stone-300 md:text-[0.95rem]">
+              {CENA_DEL_SENOR_CAPTION}
+            </p>
           </div>
         </Reveal>
 
@@ -162,7 +195,7 @@ const VisionSection = () => {
                       className={`grid transition-[grid-template-rows] duration-300 ease-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
                     >
                       <div className="min-h-0 overflow-hidden">
-                        <p className="px-5 pb-5 font-sans text-sm leading-relaxed text-zinc-400 sm:px-6 sm:pb-6 md:text-[0.95rem] md:leading-relaxed">
+                        <p className="px-5 pb-5 font-sans text-sm leading-relaxed text-stone-400 sm:px-6 sm:pb-6 md:text-[0.95rem] md:leading-relaxed">
                           {item.body}
                         </p>
                       </div>
@@ -173,7 +206,7 @@ const VisionSection = () => {
             </div>
 
             <motion.p
-              className="mt-8 rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-5 text-center font-sans text-sm font-medium leading-relaxed text-zinc-200 md:text-base"
+              className="mt-8 rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-5 text-center font-sans text-sm font-medium leading-relaxed text-stone-200 md:text-base"
               variants={fadeUp}
               custom={PROPOSITO_ACCORDION.length + 2}
             >

@@ -59,7 +59,7 @@ const IglesiaEnCasaSection: React.FC = () => {
   );
 
   return (
-    <div className="relative isolate bg-[#030508]">
+    <div className="relative isolate bg-[#0e0b08]">
       {/* Hero */}
       <header
         id="iec-hero"
@@ -78,7 +78,7 @@ const IglesiaEnCasaSection: React.FC = () => {
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-b from-[#030508]/95 via-slate-950/60 to-[#030508]"
+          className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-b from-[#0e0b08]/95 via-[#0b0806]/60 to-[#0e0b08]"
           aria-hidden
         />
 

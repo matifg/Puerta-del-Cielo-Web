@@ -1,18 +1,24 @@
+import type { PdcCarouselSlide } from "../components/PdcPhotoCarousel";
+import { galleryCarouselSizes, galleryWebpSrc, galleryWebpSrcSet } from "./galleryWebp";
+
 export type DiscipuladoMoment = {
   id: string;
   slug: string;
   src: string;
   alt: string;
-  /** Pie corto visible bajo la miniatura */
   caption: string;
   objectPosition?: string;
-  /** Celda alta en el bento de galería */
   bento?: "featured";
 };
 
 const discFile = (name: string) => `/images/discipulado/${name}`;
 
-/** Galería «Así se vive el programa» — public/images/discipulado/ */
+export const DISCIPULADO_GALLERY_FOLDER = "discipulado";
+
+/** Cuántas fotos muestra el bento antes de «Ver más» */
+export const DISCIPULADO_FOTOS_INICIALES = 5;
+
+/** Galería bento — public/images/discipulado/ */
 export const DISCIPULADO_MOMENTS: DiscipuladoMoment[] = [
   {
     id: "disc-moment-1",
@@ -55,11 +61,48 @@ export const DISCIPULADO_MOMENTS: DiscipuladoMoment[] = [
     objectPosition: "center 42%",
     bento: "featured",
   },
+  {
+    id: "disc-moment-6",
+    slug: "discipulado6",
+    src: discFile("discipulado6.jpg"),
+    alt: "Cuatro mujeres sonriendo en un encuentro de discipulado en el salón",
+    caption: "Hermanas",
+    objectPosition: "center 35%",
+  },
+  {
+    id: "disc-moment-7",
+    slug: "discipulado7",
+    src: discFile("discipulado7.jpg"),
+    alt: "Grupo de hombres con cuadernos frente al versículo de Génesis 28:17 en el salón",
+    caption: "Casa de Dios",
+    objectPosition: "center 28%",
+  },
+  {
+    id: "disc-moment-8",
+    slug: "discipulado8",
+    src: discFile("discipulado8.jpg"),
+    alt: "Seis mujeres reunidas alrededor de la mesa en un encuentro de discipulado",
+    caption: "Mesa",
+    objectPosition: "center 32%",
+  },
+  {
+    id: "disc-moment-9",
+    slug: "discipulado9",
+    src: discFile("discipulado9.jpg"),
+    alt: "Dos mujeres sonriendo juntas en un encuentro de discipulado",
+    caption: "Compañeras",
+    objectPosition: "center 30%",
+  },
+  {
+    id: "disc-moment-10",
+    slug: "discipulado10",
+    src: discFile("discipulado10.jpg"),
+    alt: "Grupo reunido alrededor de la mesa en un encuentro de discipulado en casa, con laptops y material de estudio",
+    caption: "En casa",
+    objectPosition: "center 35%",
+  },
 ];
 
-export const DISCIPULADO_GALLERY_FOLDER = "discipulado";
-
-/** Fondo hero — WebP responsivo (discipulado1) */
 export const DISCIPULADO_HERO_WEBP = "/images/discipulado/discipulado1-1080.webp";
 export const DISCIPULADO_HERO_FALLBACK = "/images/discipulado/discipulado1.jpeg";
 
@@ -75,3 +118,14 @@ const BENTO_GRID_CLASS: Record<string, string> = {
 export function discipuladoMomentGridClass(id: string): string {
   return BENTO_GRID_CLASS[id] ?? "";
 }
+
+/** @deprecated — preferir bento; se mantiene por compat */
+export const DISCIPULADO_CAROUSEL_SLIDES: PdcCarouselSlide[] = DISCIPULADO_MOMENTS.map((photo) => ({
+  id: photo.id,
+  alt: photo.alt,
+  src: galleryWebpSrc(DISCIPULADO_GALLERY_FOLDER, photo.slug, 1080),
+  srcSet: galleryWebpSrcSet(DISCIPULADO_GALLERY_FOLDER, photo.slug),
+  sizes: galleryCarouselSizes(),
+  objectPosition: photo.objectPosition,
+  caption: photo.caption,
+}));

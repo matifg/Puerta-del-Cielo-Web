@@ -12,7 +12,7 @@
 @tailwind utilities;
 
 body {
-  @apply font-sans bg-[#030508] text-[#ece8e2] antialiased;
+  @apply font-sans bg-[#0e0b08] text-[#ece8e2] antialiased;
 }
 
 /* Bethel: la galería encastra a pantalla completa en notebook al scrollear */
@@ -89,7 +89,7 @@ nav[aria-label="Principal"] {
   .pdc-btn-glass {
     @apply inline-flex min-h-[3.25rem] flex-1 items-center justify-center gap-2.5 rounded-full px-8 py-3.5 font-sans text-sm font-medium tracking-[0.05em] backdrop-blur-xl sm:min-w-[13rem] sm:flex-initial;
     border: 1px solid rgba(37, 99, 173, 0.32);
-    background: rgba(2, 6, 23, 0.5);
+    background: rgba(14, 11, 8, 0.5);
     color: #faf8f4;
     box-shadow:
       0 8px 36px rgba(37, 99, 173, 0.22),
@@ -98,7 +98,7 @@ nav[aria-label="Principal"] {
 
   .pdc-btn-glass:hover {
     border-color: rgba(64, 194, 222, 0.55);
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(30, 24, 18, 0.6);
     box-shadow: 0 14px 44px rgba(37, 99, 173, 0.32);
   }
 
@@ -244,7 +244,7 @@ nav[aria-label="Principal"] {
   .pdc-dock {
     @apply pointer-events-auto flex w-fit max-w-full items-stretch gap-0.5 rounded-xl p-0.5 backdrop-blur-xl transition duration-300 sm:gap-1 sm:rounded-2xl sm:p-1;
     border: 1px solid rgba(255, 255, 255, 0.28);
-    background: rgba(10, 21, 36, 0.95);
+    background: rgba(29, 23, 17, 0.95);
     box-shadow:
       0 12px 40px rgba(0, 0, 0, 0.52),
       0 0 28px -10px rgba(125, 211, 234, 0.22);

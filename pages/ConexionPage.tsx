@@ -49,7 +49,7 @@ const ConexionPage: React.FC = () => (
       endMarkerId={IEC_SCROLL_END_ID}
       footerProximityRootId="iec-footer-root"
     />
-    <div id="iec-footer-root" className="relative bg-[#030508]">
+    <div id="iec-footer-root" className="relative bg-[#0e0b08]">
       <Footer />
     </div>
   </>

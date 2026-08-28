@@ -11,6 +11,7 @@ import {
 import { galleryGridSizes } from "../data/galleryWebp";
 import {
   pdcNotebookGalleryCaptionClass,
+  pdcNotebookGalleryGridClass,
   pdcNotebookGalleryHintClass,
   pdcNotebookGalleryMediaClass,
   pdcNotebookGalleryTileClass,
@@ -64,7 +65,7 @@ const MomentCell: React.FC<MomentCellProps> = ({
       onClick={onOpen}
       whileHover={reduceMotion ? undefined : { y: -3 }}
       whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-      className={`group flex h-full w-full min-h-0 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary notebook:rounded-xl ${pdcNotebookGalleryTileClass} notebook:!col-span-1 notebook:!row-span-1 notebook:!col-start-auto notebook:!row-start-auto ${hideOnNotebook ? "notebook:hidden" : ""} ${gridClass}`}
+      className={`group flex h-full w-full min-h-0 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#17130e]/80 text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary notebook:rounded-xl ${pdcNotebookGalleryTileClass} notebook:!col-span-1 notebook:!row-span-1 notebook:!col-start-auto notebook:!row-start-auto ${hideOnNotebook ? "notebook:hidden" : ""} ${gridClass}`}
       aria-label={
         isVideo
           ? `${moment.caption}: ver video ampliado. ${moment.alt}`
@@ -97,25 +98,25 @@ const MomentCell: React.FC<MomentCellProps> = ({
           />
         )}
         <span
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/50 via-transparent to-[#030508]/15"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0e0b08]/50 via-transparent to-[#0e0b08]/15"
           aria-hidden
         />
         {isVideo ? (
           <span
-            className="pointer-events-none absolute left-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-[#030508]/75 text-secondary backdrop-blur-sm"
+            className="pointer-events-none absolute left-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/75 text-secondary backdrop-blur-sm"
             aria-hidden
           >
             <Play className="h-3.5 w-3.5 fill-current" />
           </span>
         ) : null}
         <span
-          className="pointer-events-none absolute right-2.5 top-2.5 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-[#030508]/75 text-secondary opacity-90 shadow-md backdrop-blur-sm transition group-hover:border-secondary/40 group-hover:bg-[#0a1524]/90 group-focus-visible:opacity-100 md:opacity-0 md:group-hover:opacity-100"
+          className="pointer-events-none absolute right-2.5 top-2.5 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/75 text-secondary opacity-90 shadow-md backdrop-blur-sm transition group-hover:border-secondary/40 group-hover:bg-[#1d1711]/90 group-focus-visible:opacity-100 md:opacity-0 md:group-hover:opacity-100"
           aria-hidden
         >
           <Maximize2 className="h-4 w-4" strokeWidth={2.25} />
         </span>
       </span>
-      <span className={`shrink-0 border-t border-white/[0.08] bg-[#0a1018]/95 px-3 py-2.5 font-sans text-sm font-medium text-white/85 transition group-hover:text-white md:px-4 md:py-3 ${pdcNotebookGalleryCaptionClass}`}>
+      <span className={`shrink-0 border-t border-white/[0.08] bg-[#17130e]/95 px-3 py-2.5 font-sans text-sm font-medium text-white/85 transition group-hover:text-white md:px-4 md:py-3 ${pdcNotebookGalleryCaptionClass}`}>
         {moment.caption}
       </span>
     </motion.button>
@@ -173,7 +174,7 @@ export const FormacionMomentsBento: React.FC<FormacionMomentsBentoProps> = ({ cl
         Tocá una foto o video para verlo en grande.
       </p>
 
-      <div className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-3 md:gap-4 notebook:mx-auto notebook:grid-cols-3 notebook:grid-rows-2 notebook:items-stretch notebook:gap-3 notebook:max-w-[min(99vw,70rem)] notebook:h-[min(50vh,440px)] desktop:max-w-[min(98vw,76rem)] desktop:gap-3.5">
+      <div className={pdcNotebookGalleryGridClass}>
         {FORMATION_MOMENTS.map((moment, i) => (
           <MomentCell
             key={moment.id}
@@ -214,7 +215,7 @@ export const FormacionMomentsBento: React.FC<FormacionMomentsBentoProps> = ({ cl
         {active && lightboxIndex !== null ? (
           <motion.div
             key="formacion-lightbox"
-            className="fixed inset-0 z-[10025] flex items-center justify-center bg-[#030508]/88 p-4 backdrop-blur-md sm:p-6"
+            className="fixed inset-0 z-[10025] flex items-center justify-center bg-[#0e0b08]/88 p-4 backdrop-blur-md sm:p-6"
             role="dialog"
             aria-modal="true"
             aria-label={`${active.caption}. ${active.alt}`}
@@ -227,7 +228,7 @@ export const FormacionMomentsBento: React.FC<FormacionMomentsBentoProps> = ({ cl
             <button
               type="button"
               onClick={closeLightbox}
-              className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
+              className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
               aria-label="Cerrar"
             >
               <X className="h-5 w-5" aria-hidden />
@@ -239,7 +240,7 @@ export const FormacionMomentsBento: React.FC<FormacionMomentsBentoProps> = ({ cl
                 e.stopPropagation();
                 goLightbox(-1);
               }}
-              className="absolute left-2 top-1/2 z-[2] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white sm:left-4"
+              className="absolute left-2 top-1/2 z-[2] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white sm:left-4"
               aria-label="Anterior"
             >
               <ChevronLeft className="h-5 w-5" aria-hidden />
@@ -250,7 +251,7 @@ export const FormacionMomentsBento: React.FC<FormacionMomentsBentoProps> = ({ cl
                 e.stopPropagation();
                 goLightbox(1);
               }}
-              className="absolute right-2 top-1/2 z-[2] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white sm:right-4"
+              className="absolute right-2 top-1/2 z-[2] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white sm:right-4"
               aria-label="Siguiente"
             >
               <ChevronRight className="h-5 w-5" aria-hidden />
@@ -280,11 +281,11 @@ export const FormacionMomentsBento: React.FC<FormacionMomentsBentoProps> = ({ cl
                   slug={active.slug}
                   fallbackSrc={active.src}
                   alt={active.alt}
-                  className="max-h-[min(78vh,680px)] w-full object-contain bg-[#0a1018]"
+                  className="max-h-[min(78vh,680px)] w-full object-contain bg-[#17130e]"
                   style={active.objectPosition ? { objectPosition: active.objectPosition } : undefined}
                 />
               )}
-              <figcaption className="border-t border-white/[0.08] bg-[#0a1018]/95 px-4 py-3 text-center">
+              <figcaption className="border-t border-white/[0.08] bg-[#17130e]/95 px-4 py-3 text-center">
                 <span className="block font-sans text-sm font-semibold text-secondary">{active.caption}</span>
                 <span className="mt-1 block font-sans text-sm leading-relaxed text-white/70">{active.alt}</span>
               </figcaption>

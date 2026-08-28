@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
-import { Maximize2, X } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ChevronUp, Images, Maximize2, X } from "lucide-react";
 import {
+  DISCIPULADO_FOTOS_INICIALES,
   DISCIPULADO_GALLERY_FOLDER,
   DISCIPULADO_MOMENTS,
   discipuladoMomentGridClass,
@@ -9,19 +10,13 @@ import {
 } from "../data/discipuladoPhotos";
 import { galleryGridSizes } from "../data/galleryWebp";
 import {
+  pdcBentoGalleryGridClass,
   pdcNotebookGalleryCaptionClass,
-  pdcNotebookGalleryHintClass,
-  pdcNotebookGalleryMediaClass,
   pdcNotebookGalleryTileClass,
 } from "./PdcSectionHeader";
 import { PdcGalleryLightboxPicture, PdcGalleryPicture } from "./PdcGalleryPicture";
 
 const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
-
-const staggerItem: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.48, ease: easeOut } },
-};
 
 type MomentCellProps = {
   photo: DiscipuladoMoment;
@@ -40,47 +35,49 @@ const MomentCell: React.FC<MomentCellProps> = ({
 }) => {
   const featured = photo.bento === "featured";
   const aspectClass = featured
-    ? `relative block w-full min-h-0 overflow-hidden aspect-[3/4] sm:aspect-[5/6] md:aspect-[4/5] notebook:flex-1 ${pdcNotebookGalleryMediaClass}`
-    : `relative block w-full min-h-0 overflow-hidden aspect-[4/3] notebook:flex-1 ${pdcNotebookGalleryMediaClass}`;
+    ? "relative block w-full min-h-0 overflow-hidden aspect-[3/4] sm:aspect-[5/6] md:aspect-[4/5] md:h-full"
+    : "relative block w-full min-h-0 overflow-hidden aspect-[4/3]";
 
   return (
-  <motion.button
-    type="button"
-    variants={staggerItem}
-    onClick={onOpen}
-    whileHover={reduceMotion ? undefined : { y: -3 }}
-    whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-    className={`group flex h-full w-full min-h-0 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0a1018]/80 text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary notebook:rounded-xl ${pdcNotebookGalleryTileClass} notebook:!col-span-1 notebook:!row-span-1 notebook:!col-start-auto notebook:!row-start-auto ${gridClass}`}
-    aria-label={`${photo.caption}: ver foto ampliada. ${photo.alt}`}
-  >
-    <span className={aspectClass}>
-      <PdcGalleryPicture
-        folder={DISCIPULADO_GALLERY_FOLDER}
-        slug={photo.slug}
-        fallbackSrc={photo.src}
-        ariaHidden
-        loading={featured || index < 2 ? "eager" : "lazy"}
-        sizes={galleryGridSizes()}
-        className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
-        style={photo.objectPosition ? { objectPosition: photo.objectPosition } : undefined}
-      />
-      <span
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/50 via-transparent to-[#030508]/15"
-        aria-hidden
-      />
-      <span
-        className="pointer-events-none absolute right-2.5 top-2.5 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-[#030508]/75 text-secondary opacity-90 shadow-md backdrop-blur-sm transition group-hover:border-secondary/40 group-hover:bg-[#0a1524]/90 group-focus-visible:opacity-100 md:opacity-0 md:group-hover:opacity-100"
-        aria-hidden
-      >
-        <Maximize2 className="h-4 w-4" strokeWidth={2.25} />
-      </span>
-    </span>
-    <span
-      className={`shrink-0 border-t border-white/[0.08] bg-[#0a1018]/95 px-3 py-2.5 font-sans text-sm font-medium text-white/85 transition group-hover:text-white md:px-4 md:py-3 ${pdcNotebookGalleryCaptionClass}`}
+    <motion.button
+      type="button"
+      initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: easeOut, delay: Math.min(index, 8) * 0.03 }}
+      onClick={onOpen}
+      whileHover={reduceMotion ? undefined : { y: -3 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.99 }}
+      className={`group flex h-full w-full min-h-0 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#17130e]/80 text-left shadow-[0_20px_50px_-24px_rgba(0,0,0,0.75)] transition-colors hover:border-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary ${pdcNotebookGalleryTileClass} ${gridClass}`}
+      aria-label={`${photo.caption}: ver foto ampliada. ${photo.alt}`}
     >
-      {photo.caption}
-    </span>
-  </motion.button>
+      <span className={aspectClass}>
+        <PdcGalleryPicture
+          folder={DISCIPULADO_GALLERY_FOLDER}
+          slug={photo.slug}
+          fallbackSrc={photo.src}
+          ariaHidden
+          loading={featured || index < 4 ? "eager" : "lazy"}
+          sizes={galleryGridSizes()}
+          className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
+          style={photo.objectPosition ? { objectPosition: photo.objectPosition } : undefined}
+        />
+        <span
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0e0b08]/50 via-transparent to-[#0e0b08]/15"
+          aria-hidden
+        />
+        <span
+          className="pointer-events-none absolute right-2.5 top-2.5 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/75 text-secondary opacity-90 shadow-md backdrop-blur-sm transition group-hover:border-secondary/40 group-hover:bg-[#1d1711]/90 group-focus-visible:opacity-100 md:opacity-0 md:group-hover:opacity-100"
+          aria-hidden
+        >
+          <Maximize2 className="h-4 w-4" strokeWidth={2.25} />
+        </span>
+      </span>
+      <span
+        className={`shrink-0 border-t border-white/[0.08] bg-[#17130e]/95 px-3 py-2.5 font-sans text-sm font-medium text-white/85 transition group-hover:text-white md:px-4 md:py-3 ${pdcNotebookGalleryCaptionClass}`}
+      >
+        {photo.caption}
+      </span>
+    </motion.button>
   );
 };
 
@@ -89,9 +86,17 @@ type DiscipuladoMomentsBentoProps = {
   id?: string;
 };
 
-export const DiscipuladoMomentsBento: React.FC<DiscipuladoMomentsBentoProps> = ({ className = "", id }) => {
+export const DiscipuladoMomentsBento: React.FC<DiscipuladoMomentsBentoProps> = ({
+  className = "",
+  id,
+}) => {
   const reduceMotion = useReducedMotion() ?? false;
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState(false);
+
+  const iniciales = DISCIPULADO_MOMENTS.slice(0, DISCIPULADO_FOTOS_INICIALES);
+  const extras = DISCIPULADO_MOMENTS.slice(DISCIPULADO_FOTOS_INICIALES);
+  const hayMas = extras.length > 0;
 
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
 
@@ -112,50 +117,85 @@ export const DiscipuladoMomentsBento: React.FC<DiscipuladoMomentsBentoProps> = (
 
   return (
     <div id={id} className={className}>
-      <motion.p
-        variants={staggerItem}
-        className="mb-2 text-center font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-secondary/80 notebook:mb-1"
-      >
+      <p className="mb-2 text-center font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-secondary/80 notebook:mb-1">
         En el salón
-      </motion.p>
-      <motion.h3
+      </p>
+      <h3
         data-pdc-scroll-focus
-        variants={staggerItem}
         className="mb-2 text-center font-serif text-xl text-white notebook:mb-1 md:text-2xl"
       >
         Así se vive el programa
-      </motion.h3>
-      <motion.p
-        variants={staggerItem}
-        className="mx-auto max-w-lg text-center font-sans text-sm text-white/65 notebook:hidden desktop:block"
-      >
+      </h3>
+      <p className="mx-auto mb-4 max-w-lg text-center font-sans text-sm text-white/65 md:mb-5">
         Encuentros quincenales, comunidad y formación en un mismo espacio.
-      </motion.p>
-      <motion.p
-        variants={staggerItem}
-        className={`mx-auto mb-4 mt-3 max-w-md text-center font-sans text-sm text-white/50 notebook:mb-3 notebook:mt-1 md:mb-5 ${pdcNotebookGalleryHintClass}`}
-      >
-        Tocá una foto para verla en grande.
-      </motion.p>
+      </p>
 
-      <div className="mx-auto grid w-full max-w-5xl grid-cols-2 auto-rows-auto gap-2 sm:gap-2.5 md:grid-cols-3 md:grid-rows-2 md:gap-4 notebook:mx-auto notebook:grid-cols-3 notebook:grid-rows-2 notebook:items-stretch notebook:gap-3 notebook:max-w-[min(99vw,70rem)] notebook:h-[min(50vh,440px)] desktop:max-w-[min(98vw,76rem)] desktop:gap-3.5">
-        {DISCIPULADO_MOMENTS.map((photo, i) => (
-          <MomentCell
-            key={photo.id}
-            photo={photo}
-            index={i}
-            gridClass={discipuladoMomentGridClass(photo.id)}
-            reduceMotion={reduceMotion}
-            onOpen={() => setLightboxIndex(i)}
-          />
-        ))}
+      <div className={pdcBentoGalleryGridClass}>
+        {iniciales.map((photo) => {
+          const globalIndex = DISCIPULADO_MOMENTS.findIndex((p) => p.id === photo.id);
+          return (
+            <MomentCell
+              key={photo.id}
+              photo={photo}
+              index={globalIndex}
+              gridClass={discipuladoMomentGridClass(photo.id)}
+              reduceMotion={reduceMotion}
+              onOpen={() => setLightboxIndex(globalIndex)}
+            />
+          );
+        })}
       </div>
+
+      {expanded && extras.length > 0 ? (
+        <div
+          className="mx-auto mt-2.5 grid w-full max-w-5xl grid-cols-2 gap-2.5 sm:mt-3 sm:grid-cols-3 sm:gap-3 md:gap-4 desktop:max-w-[min(98vw,76rem)]"
+          role="list"
+          aria-label="Más momentos de discipulado"
+        >
+          {extras.map((photo, i) => {
+            const globalIndex = DISCIPULADO_MOMENTS.findIndex((p) => p.id === photo.id);
+            return (
+              <MomentCell
+                key={photo.id}
+                photo={photo}
+                index={DISCIPULADO_FOTOS_INICIALES + i}
+                gridClass={photo.id === "disc-moment-9" || photo.id === "disc-moment-10" ? "col-span-2 sm:col-span-1" : ""}
+                reduceMotion={reduceMotion}
+                onOpen={() => setLightboxIndex(globalIndex)}
+              />
+            );
+          })}
+        </div>
+      ) : null}
+
+      {hayMas ? (
+        <div className="mt-5 flex justify-center md:mt-6">
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="pdc-btn-on-dark-ghost inline-flex items-center gap-2"
+            aria-expanded={expanded}
+          >
+            {expanded ? (
+              <>
+                <ChevronUp className="relative z-[1] h-4 w-4 shrink-0 text-secondary" aria-hidden />
+                <span className="relative z-[1]">Ver menos</span>
+              </>
+            ) : (
+              <>
+                <Images className="relative z-[1] h-4 w-4 shrink-0 text-secondary" aria-hidden />
+                <span className="relative z-[1]">Ver más fotos</span>
+              </>
+            )}
+          </button>
+        </div>
+      ) : null}
 
       <AnimatePresence>
         {active && lightboxIndex !== null ? (
           <motion.div
             key="disc-lightbox"
-            className="fixed inset-0 z-[10025] flex items-center justify-center bg-[#030508]/88 p-4 backdrop-blur-md sm:p-6"
+            className="fixed inset-0 z-[10025] flex items-center justify-center bg-[#0e0b08]/88 p-4 backdrop-blur-md sm:p-6"
             role="dialog"
             aria-modal="true"
             aria-label={`${active.caption}. ${active.alt}`}
@@ -168,7 +208,7 @@ export const DiscipuladoMomentsBento: React.FC<DiscipuladoMomentsBentoProps> = (
             <motion.button
               type="button"
               onClick={closeLightbox}
-              className="absolute right-4 top-4 z-[1] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
+              className="absolute right-4 top-4 z-[1] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
               aria-label="Cerrar foto"
             >
               <X className="h-5 w-5" aria-hidden />
@@ -186,10 +226,10 @@ export const DiscipuladoMomentsBento: React.FC<DiscipuladoMomentsBentoProps> = (
                 slug={active.slug}
                 fallbackSrc={active.src}
                 alt={active.alt}
-                className="max-h-[min(78vh,680px)] w-full object-contain bg-[#0a1018]"
+                className="max-h-[min(78vh,680px)] w-full object-contain bg-[#17130e]"
                 style={active.objectPosition ? { objectPosition: active.objectPosition } : undefined}
               />
-              <figcaption className="border-t border-white/[0.08] bg-[#0a1018]/95 px-4 py-3 text-center">
+              <figcaption className="border-t border-white/[0.08] bg-[#17130e]/95 px-4 py-3 text-center">
                 <span className="block font-sans text-sm font-semibold text-secondary">{active.caption}</span>
                 <span className="mt-1 block font-sans text-sm leading-relaxed text-white/70">{active.alt}</span>
               </figcaption>

@@ -30,7 +30,7 @@ const PhotoTile: React.FC<PhotoTileProps> = ({ photo, eager = false, onOpen, red
       onClick={() => onOpen(poolIndex)}
       whileHover={reduceMotion ? undefined : { y: -2 }}
       whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-      className="group relative block h-full w-full overflow-hidden rounded-2xl border-0 bg-[#0a1018]/80 text-left ring-1 ring-inset ring-white/10 transition-[box-shadow,ring-color] hover:ring-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+      className="group relative block h-full w-full overflow-hidden rounded-2xl border-0 bg-[#17130e]/80 text-left ring-1 ring-inset ring-white/10 transition-[box-shadow,ring-color] hover:ring-secondary/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
       aria-label={`Ver foto ampliada: ${photo.alt}`}
     >
       <span className="relative block aspect-[4/3] w-full overflow-hidden">
@@ -45,7 +45,7 @@ const PhotoTile: React.FC<PhotoTileProps> = ({ photo, eager = false, onOpen, red
           style={photo.objectPosition ? { objectPosition: photo.objectPosition } : undefined}
         />
         <span
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030508]/55 via-transparent to-[#030508]/10"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0e0b08]/55 via-transparent to-[#0e0b08]/10"
           aria-hidden
         />
         {photo.caption ? (
@@ -56,7 +56,7 @@ const PhotoTile: React.FC<PhotoTileProps> = ({ photo, eager = false, onOpen, red
           </span>
         ) : null}
         <span
-          className="pointer-events-none absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-[#030508]/75 text-secondary opacity-95 backdrop-blur-sm"
+          className="pointer-events-none absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/75 text-secondary opacity-95 backdrop-blur-sm"
           aria-hidden
         >
           <Maximize2 className="h-3 w-3" strokeWidth={2.25} />
@@ -118,7 +118,7 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({
       <AnimatePresence>
         <motion.div
           key="iec-lightbox"
-          className={`fixed inset-0 ${IEC_LIGHTBOX_Z} flex items-center justify-center bg-[#030508]/92 p-4 backdrop-blur-md sm:p-6`}
+          className={`fixed inset-0 ${IEC_LIGHTBOX_Z} flex items-center justify-center bg-[#0e0b08]/92 p-4 backdrop-blur-md sm:p-6`}
           role="dialog"
           aria-modal="true"
           aria-label={active.alt}
@@ -131,7 +131,7 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({
           <button
             type="button"
             onClick={closeLightbox}
-            className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
+            className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
             aria-label="Cerrar foto"
           >
             <X className="h-5 w-5" aria-hidden />
@@ -143,7 +143,7 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({
               e.stopPropagation();
               goLightbox(-1);
             }}
-            className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:left-4 md:left-6"
+            className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:left-4 md:left-6"
             aria-label="Foto anterior"
           >
             <ChevronLeft className="h-6 w-6" aria-hidden />
@@ -154,7 +154,7 @@ export const IecComunidadGallery: React.FC<IecComunidadGalleryProps> = ({
               e.stopPropagation();
               goLightbox(1);
             }}
-            className="absolute right-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a1524]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-4 md:right-6"
+            className="absolute right-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-4 md:right-6"
             aria-label="Foto siguiente"
           >
             <ChevronRight className="h-6 w-6" aria-hidden />

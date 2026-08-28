@@ -1,3 +1,6 @@
+import type { PdcCarouselSlide } from "../components/PdcPhotoCarousel";
+import { galleryCarouselSizes, galleryWebpSrc, galleryWebpSrcSet } from "./galleryWebp";
+
 export type FormacionLideresAccordionItem = {
   id: string;
   title: string;
@@ -119,6 +122,39 @@ export const FORMATION_MOMENTS: FormacionMoment[] = [
   },
 ];
 
+/** Carrusel — solo landscape + videos (el portrait va aparte) */
+export const FORMATION_CAROUSEL_SLIDES: PdcCarouselSlide[] = FORMATION_MOMENTS.filter(
+  (m) => m.bento !== "featured"
+).map((moment) => {
+  if (moment.kind === "video" && moment.video) {
+    return {
+      id: moment.id,
+      alt: moment.alt,
+      caption: moment.caption,
+      video: moment.video,
+    };
+  }
+  return {
+    id: moment.id,
+    alt: moment.alt,
+    src: galleryWebpSrc(FORMATION_GALLERY_FOLDER, moment.slug, 1080),
+    srcSet: galleryWebpSrcSet(FORMATION_GALLERY_FOLDER, moment.slug),
+    sizes: galleryCarouselSizes(),
+    objectPosition: moment.objectPosition,
+    caption: moment.caption,
+  };
+});
+
+/** Verticales aparte del carrusel */
+export const FORMATION_PORTRAIT_MOMENTS = FORMATION_MOMENTS.filter(
+  (m) => m.bento === "featured" && m.kind === "image"
+);
+
+/** Landscapes estáticas (sin video) — grilla editorial Liderazgo */
+export const FORMATION_LANDSCAPE_MOMENTS = FORMATION_MOMENTS.filter(
+  (m) => m.kind === "image" && m.bento !== "featured"
+);
+
 const BENTO_GRID_CLASS: Record<string, string> = {
   "formacion-moment-01":
     "order-first col-span-2 md:col-span-1 md:col-start-1 md:row-start-1 md:row-span-2",
@@ -141,15 +177,13 @@ export const FORMATION_EFESIOS_VERSE =
   "A fin de perfeccionar a los santos para la obra del ministerio, para la edificación del cuerpo de Cristo.";
 
 export const FORMATION_VISION_INTRO =
-  "En Iglesia Puerta del Cielo formamos y equipamos líderes conforme al corazón de Dios, capacitando a cada creyente para desarrollar plenamente su llamado en Cristo y servir eficazmente en la obra del ministerio.";
+  "Equipamos líderes conforme al corazón de Dios para servir en la obra del ministerio.";
 
 export const FORMATION_LEADER_TRAITS: readonly string[] = [
-  "Sean apasionados por la presencia de Dios.",
-  "Estén firmemente fundamentados en las Escrituras.",
-  "Sirvan con un corazón de siervos siguiendo el ejemplo de Cristo.",
-  "Operen en los dones y capacidades que Dios les ha otorgado.",
-  "Formen y acompañen a otros en su crecimiento espiritual.",
-  "Trabajen por la unidad y la edificación de la Iglesia.",
+  "Apasionados por la presencia de Dios",
+  "Firmes en las Escrituras",
+  "Siervos con el ejemplo de Cristo",
+  "Que forman y acompañan a otros",
 ];
 
 export const FORMATION_ACCORDION: readonly FormacionLideresAccordionItem[] = [
@@ -157,18 +191,12 @@ export const FORMATION_ACCORDION: readonly FormacionLideresAccordionItem[] = [
     id: "vision",
     title: "Nuestra visión",
     summary:
-      "Creemos que el liderazgo nace del discipulado y la transformación espiritual. Trabajamos para levantar hombres y mujeres maduros en la fe, comprometidos con la Palabra de Dios, sensibles a la guía del Espíritu Santo y dispuestos a servir con humildad, excelencia y amor.\n\nComo Iglesia Puerta del Cielo, creemos que cada creyente ha sido llamado a participar activamente en la misión de Dios. Nuestra visión es equipar, desarrollar y enviar líderes que extiendan el Reino de Cristo, fortaleciendo la Iglesia y llevando esperanza, restauración y salvación a las naciones.",
-  },
-  {
-    id: "fundamento",
-    title: "Fundamento bíblico · Efesios 4:12",
-    summary:
-      "Basados en Efesios 4:12, entendemos que el propósito de la formación ministerial no es simplemente transmitir conocimientos, sino perfeccionar a los santos, preparándolos para cumplir su función dentro del Reino de Dios y contribuir a la edificación del Cuerpo de Cristo.\n\nNuestro anhelo es desarrollar líderes que no solo ejerzan influencia, sino que también formen discípulos y multipliquen la obra de Dios en cada esfera de la sociedad.",
+      "Levantamos hombres y mujeres maduros en la fe, sensibles al Espíritu y dispuestos a servir con humildad. Equipamos y enviamos líderes que fortalezcan la Iglesia y extiendan el Reino de Cristo.",
   },
   {
     id: "generacion",
     title: "La generación que levantamos",
-    summary: "Aspiramos a levantar una generación de líderes que:",
+    summary: "Aspiramos a líderes que:",
     bullets: FORMATION_LEADER_TRAITS,
   },
 ] as const;

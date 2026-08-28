@@ -31,34 +31,28 @@ const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const INFO_CARDS: readonly {
   eyebrow: string;
   title: string;
-  body: string;
   icon: LucideIcon;
   accent?: boolean;
 }[] = [
   {
     eyebrow: "Duración",
     title: "1 año",
-    body: "Formación completa e integradora: movimiento que se vuelve vida.",
     icon: Clock,
   },
   {
     eyebrow: "Modalidad",
     title: "2 sábados / mes",
-    body: "Presencial, 2 sábados al mes: palabra, práctica y comunidad.",
     icon: Calendar,
     accent: true,
   },
 ];
 
 const LIVE_CHIPS = [
-  "Palabra y fundamentos",
-  "Formación espiritual",
   "Técnica y entrenamiento",
   "Creatividad con propósito",
-  "Comunidad real",
-  "Espacios de práctica",
-  "Acompañamiento",
   "Ministración",
+  "Comunidad",
+  "Palabra",
 ] as const;
 
 const cardVariants = {
@@ -69,12 +63,6 @@ const cardVariants = {
     transition: { duration: 0.48, ease, delay: i * 0.08 },
   }),
 };
-
-const DANZA_INTRO_TEASER =
-  "La Escuela de Danza y Artes Dinámicas es un espacio de formación donde el movimiento y la expresión creativa se convierten en instrumentos de Dios para traer sanidad, libertad y restauración.";
-
-const DANZA_INTRO_REST =
-  "A través de un proceso integral, los alumnos desarrollan identidad, sensibilidad espiritual y excelencia en la ministración, entendiendo la danza como una herramienta para manifestar la presencia de Dios y edificar a otros.";
 
 const DANZA_PDF_HREF = "/docs/escuela-dya.pdf";
 const DANZA_WA_HREF = whatsappUrl("Hola! Quiero info sobre Danza y Artes Dinámicas");
@@ -160,7 +148,6 @@ const GaleriaFotos: React.FC = () => {
 };
 
 const DanzaArtesSection = () => {
-  const [introExpanded, setIntroExpanded] = useState(false);
   const reduceMotion = useReducedMotion() ?? false;
 
   const scrollToSection = useCallback(
@@ -174,19 +161,19 @@ const DanzaArtesSection = () => {
 
   return (
     <PdcPageShell id="danza-inicio" aria-labelledby="danza-artes-heading">
-      <div className={`${pdcPageInnerWithHeroComfort} pb-20 sm:pb-24`}>
+      <div className={`${pdcPageInnerWithHeroComfort} pb-6 sm:pb-8`}>
         <Reveal>
-          <header className={pdcPageIntroHeaderClass}>
+          <header className={`${pdcPageIntroHeaderClass} flex min-h-[calc(100svh-6.5rem)] flex-col justify-center pb-12 md:min-h-[calc(100svh-7rem)]`}>
             <PdcSectionHeader
               headingId="danza-artes-heading"
               eyebrow="Área educativa"
               eyebrowIcon={Palette}
               title="Danza y Artes Dinámicas"
               titleAccent="creatividad que adora"
-              subtitle="Un espacio de formación donde el movimiento y la expresión creativa se convierten en instrumentos de Dios para traer sanidad, libertad y restauración."
+              subtitle="Movimiento y expresión creativa al servicio de la adoración."
               showSegmentBar
             >
-              <div className="mx-auto mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <div className="mx-auto flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <motion.button
                   type="button"
                   onClick={() => scrollToSection("danza-contenido")}
@@ -201,7 +188,7 @@ const DanzaArtesSection = () => {
                   >
                     <ChevronDown className="h-5 w-5" strokeWidth={2.25} aria-hidden />
                   </motion.span>
-                  <span className="relative z-[1]">Ver programa</span>
+                  <span className="relative z-[1]">Horarios y modalidad</span>
                 </motion.button>
                 <motion.button
                   type="button"
@@ -219,28 +206,11 @@ const DanzaArtesSection = () => {
         </Reveal>
 
         <Reveal delayMs={60}>
-          <div id="danza-contenido" className={`${glassCard} ${pdcGlassCardPadding} scroll-mt-28`}>
-            <div data-pdc-scroll-focus className="mx-auto mb-8 max-w-2xl text-center">
-              <p className="font-sans text-sm font-medium leading-relaxed text-white/92">
-                {DANZA_INTRO_TEASER}
-                {introExpanded ? (
-                  <>
-                    {" "}
-                    <span className="text-zinc-400">{DANZA_INTRO_REST}</span>
-                  </>
-                ) : null}
-              </p>
-              <button
-                type="button"
-                aria-expanded={introExpanded}
-                onClick={() => setIntroExpanded((v) => !v)}
-                className="mt-3 font-sans text-sm font-medium text-secondary transition hover:text-secondary/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
-              >
-                {introExpanded ? "Ver menos" : "Ver más"}
-              </button>
-            </div>
-
-            <div className="mx-auto mb-8 grid max-w-3xl gap-3 sm:grid-cols-2">
+          <div
+            id="danza-contenido"
+            data-pdc-scroll-focus
+            className={`${glassCard} ${pdcGlassCardPadding} scroll-mt-28`}
+          >            <div className="mx-auto mb-8 grid max-w-3xl gap-3 sm:grid-cols-2">
               {INFO_CARDS.map((card, i) => {
                 const Icon = card.icon;
                 return (
@@ -248,7 +218,7 @@ const DanzaArtesSection = () => {
                     key={card.eyebrow}
                     className={`relative overflow-hidden rounded-2xl border p-5 transition duration-500 md:p-6 ${
                       card.accent
-                        ? "border-secondary/35 bg-gradient-to-br from-secondary/15 via-[#0c1424]/80 to-[#080c16] shadow-[0_16px_48px_-24px_rgba(64,194,222,0.35)]"
+                        ? "border-secondary/35 bg-gradient-to-br from-secondary/15 via-[#1d1711]/80 to-[#14100c] shadow-[0_16px_48px_-24px_rgba(64,194,222,0.35)]"
                         : "border-white/12 bg-white/[0.05] hover:border-white/22 hover:bg-white/[0.08]"
                     }`}
                     initial="hidden"
@@ -266,24 +236,20 @@ const DanzaArtesSection = () => {
                     >
                       <Icon className="h-6 w-6" aria-hidden />
                     </span>
-                    <p className="font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                    <p className="font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-stone-500">
                       {card.eyebrow}
                     </p>
                     <p className={`mt-1 ${pdcCardStatClass}`}>{card.title}</p>
-                    <p className="mt-2 font-sans text-sm leading-relaxed text-zinc-400">{card.body}</p>
                   </motion.div>
                 );
               })}
             </div>
 
             <div className="mb-8">
-              <h3 className={`mb-2 flex items-center justify-center gap-2 ${pdcSectionH3Class}`}>
+              <h3 className={`mb-5 flex items-center justify-center gap-2 ${pdcSectionH3Class}`}>
                 <Sparkles className="h-5 w-5 text-secondary" aria-hidden />
                 Lo que vas a vivir
               </h3>
-              <p className="mb-6 text-center font-sans text-sm text-zinc-400 md:text-base">
-                Palabra + práctica + momentos de ministración
-              </p>
               <ul className="mx-auto flex max-w-3xl flex-wrap justify-center gap-2.5 sm:gap-3" role="list">
                 {LIVE_CHIPS.map((item, i) => (
                   <motion.li
@@ -311,13 +277,10 @@ const DanzaArtesSection = () => {
           >
             <h2
               data-pdc-scroll-focus
-              className={`mb-2 text-center notebook:mb-1.5 ${pdcSectionH3Class}`}
+              className={`mb-5 text-center notebook:mb-3 ${pdcSectionH3Class}`}
             >
               Galería
             </h2>
-            <p className="mx-auto mb-6 max-w-lg text-center font-serif text-sm italic leading-relaxed text-white/70 notebook:mb-2 notebook:text-xs md:text-base desktop:mb-10">
-              Formación, ensayo y ministración — la creatividad al servicio de la adoración.
-            </p>
             <div className={pdcNotebookGalleryInnerClass}>
               <PdcPhotoCarousel
                 slides={DANZA_CAROUSEL_SLIDES}
@@ -330,14 +293,10 @@ const DanzaArtesSection = () => {
               />
             </div>
 
-            {/* Botón "Ver fotos" debajo del carrusel, alineado a la derecha */}
             <div className="mb-2 mt-3 flex justify-end md:mt-4">
               <button
                 type="button"
-                onClick={() => {
-                  const el = document.getElementById("danza-fotos");
-                  el?.scrollIntoView({ behavior: "smooth", block: "start" });
-                }}
+                onClick={() => scrollToSection("danza-fotos")}
                 className="pdc-btn-on-dark-ghost inline-flex items-center gap-2"
               >
                 <Images className="relative z-[1] h-4 w-4 shrink-0 text-secondary" aria-hidden />
@@ -345,7 +304,6 @@ const DanzaArtesSection = () => {
               </button>
             </div>
 
-            {/* Grilla de fotos con "Ver más" */}
             <GaleriaFotos />
           </div>
         </Reveal>
@@ -354,7 +312,8 @@ const DanzaArtesSection = () => {
       <PdcPlanDock
         pdfHref={DANZA_PDF_HREF}
         waHref={DANZA_WA_HREF}
-        waLabel="Consultar por WhatsApp sobre Danza y Artes Dinámicas"
+        waLabel="Consultar por WhatsApp sobre Danza y Artes"
+        revealAfterId="danza-contenido"
       />
     </PdcPageShell>
   );
