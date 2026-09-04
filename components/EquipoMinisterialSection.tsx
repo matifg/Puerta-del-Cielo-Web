@@ -114,7 +114,7 @@ const pastorsPhotoFrame = {
 const pastorsPhotoGlow = {
   hidden: { opacity: 0, scale: 0.86 },
   visible: {
-    opacity: 0.85,
+    opacity: 0.45,
     scale: 1,
     transition: { duration: 2.2, delay: T.glow, ease: PASTORS_EASE },
   },
@@ -373,14 +373,14 @@ const EquipoMinisterialSection: React.FC = () => {
 
           <motion.div
             ref={pastorsBlockRef}
-            className="group relative order-1 w-[min(68vw,12.5rem)] shrink-0 sm:w-[13.5rem] md:order-2 md:w-[14.5rem] lg:w-[15.5rem]"
+            className="group relative order-1 w-[min(73vw,13.4rem)] shrink-0 -translate-y-1.5 sm:w-[14.5rem] sm:-translate-y-2 md:order-2 md:w-[15.5rem] lg:w-[16.5rem]"
             initial={pastorsPlay ? "visible" : "hidden"}
             animate={pastorsPlay ? "visible" : "hidden"}
             style={reduceMotion ? undefined : { y: photoParallax }}
           >
             <motion.div
               variants={reduceMotion ? fadeOnly(T.glow) : pastorsPhotoGlow}
-              className="pointer-events-none absolute -inset-4 -z-10 rounded-[2rem] bg-secondary/15 blur-[2.5rem] sm:-inset-5"
+              className="pointer-events-none absolute -inset-4 -z-10 rounded-[2rem] bg-secondary/8 blur-[2.5rem] sm:-inset-5"
               aria-hidden
             />
 

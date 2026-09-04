@@ -26,16 +26,16 @@ type PdcMinisterPortraitProps = {
 const frameClass: Record<PortraitVariant, string> = {
   team:
     "relative h-28 w-28 overflow-hidden rounded-full border-2 border-secondary/80 bg-white shadow-lg shadow-black/25 transition-[border-color,box-shadow] duration-500 ease-out group-hover:border-secondary group-hover:shadow-2xl group-hover:shadow-black/40 md:h-24 md:w-24 lg:h-32 lg:w-32",
-  /** Marco 2:3: retrato recortado sobre el fondo de página (sin recuadro visible). */
+  /** Marco 2:3: sin padding; feather suave hacia el fondo de página. */
   lead:
-    "relative flex aspect-[2/3] w-full items-center justify-center bg-transparent p-2 sm:p-2.5",
+    "relative flex aspect-[2/3] w-full items-center justify-center overflow-visible bg-transparent [mask-image:radial-gradient(ellipse_92%_88%_at_50%_48%,#000_62%,transparent_100%)] [-webkit-mask-image:radial-gradient(ellipse_92%_88%_at_50%_48%,#000_62%,transparent_100%)]",
 };
 
 const imgClass: Record<PortraitVariant, string> = {
   team:
     "h-full w-full object-contain object-center grayscale transition-[filter] duration-700 ease-out group-hover:grayscale-0",
   lead:
-    "max-h-full max-w-full object-contain object-center mix-blend-lighten transition-[filter] duration-[1.1s] ease-out group-hover:brightness-[1.02]",
+    "max-h-full max-w-full object-contain object-center drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)] transition-[filter] duration-[1.1s] ease-out group-hover:brightness-[1.02]",
 };
 
 const intrinsic: Record<PortraitVariant, { width: number; height: number }> = {
@@ -103,7 +103,7 @@ export const PdcMinisterPortrait: React.FC<PdcMinisterPortraitProps> = ({
       {lqip ? (
         <div
           aria-hidden
-          className={`absolute inset-0 bg-transparent bg-contain bg-center bg-no-repeat mix-blend-lighten transition-opacity duration-700 ease-out ${
+          className={`absolute inset-0 bg-transparent bg-contain bg-center bg-no-repeat transition-opacity duration-700 ease-out ${
             loaded ? "opacity-0" : "opacity-100"
           }`}
           style={{ backgroundImage: `url(${lqip})`, filter: "blur(14px)", backgroundPosition: objectPosition }}

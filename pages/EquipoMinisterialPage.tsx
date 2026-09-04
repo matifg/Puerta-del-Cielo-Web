@@ -21,7 +21,7 @@ const EquipoMinisterialPage = () => {
           pinToTop={fabIsLast}
           ariaLabel={fabSrLabel}
           titleKey={titleKey}
-          className="pointer-events-auto shadow-[0_8px_40px_rgba(0,0,0,0.65)]"
+          className="pointer-events-auto origin-bottom-right scale-[0.92] shadow-[0_8px_40px_rgba(0,0,0,0.65)]"
         />
       </div>
       <div id={EQUIPO_FOOTER_ROOT_ID} className="relative bg-[#0e0b08]">

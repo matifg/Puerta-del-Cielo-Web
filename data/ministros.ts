@@ -34,7 +34,7 @@ export function ministerSrcSet(slug: MinisterSlug, variant: PortraitVariant): st
 
 export function ministerSizes(variant: PortraitVariant): string {
   return variant === "lead"
-    ? "(max-width: 768px) min(68vw, 13.5rem), 15.5rem"
+    ? "(max-width: 768px) min(73vw, 14.5rem), 16.5rem"
     : "(max-width: 768px) 112px, 128px";
 }
 
