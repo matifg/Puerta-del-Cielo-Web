@@ -12,6 +12,13 @@ const celulaFile = (name: string) => `/images/celula/${name}`;
 /** Pool «Así nos reunimos» — public/images/celula/ */
 export const CELULA_PHOTOS: CelulaPhoto[] = [
   {
+    id: "celula-12",
+    slug: "celula12",
+    src: celulaFile("celula12.jpeg"),
+    alt: "Grupo de hombres de diferentes edades en una reunión de Iglesia en casa",
+    caption: "Comunidad",
+  },
+  {
     id: "celula-1",
     slug: "celula1",
     src: celulaFile("celula1.jpeg"),

@@ -25,22 +25,22 @@ type PdcMinisterPortraitProps = {
 
 const frameClass: Record<PortraitVariant, string> = {
   team:
-    "relative h-32 w-32 overflow-hidden rounded-full border-2 border-secondary/80 shadow-lg shadow-black/25 transition-[border-color,box-shadow] duration-500 ease-out group-hover:border-secondary group-hover:shadow-2xl group-hover:shadow-black/40 md:h-28 md:w-28 lg:h-40 lg:w-40",
-  /** Marco 1:1: recorte cuadrado para que el bloque entre sin scroll. */
+    "relative h-28 w-28 overflow-hidden rounded-full border-2 border-secondary/80 bg-white shadow-lg shadow-black/25 transition-[border-color,box-shadow] duration-500 ease-out group-hover:border-secondary group-hover:shadow-2xl group-hover:shadow-black/40 md:h-24 md:w-24 lg:h-32 lg:w-32",
+  /** Marco 2:3: retrato recortado sobre el fondo de página (sin recuadro visible). */
   lead:
-    "relative aspect-square w-full overflow-hidden rounded-[1.5rem] border border-white/15 bg-black/20 shadow-[0_24px_70px_-26px_rgba(0,0,0,0.85)] ring-1 ring-white/5 sm:rounded-[1.75rem]",
+    "relative flex aspect-[2/3] w-full items-center justify-center bg-transparent p-2 sm:p-2.5",
 };
 
 const imgClass: Record<PortraitVariant, string> = {
   team:
-    "h-full w-full scale-100 object-cover grayscale transition-[transform,filter] duration-700 ease-out will-change-transform hover:scale-110 group-hover:scale-110 group-hover:grayscale-0",
+    "h-full w-full object-contain object-center grayscale transition-[filter] duration-700 ease-out group-hover:grayscale-0",
   lead:
-    "h-full w-full scale-100 object-cover transition-[transform,filter] duration-[1.1s] ease-out will-change-transform group-hover:scale-[1.03] group-hover:brightness-[1.04]",
+    "max-h-full max-w-full object-contain object-center mix-blend-lighten transition-[filter] duration-[1.1s] ease-out group-hover:brightness-[1.02]",
 };
 
 const intrinsic: Record<PortraitVariant, { width: number; height: number }> = {
   team: { width: 320, height: 320 },
-  lead: { width: 768, height: 768 },
+  lead: { width: 768, height: 1152 },
 };
 
 function PortraitPlaceholder({
@@ -52,14 +52,14 @@ function PortraitPlaceholder({
 }) {
   const size =
     variant === "lead"
-      ? "flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-[1.5rem] border border-dashed border-white/25 bg-white/[0.04] px-4 text-center sm:rounded-[1.75rem]"
-      : "flex h-32 w-32 flex-col items-center justify-center gap-1 rounded-full border-2 border-dashed border-secondary/50 bg-white/[0.04] px-2 text-center md:h-28 md:w-28 lg:h-40 lg:w-40";
-  const icon = variant === "lead" ? "h-14 w-14 md:h-16 md:w-16" : "h-9 w-9";
+      ? "flex aspect-[2/3] w-full flex-col items-center justify-center gap-2 bg-transparent px-4 text-center"
+      : "flex h-28 w-28 flex-col items-center justify-center gap-1 rounded-full border-2 border-dashed border-secondary/50 bg-white px-2 text-center md:h-24 md:w-24 lg:h-32 lg:w-32";
+  const icon = variant === "lead" ? "h-12 w-12 md:h-14 md:w-14" : "h-8 w-8";
   return (
     <div className={size} role="img" aria-label={displayName}>
       <User className={`${icon} text-secondary/60`} strokeWidth={1.5} aria-hidden />
       {variant === "lead" ? (
-        <span className="font-sans text-[0.65rem] font-medium text-white/50">Foto pendiente</span>
+        <span className="font-sans text-[0.65rem] font-medium text-secondary/70">Foto pendiente</span>
       ) : null}
     </div>
   );
@@ -69,7 +69,7 @@ export const PdcMinisterPortrait: React.FC<PdcMinisterPortraitProps> = ({
   slug,
   displayName,
   variant,
-  objectPosition = "center 22%",
+  objectPosition = "center center",
   className = "",
   loading = "lazy",
   fetchPriority,
@@ -103,13 +103,13 @@ export const PdcMinisterPortrait: React.FC<PdcMinisterPortraitProps> = ({
       {lqip ? (
         <div
           aria-hidden
-          className={`absolute inset-0 scale-[1.08] bg-cover bg-center transition-opacity duration-700 ease-out ${
+          className={`absolute inset-0 bg-transparent bg-contain bg-center bg-no-repeat mix-blend-lighten transition-opacity duration-700 ease-out ${
             loaded ? "opacity-0" : "opacity-100"
           }`}
-          style={{ backgroundImage: `url(${lqip})`, filter: "blur(18px)", backgroundPosition: objectPosition }}
+          style={{ backgroundImage: `url(${lqip})`, filter: "blur(14px)", backgroundPosition: objectPosition }}
         />
       ) : null}
-      <picture className="relative block h-full w-full">
+      <picture className="relative flex h-full w-full items-center justify-center">
         <source type="image/webp" srcSet={ministerSrcSet(slug, variant)} sizes={ministerSizes(variant)} />
         <img
           ref={imgRef}

@@ -112,7 +112,7 @@ const IglesiaEnCasaSection: React.FC = () => {
               className="pdc-btn-on-dark-ghost max-w-none"
             >
               <Images className="relative z-[1] h-5 w-5 shrink-0 text-secondary" aria-hidden />
-              <span className="relative z-[1]">Galería</span>
+              <span className="relative z-[1]">Nosotros</span>
             </button>
           </div>
         </motion.div>

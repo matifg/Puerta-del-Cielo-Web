@@ -5,7 +5,10 @@ import { MINISTER_LEAD_LQIP, type MinisterSlug } from "../data/ministros";
 import { PdcMinisterPortrait } from "./PdcMinisterPortrait";
 import { Reveal } from "./bethel/Reveal";
 import { PdcPageShell } from "./PdcPageShell";
-import { PdcSectionHeader, pdcPageInnerWithHeroComfort, pdcPageIntroHeaderClass } from "./PdcSectionHeader";
+import { PdcSectionHeader, pdcPageInnerClass } from "./PdcSectionHeader";
+
+/** Aire bajo navbar fijo (+ safe-area en móvil) sin modificar el header global. */
+const equipoPageTopClass = `${pdcPageInnerClass} pt-[calc(2rem+env(safe-area-inset-top,0px))] md:pt-[calc(2.5rem+env(safe-area-inset-top,0px))] lg:pt-[calc(3rem+env(safe-area-inset-top,0px))]`;
 
 export const EQUIPO_FOOTER_ROOT_ID = "equipo-footer-root";
 
@@ -30,7 +33,6 @@ const pastors: Member = {
   slug: "jorge-gabriela",
   displayName: "Jorge y Gabriela Bugueño",
   role: "Pastores generales",
-  objectPosition: "center center",
 };
 
 const PASTORS_EASE = [0.22, 1, 0.36, 1] as const;
@@ -133,14 +135,12 @@ const team: Member[] = [
     slug: "oscar-termini",
     displayName: "Oscar Termini",
     role: "Pastor Ordenado",
-    objectPosition: "center 20%",
   },
   {
     name: "DEBORA BUGUEÑO",
     slug: "debora-bugueno",
     displayName: "Débora Bugueño",
     role: "Ministro Ordenado",
-    objectPosition: "center 22%",
   },
   {
     name: "GUSTAVO BECERRO",
@@ -153,14 +153,12 @@ const team: Member[] = [
     slug: "silvia-taieti",
     displayName: "Silvia Taieti",
     role: "Ministro Ordenado",
-    objectPosition: "center 18%",
   },
   {
     name: "PAOLA VIRRZI",
     slug: "paola-virrzi",
     displayName: "Paola Virrzi",
     role: "Ministro Ordenado",
-    objectPosition: "center 16%",
   },
   {
     name: "DAMIAN MARCORA",
@@ -173,7 +171,6 @@ const team: Member[] = [
     slug: "veronica-martinez",
     displayName: "Verónica Martínez",
     role: "Ministro Ordenado",
-    objectPosition: "center 20%",
   },
 ];
 
@@ -241,7 +238,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
         ${className}`.trim()}
       style={{ transitionDelay: revealed ? `${index * 60}ms` : "0ms" }}
     >
-      <div className="relative mb-2 lg:mb-4">
+      <div className="relative mb-1.5 lg:mb-2">
         <div
           className={`pointer-events-none absolute inset-0 rounded-full ${glowClass} blur-2xl opacity-0 transition duration-500 group-hover:opacity-100 motion-reduce:opacity-0`}
           aria-hidden
@@ -296,13 +293,13 @@ const EquipoMinisterialSection: React.FC = () => {
     target: pastorsBlockRef,
     offset: ["start end", "end start"],
   });
-  const photoParallax = useTransform(scrollYProgress, [0, 1], [22, -22]);
+  const photoParallax = useTransform(scrollYProgress, [0, 1], [12, -12]);
 
   return (
-    <PdcPageShell aria-labelledby="equipo-heading">
-      <div className={pdcPageInnerWithHeroComfort}>
+    <PdcPageShell aria-labelledby="equipo-heading" className="pb-6 md:pb-8">
+      <div className={equipoPageTopClass}>
       <Reveal priority>
-      <header id="equipo-intro" className={pdcPageIntroHeaderClass}>
+      <header id="equipo-intro" className="mb-4 scroll-mt-28 md:mb-5">
         <PdcSectionHeader
           headingId="equipo-heading"
           eyebrow="Quiénes somos"
@@ -314,10 +311,10 @@ const EquipoMinisterialSection: React.FC = () => {
       </header>
       </Reveal>
 
-      <div id="equipo-pastores" className="mb-8 scroll-mt-28 md:mb-10 lg:mb-12">
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-7 md:flex-row md:items-center md:justify-center md:gap-10 lg:gap-12">
+      <div id="equipo-pastores" className="mb-7 scroll-mt-28 md:mb-9">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 md:flex-row md:items-center md:justify-center md:gap-8">
           <motion.div
-            className="order-2 max-w-md space-y-3.5 text-center md:order-1 md:space-y-4 md:text-left"
+            className="order-2 max-w-md space-y-3 text-center md:order-1 md:space-y-3.5 md:text-left"
             initial={pastorsPlay ? "visible" : "hidden"}
             animate={pastorsPlay ? "visible" : "hidden"}
           >
@@ -355,7 +352,7 @@ const EquipoMinisterialSection: React.FC = () => {
             />
 
             <div
-              className={`${bodyText} mx-auto max-w-md space-y-3 text-[0.9rem] md:mx-0 md:text-[0.95rem] md:leading-[1.75]`}
+              className={`${bodyText} mx-auto max-w-md space-y-2.5 text-[0.9rem] md:mx-0 md:text-[0.95rem] md:leading-[1.7]`}
             >
               {PASTORS_BIO_LINES.map((line, i) => (
                 <p key={i} className="overflow-hidden">
@@ -376,26 +373,25 @@ const EquipoMinisterialSection: React.FC = () => {
 
           <motion.div
             ref={pastorsBlockRef}
-            className="group relative order-1 w-[min(78vw,17rem)] shrink-0 sm:w-[19rem] md:order-2 md:w-[20rem] lg:w-[22rem]"
+            className="group relative order-1 w-[min(68vw,12.5rem)] shrink-0 sm:w-[13.5rem] md:order-2 md:w-[14.5rem] lg:w-[15.5rem]"
             initial={pastorsPlay ? "visible" : "hidden"}
             animate={pastorsPlay ? "visible" : "hidden"}
             style={reduceMotion ? undefined : { y: photoParallax }}
           >
             <motion.div
               variants={reduceMotion ? fadeOnly(T.glow) : pastorsPhotoGlow}
-              className="pointer-events-none absolute -inset-5 -z-10 rounded-[2.5rem] bg-secondary/20 blur-3xl sm:-inset-7"
+              className="pointer-events-none absolute -inset-4 -z-10 rounded-[2rem] bg-secondary/15 blur-[2.5rem] sm:-inset-5"
               aria-hidden
             />
 
             <motion.div
               variants={reduceMotion ? fadeOnly(T.photo) : pastorsPhotoFrame}
-              className="relative overflow-hidden rounded-[1.5rem] will-change-transform sm:rounded-[1.75rem]"
+              className="relative will-change-transform"
             >
               <PdcMinisterPortrait
                 slug={pastors.slug}
                 displayName={pastors.displayName}
                 variant="lead"
-                objectPosition={pastors.objectPosition}
                 loading="eager"
                 fetchPriority="high"
                 lqip={MINISTER_LEAD_LQIP}
@@ -409,11 +405,6 @@ const EquipoMinisterialSection: React.FC = () => {
                   aria-hidden
                 />
               ) : null}
-
-              <div
-                className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[#0e0b08]/35 via-transparent to-white/[0.04]"
-                aria-hidden
-              />
             </motion.div>
           </motion.div>
         </div>
@@ -421,7 +412,7 @@ const EquipoMinisterialSection: React.FC = () => {
 
       <div
         id="equipo-ministros"
-        className="mb-6 scroll-mt-28 border-t border-white/10 pt-6 text-center md:mb-7 md:pt-7 lg:mb-8 lg:pt-8"
+        className="mb-5 scroll-mt-28 border-t border-white/10 pt-6 text-center md:mb-6 md:pt-7"
       >
         <h2 className="font-serif text-2xl text-white md:text-[1.65rem] lg:text-[1.85rem]">Ministros y liderazgo</h2>
         <p className={`${bodyText} mx-auto mt-2.5 max-w-xl text-sm md:text-[0.8125rem] lg:mt-3 lg:text-[0.9rem]`}>
@@ -432,7 +423,7 @@ const EquipoMinisterialSection: React.FC = () => {
       <div
         id="equipo-grid"
         ref={setRevealRef}
-        className="scroll-mt-28 grid grid-cols-2 justify-items-center gap-x-6 gap-y-7 pb-2 md:grid-cols-8 md:gap-x-7 md:gap-y-6 lg:gap-x-8 lg:gap-y-8"
+        className="scroll-mt-28 grid grid-cols-2 justify-items-center gap-x-5 gap-y-5 pb-1 md:grid-cols-8 md:gap-x-6 md:gap-y-5 lg:gap-x-7 lg:gap-y-6"
         role="list"
       >
         {firstRow.map((person, i) => (

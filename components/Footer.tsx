@@ -108,20 +108,60 @@ export const Footer: React.FC = () => {
             <h4 className={sectionTitle}>Horarios</h4>
             <div className={sectionRule} />
 
-            <p className="mb-2 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-secondary/90">
-              Reunión general
-            </p>
-            <ul className="space-y-2 text-sm">
-              {horariosReunionGeneral.map((h) => (
-                <li
-                  key={`rg-${h.dia}`}
-                  className="flex justify-between gap-3 rounded-lg border border-white/[0.07] bg-white/[0.04] px-3 py-2 text-stone-400"
-                >
-                  <span>{h.dia}</span>
-                  <span className="shrink-0 font-medium tabular-nums text-[#ebe8e2]">{h.hora}</span>
-                </li>
-              ))}
-            </ul>
+            <div className="flex gap-3">
+              <svg
+                className="mt-0.5 h-5 w-5 shrink-0 text-secondary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <div className="min-w-0 space-y-4 text-sm">
+                <div>
+                  <p className="font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-secondary/90">
+                    Reunión general
+                  </p>
+                  <ul className="mt-1.5 space-y-1.5">
+                    {horariosReunionGeneral
+                      .filter((h) => !h.detalle)
+                      .map((h) => (
+                        <li key={`rg-${h.dia}`} className="text-stone-400">
+                          <span className="text-[#ebe8e2]">{h.dia}</span>
+                          <span className="mt-0.5 block text-[0.8125rem] leading-snug tabular-nums">
+                            {h.hora}
+                          </span>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+                {horariosReunionGeneral.some((h) => h.detalle) ? (
+                  <div>
+                    <p className="font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-secondary/90">
+                      Intercesión
+                    </p>
+                    <ul className="mt-1.5 space-y-1.5">
+                      {horariosReunionGeneral
+                        .filter((h) => h.detalle)
+                        .map((h) => (
+                          <li key={`int-${h.dia}`} className="text-stone-400">
+                            <span className="text-[#ebe8e2]">{h.dia}</span>
+                            <span className="mt-0.5 block text-[0.8125rem] leading-snug tabular-nums">
+                              {h.hora}
+                            </span>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                ) : null}
+              </div>
+            </div>
           </div>
 
           <div>

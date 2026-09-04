@@ -14,7 +14,7 @@ const IEC_SCROLL_SECTIONS: FloatingScrollNavSection[] = [
   },
   {
     id: "iec-comunidad",
-    title: "Galería",
+    title: "Nosotros",
     subtitle: "Así nos reunimos",
   },
   {

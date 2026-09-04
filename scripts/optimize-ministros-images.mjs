@@ -1,7 +1,7 @@
 /**
  * Genera WebP para ministros.
- * - lead (pastores): recorte 1:1 con viraje a papel cálido
- * - team: cuadrado para círculos
+ * - lead (pastores): lienzo 2:3, fit contain + fondo #0e0b08 (fundido con la página)
+ * - team: cuadrado para círculos, fit contain + fondo blanco
  * Uso: node scripts/optimize-ministros-images.mjs
  */
 import fs from "node:fs/promises";
@@ -14,54 +14,47 @@ const ROOT = path.join(__dirname, "..");
 const SRC_DIR = path.join(ROOT, "public", "images", "ministros");
 const OUT_DIR = path.join(SRC_DIR, "optimized");
 
-/** Pastores: marco ~288px CSS → 2x */
+/** Pastores: retrato 2:3 sobre fondo de página (#0e0b08) — persona completa, sin bordes blancos. */
 const LEAD_SLUG = "jorge-gabriela";
 const LEAD_WIDTHS = [384, 768];
-/**
- * 1:1. El original es 3:4 (4284×5712) y a tamaño grande obligaba a scrollear.
- * El recorte cuadrado deja las dos caras bien encuadradas y baja 25% el alto.
- */
-const LEAD_ASPECT_H = 1;
-
-/** Equipo: círculo hasta ~160px CSS → 320px en 2x */
+const LEAD_HEIGHT_RATIO = 3 / 2;
+const PAGE_BG = { r: 14, g: 11, b: 8, alpha: 1 };
+/** Equipo: círculo hasta ~128px CSS → 320px en 2x */
 const TEAM_WIDTHS = [320, 640];
 
-/**
- * Viraje a "papel cálido": la pared clara del retrato de pastores tiene tinte
- * azulado y sobre el fondo oscuro del sitio leía como un blanco frío.
- * Sube apenas el rojo y baja el azul, así el fondo cae en la familia crema
- * del texto del sitio en lugar de pelear con él.
- */
-const LEAD_WARM_MULTIPLIERS = [1.02, 0.995, 0.945];
-
 /** Miniatura inline para el cruce borroso → foto real (data/ministros.ts). */
-const LEAD_LQIP_SIZE = { width: 28, height: 28 };
+const LEAD_LQIP_SIZE = { width: 28, height: 42 };
 
-function leadPipeline(inputPath) {
-  return sharp(inputPath).rotate().linear(LEAD_WARM_MULTIPLIERS, [0, 0, 0]);
+const WHITE_BG = { r: 255, g: 255, b: 255, alpha: 1 };
+
+function portraitPipeline(inputPath) {
+  return sharp(inputPath).rotate();
 }
+
+const containResize = {
+  fit: "contain",
+  position: "centre",
+  background: WHITE_BG,
+  kernel: sharp.kernel.lanczos3,
+};
 
 async function exportSquareWebp(inputPath, slug, width) {
   const outPath = path.join(OUT_DIR, `${slug}-${width}.webp`);
-  await sharp(inputPath)
-    .rotate()
-    .resize(width, width, {
-      fit: "cover",
-      position: "centre",
-      kernel: sharp.kernel.lanczos3,
-    })
+  await portraitPipeline(inputPath)
+    .resize(width, width, containResize)
     .webp({ quality: 88, effort: 4 })
     .toFile(outPath);
   return outPath;
 }
 
 async function exportLeadPortraitWebp(inputPath, slug, width) {
-  const height = Math.round(width * LEAD_ASPECT_H);
+  const height = Math.round(width * LEAD_HEIGHT_RATIO);
   const outPath = path.join(OUT_DIR, `${slug}-${width}.webp`);
-  await leadPipeline(inputPath)
+  await portraitPipeline(inputPath)
     .resize(width, height, {
-      fit: "cover",
+      fit: "contain",
       position: "centre",
+      background: PAGE_BG,
       kernel: sharp.kernel.lanczos3,
     })
     .webp({ quality: 90, effort: 4 })
@@ -70,8 +63,12 @@ async function exportLeadPortraitWebp(inputPath, slug, width) {
 }
 
 async function buildLeadLqip(inputPath) {
-  const buf = await leadPipeline(inputPath)
-    .resize(LEAD_LQIP_SIZE.width, LEAD_LQIP_SIZE.height, { fit: "cover", position: "centre" })
+  const buf = await portraitPipeline(inputPath)
+    .resize(28, 42, {
+      fit: "contain",
+      position: "centre",
+      background: PAGE_BG,
+    })
     .webp({ quality: 40 })
     .toBuffer();
   return `data:image/webp;base64,${buf.toString("base64")}`;

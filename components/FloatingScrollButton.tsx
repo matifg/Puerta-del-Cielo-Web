@@ -162,7 +162,7 @@ export const FloatingScrollButton: React.FC<FloatingScrollButtonProps> = ({
   const scrollBehavior = reduceMotion ? "auto" : "smooth";
 
   const handleClick = () => {
-    if (footerHideBlend > 0.85 && !fabPinToTop) return;
+    if (footerHideBlend > 0.85) return;
 
     if (fabPinToTop) {
       pendingIdxRef.current = 0;
@@ -207,10 +207,11 @@ export const FloatingScrollButton: React.FC<FloatingScrollButtonProps> = ({
   const suppressOnHeroMobile =
     hideOnFirstSectionBelowSm && currentIdx === 0 && !fabPinToTop;
 
-  const fabHidden = fabPinToTop ? false : footerHideBlend >= 0.995;
-  const fabOpacity = fabPinToTop ? 1 : 1 - footerHideBlend * 0.98;
-  const fabTranslateY = fabPinToTop ? 0 : footerHideBlend * 14;
-  const blockPointer = fabPinToTop ? false : footerHideBlend > 0.42;
+  /** También con «Subir»: no tapar Horarios/Contacto del footer. */
+  const fabHidden = footerHideBlend >= 0.995;
+  const fabOpacity = 1 - footerHideBlend * 0.98;
+  const fabTranslateY = footerHideBlend * 14;
+  const blockPointer = footerHideBlend > 0.42;
 
   const titleKey = `${fabPinToTop ? "top" : "down"}-${navTargetIndex}-${currentIdx}`;
 

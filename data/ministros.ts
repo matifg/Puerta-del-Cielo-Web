@@ -34,8 +34,8 @@ export function ministerSrcSet(slug: MinisterSlug, variant: PortraitVariant): st
 
 export function ministerSizes(variant: PortraitVariant): string {
   return variant === "lead"
-    ? "(max-width: 768px) min(78vw, 19rem), 22rem"
-    : "(max-width: 768px) 144px, 160px";
+    ? "(max-width: 768px) min(68vw, 13.5rem), 15.5rem"
+    : "(max-width: 768px) 112px, 128px";
 }
 
 /**
@@ -44,4 +44,4 @@ export function ministerSizes(variant: PortraitVariant): string {
  * `scripts/optimize-ministros-images.mjs` al regenerar.
  */
 export const MINISTER_LEAD_LQIP =
-  "data:image/webp;base64,UklGRvoAAABXRUJQVlA4IO4AAADQBQCdASocABwAPuFgqU2opiQiMAwBEBwJZgC7M2QzHccsbr31zrNkr0fTd6zlTxFKTLPv+7TAAP7TF+xMzA8thMZRoYR9UGOqAVVl5pCUNHEfTcbFOb/KhbkOnqfIxo/GQ33mIb3PPR5uvKrIfdaFzYnWMB0XpFQS7rHI5ZMElaT/2EQyNl1UXq/10L+8BgCTV7csZYBUbzBoPctFT1C9eerWYRUmUjhoQ9w15IM3661B8aHqTvILWcaqNKpe3q0u0Yw+IqzKSUATYArT4BffZGbSFa/ycGfLFszJR28gAe2TmYHc+IYOzvzBAAAA";
+  "data:image/webp;base64,UklGRjgBAABXRUJQVlA4ICwBAABQCACdASocACoAPu1kq1CppSOiqrgMATAdiWYAx1Fk9QDTSNEGK5Gwp6jDJrT4H+Ir3NN+nx3FVduPdaKYJjahuYhRQwG6gQP5ZQAA/vpfriK8z8lpoIE5szYOa4yQ1KCmozSpMCL1O1oJMZfa4o8xvfAL2L8f24TxrFxexFionlsusLuTpaX+4ABLIruZ45FRhdAljBCY+C6gsqjlEWVNMrb5754ChZ9Zds4Hj5LCtVilwhyKVvFaaUPdapj+m/X/V9NGk0LQkVoWMmZ4RIy3XgIymJdP5a5mQdQDO5GpBlTc0u/z+TdBER+koAGtoSEjH/T/b3ycli/pMvynVJxp08dK2unIuixQvGIUrcdIN1swBqIJ4BT2l4oMKjiuyi+/9fVBqz8q2v4AAAA=";
