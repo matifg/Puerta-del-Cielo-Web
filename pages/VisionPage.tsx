@@ -5,7 +5,6 @@ import type { FloatingScrollNavSection } from "../components/FloatingScrollButto
 const VISION_SCROLL_SECTIONS: FloatingScrollNavSection[] = [
   { id: "vision-heading", title: "Visión" },
   { id: "vision-vision", title: "Soñamos" },
-  { id: "vision-galeria", title: "Galería" },
   { id: "vision-proposito", title: "Propósito" },
   { id: "vision-cta", title: "Sumate" },
 ];

@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
-import { ChevronDown, ChevronLeft, ChevronRight, HandHeart, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, HandHeart, Maximize2, X } from "lucide-react";
 import {
   SERVICIO_COMUNIDAD_GALLERY,
   SERVICIO_COMUNIDAD_SCENES,
   type ServicioPhoto,
 } from "../data/servicioComunidadPhotos";
-import { PdcGalleryPicture } from "./PdcGalleryPicture";
+import { PdcGalleryLightboxPicture, PdcGalleryPicture } from "./PdcGalleryPicture";
 import {
   PdcSectionEyebrow,
   pdcHeaderScrollMarginTop,
@@ -21,9 +22,9 @@ const easeOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
 export const SVC_FOOTER_ROOT_ID = "svc-footer-root";
 const GALLERY_ID = "svc-galeria";
 const STORIES_ID = "svc-historias";
+const SVC_LIGHTBOX_Z = "z-[10050]";
+const mediaClass = "absolute inset-0 h-full w-full object-cover";
 
-const FEED_PHOTOS = SERVICIO_COMUNIDAD_GALLERY.slice(0, 6);
-const FEED_AUTO_MS = 5000;
 /** Visor fullscreen: avance lento tipo historia IG */
 const STORY_AUTO_MS = 8200;
 /** Anillo de la fila: “carga” lenta al entrar en vista */
@@ -189,37 +190,239 @@ const StoryAvatarRing: React.FC<{
   );
 };
 
+/* ─── Strip tipo Bethel ───────────────────────────────────────── */
+type SvcStripTileProps = {
+  photo: ServicioPhoto;
+  index: number;
+  eager?: boolean;
+  reduceMotion: boolean;
+  onOpen: (idx: number) => void;
+};
+
+const SvcStripTile: React.FC<SvcStripTileProps> = ({
+  photo,
+  index,
+  eager = false,
+  reduceMotion,
+  onOpen,
+}) => (
+  <motion.button
+    type="button"
+    onClick={() => onOpen(index)}
+    whileHover={reduceMotion ? undefined : { y: -3 }}
+    whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+    className="group relative block h-full w-full shrink-0 overflow-hidden rounded-2xl border-0 bg-[#17130e] text-left ring-1 ring-inset ring-white/10 transition-[box-shadow,ring-color] hover:ring-secondary/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+    aria-label={`Ver foto: ${photo.alt}`}
+  >
+    <PdcGalleryPicture
+      folder={photo.folder}
+      slug={photo.slug}
+      fallbackSrc={photo.src}
+      ariaHidden
+      loading={eager ? "eager" : "lazy"}
+      sizes="(max-width: 640px) 78vw, (max-width: 1024px) 45vw, 360px"
+      className={`${mediaClass} transition duration-700 group-hover:scale-[1.03] motion-reduce:transition-none`}
+      style={photo.objectPosition ? { objectPosition: photo.objectPosition } : undefined}
+    />
+    <span
+      className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0e0b08]/80 via-[#0e0b08]/10 to-transparent"
+      aria-hidden
+    />
+    <span
+      className="pointer-events-none absolute bottom-2.5 right-2.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-[#0e0b08]/80 text-secondary opacity-0 backdrop-blur-sm transition duration-300 group-hover:opacity-100"
+      aria-hidden
+    >
+      <Maximize2 className="h-3 w-3" strokeWidth={2.25} />
+    </span>
+  </motion.button>
+);
+
+const SvcMomentsStrip: React.FC<{ reduceMotion: boolean }> = ({ reduceMotion }) => {
+  const [portalMounted, setPortalMounted] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
+  const photos = SERVICIO_COMUNIDAD_GALLERY;
+
+  useEffect(() => {
+    setPortalMounted(true);
+  }, []);
+
+  const openLightbox = useCallback((idx: number) => setLightboxIndex(idx), []);
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+  const goLightbox = useCallback(
+    (delta: number) => {
+      setLightboxIndex((i) =>
+        i === null ? null : (i + delta + photos.length) % photos.length
+      );
+    },
+    [photos.length]
+  );
+
+  const scrollStrip = useCallback((dir: -1 | 1) => {
+    const el = stripRef.current;
+    if (!el) return;
+    const tileW = el.firstElementChild
+      ? (el.firstElementChild as HTMLElement).offsetWidth + 12
+      : 280;
+    el.scrollBy({ left: dir * tileW * 2, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") goLightbox(-1);
+      if (e.key === "ArrowRight") goLightbox(1);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [lightboxIndex, closeLightbox, goLightbox]);
+
+  const active = lightboxIndex !== null ? photos[lightboxIndex] : null;
+
+  const lightbox =
+    portalMounted && active && lightboxIndex !== null ? (
+      <div
+        className={`fixed inset-0 ${SVC_LIGHTBOX_Z} flex items-center justify-center bg-[#0e0b08]/92 p-4 backdrop-blur-md sm:p-6`}
+        role="dialog"
+        aria-modal="true"
+        aria-label={active.alt}
+        onClick={closeLightbox}
+      >
+        <button
+          type="button"
+          onClick={closeLightbox}
+          className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-6 sm:top-6"
+          aria-label="Cerrar"
+        >
+          <X className="h-5 w-5" aria-hidden />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            goLightbox(-1);
+          }}
+          className="absolute left-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:left-4 md:left-6"
+          aria-label="Anterior"
+        >
+          <ChevronLeft className="h-6 w-6" aria-hidden />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            goLightbox(1);
+          }}
+          className="absolute right-2 top-1/2 z-[2] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/85 transition hover:border-secondary/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary sm:right-4 md:right-6"
+          aria-label="Siguiente"
+        >
+          <ChevronRight className="h-6 w-6" aria-hidden />
+        </button>
+
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={lightboxIndex}
+            initial={reduceMotion ? false : { opacity: 0, scale: 1.03 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={reduceMotion ? undefined : { opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.25 }}
+            onClick={(e) => e.stopPropagation()}
+            className="flex max-h-[90dvh] max-w-[min(96vw,1200px)] flex-col items-center gap-3"
+          >
+            <PdcGalleryLightboxPicture
+              folder={active.folder}
+              slug={active.slug}
+              fallbackSrc={active.src}
+              alt={active.alt}
+              className="max-h-[80dvh] w-auto max-w-full rounded-xl object-contain shadow-[0_24px_80px_-20px_rgba(0,0,0,0.85)]"
+              style={active.objectPosition ? { objectPosition: active.objectPosition } : undefined}
+            />
+            <p className="font-sans text-xs text-white/35">
+              {lightboxIndex + 1} / {photos.length}
+            </p>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    ) : null;
+
+  return (
+    <>
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => scrollStrip(-1)}
+          className="absolute -left-4 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/80 transition hover:border-secondary/35 hover:text-white md:flex"
+          aria-label="Anterior"
+        >
+          <ChevronLeft className="h-5 w-5" aria-hidden />
+        </button>
+        <button
+          type="button"
+          onClick={() => scrollStrip(1)}
+          className="absolute -right-4 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#1d1711]/90 text-white/80 transition hover:border-secondary/35 hover:text-white md:flex"
+          aria-label="Siguiente"
+        >
+          <ChevronRight className="h-5 w-5" aria-hidden />
+        </button>
+
+        <div
+          ref={stripRef}
+          className="flex gap-3 overflow-x-auto scroll-smooth pb-2 md:gap-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          style={{ scrollSnapType: "x mandatory" }}
+          role="list"
+          aria-label="Galería de servicio en la comunidad"
+        >
+          {photos.map((photo, i) => (
+            <div
+              key={photo.id}
+              role="listitem"
+              className="shrink-0"
+              style={{
+                scrollSnapAlign: "start",
+                width: "clamp(240px, 78vw, 360px)",
+              }}
+            >
+              <div className="h-[220px] sm:h-[260px] md:h-[300px] lg:h-[340px]">
+                <SvcStripTile
+                  photo={photo}
+                  index={i}
+                  eager={i < 4}
+                  onOpen={openLightbox}
+                  reduceMotion={reduceMotion}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[#0e0b08] to-transparent md:w-24"
+          aria-hidden
+        />
+      </div>
+
+      <p className="mt-3 text-center font-sans text-[0.7rem] text-white/30 md:hidden">
+        Deslizá para ver más
+      </p>
+
+      {portalMounted ? createPortal(lightbox, document.body) : null}
+    </>
+  );
+};
+
 const ServicioComunidadSection: React.FC = () => {
   const reduceMotion = useReducedMotion() ?? false;
-
-  const [feedIndex, setFeedIndex] = useState(0);
-  const [feedPaused, setFeedPaused] = useState(false);
-  const [feedKey, setFeedKey] = useState(0);
-  const touchStartX = useRef<number | null>(null);
 
   const [storyIndex, setStoryIndex] = useState<number | null>(null);
   const [storyKey, setStoryKey] = useState(0);
   const [seenStories, setSeenStories] = useState<Record<string, boolean>>({});
 
-  const feedCount = FEED_PHOTOS.length;
   const storyCount = stories.length;
-
-  const goFeed = useCallback(
-    (delta: number) => {
-      setFeedIndex((i) => (i + delta + feedCount) % feedCount);
-      setFeedKey((k) => k + 1);
-    },
-    [feedCount]
-  );
-
-  useEffect(() => {
-    if (feedCount <= 1 || reduceMotion || feedPaused || storyIndex !== null) return;
-    const id = window.setInterval(() => {
-      setFeedIndex((i) => (i + 1) % feedCount);
-      setFeedKey((k) => k + 1);
-    }, FEED_AUTO_MS);
-    return () => window.clearInterval(id);
-  }, [feedCount, reduceMotion, feedPaused, storyIndex]);
 
   const openStory = useCallback((i: number) => {
     const s = stories[i];
@@ -294,7 +497,6 @@ const ServicioComunidadSection: React.FC = () => {
     [reduceMotion]
   );
 
-  const feedPhoto = FEED_PHOTOS[feedIndex];
   const activeStory = storyIndex !== null ? stories[storyIndex] : null;
 
   return (
@@ -355,7 +557,7 @@ const ServicioComunidadSection: React.FC = () => {
         </motion.div>
       </header>
 
-      {/* Carrusel feed — un poco más grande, borde más limpio */}
+      {/* Galería strip — mismo patrón visual que Bethel */}
       <section
         id={GALLERY_ID}
         className={`border-t border-white/[0.06] py-12 md:py-16 ${pdcHeaderScrollMarginTop}`}
@@ -376,111 +578,12 @@ const ServicioComunidadSection: React.FC = () => {
           </motion.div>
 
           <motion.div
-            className="mx-auto w-full max-w-[22rem] sm:max-w-[24rem]"
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.15 }}
             variants={fadeUp}
-            onMouseEnter={() => setFeedPaused(true)}
-            onMouseLeave={() => setFeedPaused(false)}
           >
-            <div
-              className="relative overflow-hidden rounded-2xl bg-[#14110d] shadow-[0_20px_48px_-28px_rgba(0,0,0,0.8)] ring-1 ring-white/[0.12]"
-              role="region"
-              aria-roledescription="carousel"
-              aria-label="Fotos de servicio"
-              onTouchStart={(e) => {
-                touchStartX.current = e.touches[0]?.clientX ?? null;
-              }}
-              onTouchEnd={(e) => {
-                const start = touchStartX.current;
-                touchStartX.current = null;
-                if (start == null) return;
-                const dx = (e.changedTouches[0]?.clientX ?? start) - start;
-                if (Math.abs(dx) < 40) return;
-                goFeed(dx < 0 ? 1 : -1);
-              }}
-            >
-              {/* Progreso arriba, estilo IG */}
-              <div className="pointer-events-none absolute inset-x-0 top-0 z-[3] flex gap-[3px] px-2.5 pt-2.5" aria-hidden>
-                {FEED_PHOTOS.map((p, i) => (
-                  <div key={p.id} className="h-[2.5px] flex-1 overflow-hidden rounded-full bg-white/25">
-                    {!reduceMotion && i === feedIndex ? (
-                      <motion.div
-                        key={feedKey}
-                        className="h-full rounded-full bg-white"
-                        initial={{ width: "0%" }}
-                        animate={{ width: feedPaused ? undefined : "100%" }}
-                        transition={{
-                          duration: feedPaused ? 0 : FEED_AUTO_MS / 1000,
-                          ease: "linear",
-                        }}
-                        style={feedPaused ? { width: "40%" } : undefined}
-                      />
-                    ) : (
-                      <div
-                        className={`h-full rounded-full ${
-                          i < feedIndex || (reduceMotion && i === feedIndex) ? "bg-white/90" : "bg-transparent"
-                        }`}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <div className="relative aspect-square w-full">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={feedPhoto.id}
-                    className="absolute inset-0"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: reduceMotion ? 0.08 : 0.28 }}
-                  >
-                    <PdcGalleryPicture
-                      folder={feedPhoto.folder}
-                      slug={feedPhoto.slug}
-                      fallbackSrc={feedPhoto.src}
-                      alt={feedPhoto.alt}
-                      loading={feedIndex === 0 ? "eager" : "lazy"}
-                      sizes="(max-width: 640px) 88vw, 24rem"
-                      className="absolute inset-0 h-full w-full object-cover object-center"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-
-                <button
-                  type="button"
-                  className="absolute inset-y-0 left-0 z-[1] w-1/3 bg-transparent"
-                  aria-label="Foto anterior"
-                  onClick={() => goFeed(-1)}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 z-[1] w-1/3 bg-transparent"
-                  aria-label="Foto siguiente"
-                  onClick={() => goFeed(1)}
-                />
-
-                <button
-                  type="button"
-                  onClick={() => goFeed(-1)}
-                  className="absolute left-2 top-1/2 z-[2] hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[#0e0b08]/45 text-white/95 backdrop-blur-md ring-1 ring-white/18 sm:flex"
-                  aria-label="Anterior"
-                >
-                  <ChevronLeft className="h-5 w-5" aria-hidden />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => goFeed(1)}
-                  className="absolute right-2 top-1/2 z-[2] hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[#0e0b08]/45 text-white/95 backdrop-blur-md ring-1 ring-white/18 sm:flex"
-                  aria-label="Siguiente"
-                >
-                  <ChevronRight className="h-5 w-5" aria-hidden />
-                </button>
-              </div>
-            </div>
+            <SvcMomentsStrip reduceMotion={reduceMotion} />
           </motion.div>
         </div>
       </section>

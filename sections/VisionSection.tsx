@@ -3,26 +3,15 @@ import { Church, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
-  CENA_DEL_SENOR_CAPTION,
   PROPOSITO_CIERRE,
   PROPOSITO_PARAGRAPHS,
   VISION_LEMA,
   VISION_STATEMENT,
 } from "../data/vision";
-import {
-  VISION_CENA_PHOTOS,
-  editorialSizes,
-  editorialSrc,
-  editorialSrcSet,
-} from "../data/sitePhotos";
-import type { PdcCarouselSlide } from "../components/PdcPhotoCarousel";
 import { Reveal } from "../components/bethel/Reveal";
-import { PdcPhotoCarousel } from "../components/PdcPhotoCarousel";
 import { PdcPageShell } from "../components/PdcPageShell";
 import {
   PdcSectionHeader,
-  pdcNotebookGalleryInnerClass,
-  pdcNotebookGallerySectionClass,
   pdcPageInnerWithHeroComfort,
   pdcPageIntroHeaderClass,
 } from "../components/PdcSectionHeader";
@@ -43,27 +32,6 @@ const PROPOSITO_ACCORDION = [
   { id: "mision", title: "Nuestra misión", body: PROPOSITO_PARAGRAPHS[1] },
   { id: "vida", title: "Cómo lo vivimos", body: PROPOSITO_PARAGRAPHS[2] },
 ] as const;
-
-const { mesa, cruz } = VISION_CENA_PHOTOS;
-
-const VISION_CAROUSEL_SLIDES: PdcCarouselSlide[] = [
-  {
-    id: cruz.slug,
-    alt: cruz.alt,
-    src: editorialSrc(cruz.slug, 1440),
-    srcSet: editorialSrcSet(cruz.slug, "landscape"),
-    sizes: editorialSizes("landscape"),
-    objectPosition: cruz.objectPosition,
-  },
-  {
-    id: mesa.slug,
-    alt: mesa.alt,
-    src: editorialSrc(mesa.slug, 960),
-    srcSet: editorialSrcSet(mesa.slug, "portrait"),
-    sizes: editorialSizes("portrait"),
-    objectPosition: mesa.objectPosition,
-  },
-];
 
 const VisionSection = () => {
   const [openProposito, setOpenProposito] = useState<string | null>(PROPOSITO_ACCORDION[0].id);
@@ -110,28 +78,6 @@ const VisionSection = () => {
               {VISION_STATEMENT}
             </motion.p>
           </motion.section>
-        </Reveal>
-
-        <Reveal delayMs={60}>
-          <div
-            id="vision-cena"
-            className={`mx-auto mb-14 max-w-5xl scroll-mt-28 md:mb-20 desktop:max-w-[min(88vw,80rem)] ${pdcNotebookGallerySectionClass}`}
-          >
-            <div className={pdcNotebookGalleryInnerClass}>
-              <PdcPhotoCarousel
-                slides={VISION_CAROUSEL_SLIDES}
-                airy
-                className="notebook:mb-0"
-                ariaLabel="Cena del Señor y la cruz"
-                autoPlayMs={5500}
-                showSlideCaption={false}
-                showPlaybackHint={false}
-              />
-            </div>
-            <p className="mt-4 text-center font-sans text-sm font-medium leading-relaxed text-stone-300 md:text-[0.95rem]">
-              {CENA_DEL_SENOR_CAPTION}
-            </p>
-          </div>
         </Reveal>
 
         <Reveal delayMs={90}>

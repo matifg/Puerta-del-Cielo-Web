@@ -125,7 +125,7 @@ const FormacionLideresSection = () => {
         <Reveal delayMs={60}>
           <div id="formacion-lideres-contenido" className={`${glassCard} ${pdcGlassCardPadding} scroll-mt-28`}>
             <p className={`mx-auto mb-6 max-w-2xl text-center ${pdcBodyLeadClass}`}>{FORMATION_VISION_INTRO}</p>
-n
+
             <div className="mx-auto mb-6 max-w-2xl space-y-2.5">
               {FORMATION_ACCORDION.map((item) => {
                 const open = openAccordion === item.id;
