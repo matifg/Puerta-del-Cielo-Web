@@ -1,6 +1,6 @@
 /**
  * Genera WebP para ministros.
- * - lead (pastores): lienzo 2:3, fit contain + fondo #0e0b08 (fundido con la página)
+ * - lead (pastores): lienzo 2:3, fit contain + fondo marfil #F3EFE7
  * - team: cuadrado para círculos, fit contain + fondo blanco
  * Uso: node scripts/optimize-ministros-images.mjs
  */
@@ -14,11 +14,11 @@ const ROOT = path.join(__dirname, "..");
 const SRC_DIR = path.join(ROOT, "public", "images", "ministros");
 const OUT_DIR = path.join(SRC_DIR, "optimized");
 
-/** Pastores: retrato 2:3 sobre fondo de página (#0e0b08) — persona completa, sin bordes blancos. */
+/** Pastores: retrato 2:3 sobre marfil #F3EFE7. */
 const LEAD_SLUG = "jorge-gabriela";
 const LEAD_WIDTHS = [384, 768];
 const LEAD_HEIGHT_RATIO = 3 / 2;
-const PAGE_BG = { r: 14, g: 11, b: 8, alpha: 1 };
+const PAGE_BG = { r: 243, g: 239, b: 231, alpha: 1 };
 /** Equipo: círculo hasta ~128px CSS → 320px en 2x */
 const TEAM_WIDTHS = [320, 640];
 
