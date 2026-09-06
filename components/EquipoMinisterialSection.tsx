@@ -66,6 +66,16 @@ function fadeOnly(delay: number) {
   };
 }
 
+/** Foto lead en reposo: mismo recorte redondeado que producción (también con reduced motion). */
+const pastorsPhotoFrameStatic = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    clipPath: "inset(0% 0% 0% 0% round 1.75rem)",
+    transition: { duration: 0.35, delay: T.photo, ease: "linear" as const },
+  },
+};
+
 function maskRise(delay: number, distance = "100%") {
   return {
     hidden: { y: distance, opacity: 0 },
@@ -385,7 +395,7 @@ const EquipoMinisterialSection: React.FC = () => {
             />
 
             <motion.div
-              variants={reduceMotion ? fadeOnly(T.photo) : pastorsPhotoFrame}
+              variants={reduceMotion ? pastorsPhotoFrameStatic : pastorsPhotoFrame}
               className="relative will-change-transform"
             >
               <PdcMinisterPortrait

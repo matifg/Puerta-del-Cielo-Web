@@ -1,6 +1,6 @@
 /**
  * Genera WebP para ministros.
- * - lead (pastores): lienzo 2:3, fit contain + fondo marfil #F3EFE7
+ * - lead (pastores): lienzo 2:3 exacto con fit fill (sin letterbox que genera borde claro)
  * - team: cuadrado para círculos, fit contain + fondo blanco
  * Uso: node scripts/optimize-ministros-images.mjs
  */
@@ -50,11 +50,10 @@ async function exportSquareWebp(inputPath, slug, width) {
 async function exportLeadPortraitWebp(inputPath, slug, width) {
   const height = Math.round(width * LEAD_HEIGHT_RATIO);
   const outPath = path.join(OUT_DIR, `${slug}-${width}.webp`);
+  // fill: evita 1px de letterbox marfil en el borde (se veía como línea blanca).
   await portraitPipeline(inputPath)
     .resize(width, height, {
-      fit: "contain",
-      position: "centre",
-      background: PAGE_BG,
+      fit: "fill",
       kernel: sharp.kernel.lanczos3,
     })
     .webp({ quality: 90, effort: 4 })
@@ -64,10 +63,8 @@ async function exportLeadPortraitWebp(inputPath, slug, width) {
 
 async function buildLeadLqip(inputPath) {
   const buf = await portraitPipeline(inputPath)
-    .resize(28, 42, {
-      fit: "contain",
-      position: "centre",
-      background: PAGE_BG,
+    .resize(LEAD_LQIP_SIZE.width, LEAD_LQIP_SIZE.height, {
+      fit: "fill",
     })
     .webp({ quality: 40 })
     .toBuffer();
